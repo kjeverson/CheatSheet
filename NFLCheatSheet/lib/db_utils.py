@@ -688,6 +688,8 @@ def update_season_stats(db):
 
             ps.FPs = ws.FPs if not ps.FPs else ps.FPs + ws.FPs
 
+            ws.counted = True
+
     print("Update Season Stats...\x1b[32mCOMPLETE!\x1b[0m\033[K")
 
 
