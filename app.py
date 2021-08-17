@@ -117,7 +117,7 @@ def matchup():
             home_leaders = get_stats_leaders(game.home_team.players)
             away_leaders = get_stats_leaders(game.away_team.players)
 
-            default_headshot_path = url_for('static', filename='headshots/default.png')
+            default_headshot_path = url_for('static', filename='headshots/FA.png')
 
             return render_template("matchup.html", teams=teams, matchup=game, date=date, time=time,
                                    home_leaders=home_leaders, away_leaders=away_leaders,
@@ -203,6 +203,7 @@ def player():
     default_path = url_for('static', filename='headshots/default.png')
 
     team_logo = url_for('static', filename='logos/{}.png'.format(player.current_team.key))
+
     status = player.designation
     if status:
         if status in ['Questionable', 'Doubtful']:

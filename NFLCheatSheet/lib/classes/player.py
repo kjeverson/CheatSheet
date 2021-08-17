@@ -27,6 +27,7 @@ class Player(db.Model):
 
     team = db.Column(db.String(5))
     team_id = db.Column(db.Integer, db.ForeignKey('team.ID'))
+    prev_team_id = db.Column(db.Integer, db.ForeignKey('team.ID'))
     bye = db.Column(db.Integer)
     college = db.Column(db.String(20))
 

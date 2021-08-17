@@ -5,7 +5,7 @@
 {% block content %}
 <div class="container mt-4 pt-4">
     <form action="{{ url_for('team') }}" method="GET">
-    <div class="row justify-content-center text-white">
+    <div class="row mt-2 justify-content-center text-white">
         <div class="col-5">
             <div class="row">
                 <div class="col-6 align-self-center">
@@ -180,7 +180,17 @@
                                         </thead>
                                         <tbody>
                                             {% for line in pass_stats %}
-                                            {% if line.player.team == matchup.home_team.key and line.passer %}
+                                            {% if line.player.current_team.ID == matchup.home_team.ID and line.passer %}
+                                                <tr data-id="{{ line.player.ID }}">
+                                                    <td class="text-start">{{line.player.fname[0] }}. {{ line.player.lname }}</td>
+                                                    <td class="text-start">{{ line.passComps }}/{{ line.passAtts }}</td>
+                                                    <td class="text-start">{{ line.passYDs }}</td>
+                                                    <td class="text-start">{{'%0.1f'| format(line.passYDs/line.passComps|float)}}</td>
+                                                    <td class="text-start">{{ line.passTDs }}</td>
+                                                    <td class="text-start">{{ line.passINTs }}</td>
+                                                    <td class="text-start">{{ line.passSacks }}-{{ line.passSackYDs }}</td>
+                                                </tr>
+                                            {% elif line.player.previous_team.ID == matchup.home_team.ID and line.passer %}
                                                 <tr data-id="{{ line.player.ID }}">
                                                     <td class="text-start">{{line.player.fname[0] }}. {{ line.player.lname }}</td>
                                                     <td class="text-start">{{ line.passComps }}/{{ line.passAtts }}</td>
@@ -212,7 +222,17 @@
                                         </thead>
                                         <tbody>
                                             {% for line in pass_stats %}
-                                            {% if line.player.team == matchup.away_team.key and line.passer %}
+                                            {% if line.player.current_team.ID == matchup.away_team.ID and line.passer %}
+                                                <tr data-id="{{ line.player.ID }}">
+                                                    <td class="text-start">{{line.player.fname[0] }}. {{ line.player.lname }}</td>
+                                                    <td class="text-start">{{ line.passComps }}/{{ line.passAtts }}</td>
+                                                    <td class="text-start">{{ line.passYDs }}</td>
+                                                    <td class="text-start">{{'%0.1f'| format(line.passYDs/line.passComps|float)}}</td>
+                                                    <td class="text-start">{{ line.passTDs }}</td>
+                                                    <td class="text-start">{{ line.passINTs }}</td>
+                                                    <td class="text-start">{{ line.passSacks }}-{{ line.passSackYDs }}</td>
+                                                </tr>
+                                            {% elif line.player.previous_team.ID == matchup.away_team.ID and line.passer %}
                                                 <tr data-id="{{ line.player.ID }}">
                                                     <td class="text-start">{{line.player.fname[0] }}. {{ line.player.lname }}</td>
                                                     <td class="text-start">{{ line.passComps }}/{{ line.passAtts }}</td>
@@ -246,7 +266,16 @@
                                         </thead>
                                         <tbody>
                                         {% for line in rush_stats %}
-                                            {% if line.player.team == matchup.home_team.key and line.rusher %}
+                                            {% if line.player.current_team.ID == matchup.home_team.ID and line.rusher %}
+                                                <tr data-id="{{ line.player.ID }}">
+                                                    <td class="text-start">{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
+                                                    <td class="text-start">{{ line.rushAtts }}</td>
+                                                    <td class="text-start">{{ line.rushYDs }}</td>
+                                                    <td class="text-start">{{'%0.1f'| format(line.rushYDs/line.rushAtts|float)}}</td>
+                                                    <td class="text-start">{{ line.rushTDs }}</td>
+                                                    <td class="text-start">{{ line.rushLng }}</td>
+                                                </tr>
+                                            {% elif line.player.previous_team.ID == matchup.home_team.ID and line.rusher %}
                                                 <tr data-id="{{ line.player.ID }}">
                                                     <td class="text-start">{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
                                                     <td class="text-start">{{ line.rushAtts }}</td>
@@ -276,7 +305,16 @@
                                         </thead>
                                         <tbody>
                                         {% for line in rush_stats %}
-                                            {% if line.player.team == matchup.away_team.key and line.rusher %}
+                                            {% if line.player.current_team.ID == matchup.away_team.ID and line.rusher %}
+                                                <tr data-id="{{ line.player.ID }}">
+                                                    <td class="text-start">{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
+                                                    <td class="text-start">{{ line.rushAtts }}</td>
+                                                    <td class="text-start">{{ line.rushYDs }}</td>
+                                                    <td class="text-start">{{'%0.1f'| format(line.rushYDs/line.rushAtts|float)}}</td>
+                                                    <td class="text-start">{{ line.rushTDs }}</td>
+                                                    <td class="text-start">{{ line.rushLng }}</td>
+                                                </tr>
+                                            {% elif line.player.previous_team.ID == matchup.away_team.ID and line.rusher %}
                                                 <tr data-id="{{ line.player.ID }}">
                                                     <td class="text-start">{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
                                                     <td class="text-start">{{ line.rushAtts }}</td>
@@ -289,7 +327,7 @@
                                         {% endfor %}
                                         </tbody>
                                     </table>
-                                </div>                                
+                                </div>
                             </div>
                             <!-- Receiving -->
                             <div class="row">
@@ -310,7 +348,21 @@
                                         </thead>
                                         <tbody>
                                         {% for line in rec_stats %}
-                                            {% if line.player.team == matchup.home_team.key and line.receiver %}
+                                            {% if line.player.current_team.ID == matchup.home_team.ID and line.receiver %}
+                                                <tr data-id="{{ line.player.ID }}">
+                                                    <td class="text-start">{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
+                                                    <td class="text-start">{{ line.recs }}</td>
+                                                    <td class="text-start">{{ line.recYDs }}</td>
+                                                    {% if line.recs > 0 %}
+                                                    <td class="text-start">{{'%0.1f'| format(line.recYDs/line.recs|float)}}</td>
+                                                    {% else %}
+                                                    <td class="text-start">0.0</td>
+                                                    {% endif %}
+                                                    <td class="text-start">{{ line.recTDs }}</td>
+                                                    <td class="text-start">{{ line.recLng }}</td>
+                                                    <td class="text-start">{{ line.recTGTS }}</td>
+                                                </tr>
+                                            {% elif line.player.previous_team.ID == matchup.home_team.ID and line.receiver %}
                                                 <tr data-id="{{ line.player.ID }}">
                                                     <td class="text-start">{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
                                                     <td class="text-start">{{ line.recs }}</td>
@@ -346,7 +398,21 @@
                                         </thead>
                                         <tbody>
                                         {% for line in rec_stats %}
-                                            {% if line.player.team == matchup.away_team.key and line.receiver %}
+                                            {% if line.player.current_team.ID == matchup.away_team.ID and line.receiver %}
+                                                <tr data-id="{{ line.player.ID }}">
+                                                    <td class="text-start">{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
+                                                    <td class="text-start">{{ line.recs }}</td>
+                                                    <td class="text-start">{{ line.recYDs }}</td>
+                                                    {% if line.recs > 0 %}
+                                                    <td class="text-start">{{'%0.1f'| format(line.recYDs/line.recs|float)}}</td>
+                                                    {% else %}
+                                                    <td class="text-start">0.0</td>
+                                                    {% endif %}
+                                                    <td class="text-start">{{ line.recTDs }}</td>
+                                                    <td class="text-start">{{ line.recLng }}</td>
+                                                    <td class="text-start">{{ line.recTGTS }}</td>
+                                                </tr>
+                                            {% elif line.player.previous_team.ID == matchup.away_team.ID and line.receiver %}
                                                 <tr data-id="{{ line.player.ID }}">
                                                     <td class="text-start">{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
                                                     <td class="text-start">{{ line.recs }}</td>
@@ -364,7 +430,7 @@
                                         {% endfor %}
                                         </tbody>
                                     </table>
-                                </div>                                     
+                                </div>
                             </div>
                         </div>
                     </div>

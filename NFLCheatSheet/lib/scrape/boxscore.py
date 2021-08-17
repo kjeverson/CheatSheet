@@ -7,7 +7,8 @@ def parse_table(tables, headers):
 
     stat_dict = {}
 
-    for table in tables:
+    for i in range(len(tables)):
+        table = tables[i]
         head = table.find("thead")
         body = table.find("tbody")
 
@@ -20,8 +21,9 @@ def parse_table(tables, headers):
             stats = [stat.text for stat in row.find_all("td")][1:]
 
             stat_dict.update({name: {}})
-            for i in range(len(headers)):
-                stat_dict[name].update({headers[i]: stats[i]})
+            for header in range(len(headers)):
+                stat_dict[name].update({headers[header]: stats[header]})
+            stat_dict[name].update({"team": "away" if i == 0 else "home"})
 
     return stat_dict
 
@@ -33,20 +35,38 @@ def get_game_stats(game_id):
 
     # Passing Scrape
     passing = soup.find("div", {"id": "gamepackage-passing"})
-    tables = passing.find_all("table")
+    away_passing = passing.find("div", {"class": "col column-one gamepackage-away-wrap"})
+    home_passing = passing.find("div", {"class": "col column-two gamepackage-home-wrap"})
+
+    tables = list()
+    tables.append(away_passing.find("table"))
+    tables.append(home_passing.find("table"))
+
     headers = ['passComps/passAtts', 'passYDs', 'AVG', 'passTDs', 'passINTs',
                'passSacks/passSackYDs', 'passRTG']
     pass_stats = parse_table(tables, headers)
 
     # Rushing Scrape
     rushing = soup.find("div", {"id": "gamepackage-rushing"})
-    tables = rushing.find_all("table")
+    away_rushing = rushing.find("div", {"class": "col column-one gamepackage-away-wrap"})
+    home_rushing = rushing.find("div", {"class": "col column-two gamepackage-home-wrap"})
+
+    tables = list()
+    tables.append(away_rushing.find("table"))
+    tables.append(home_rushing.find("table"))
+
     headers = ['rushAtts', 'rushYDs', 'AVG', 'rushTDs', 'rushLng']
     rush_stats = parse_table(tables, headers)
 
     # Receiving Scrape
     receiving = soup.find("div", {"id": "gamepackage-receiving"})
-    tables = receiving.find_all("table")
+    away_receiving = receiving.find("div", {"class": "col column-one gamepackage-away-wrap"})
+    home_receiving = receiving.find("div", {"class": "col column-two gamepackage-home-wrap"})
+
+    tables = list()
+    tables.append(away_receiving.find("table"))
+    tables.append(home_receiving.find("table"))
+
     headers = ['recs', 'recYDs', 'AVG', 'recTDs', 'recLng', 'recTGTS']
     rec_stats = parse_table(tables, headers)
 

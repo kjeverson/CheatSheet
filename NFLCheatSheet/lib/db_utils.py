@@ -71,6 +71,14 @@ def add_teams(database, teams: List[Dict]) -> None:
             preseason_ties=0
         ))
 
+    database.session.add(Team(
+        ID=100,
+        key="FA",
+        location="",
+        name="Free Agent",
+        fullname="Free Agent"
+    ))
+
     print("Adding Teams to Database...\x1b[32mCOMPLETE!\x1b[0m\033[K")
 
 
@@ -161,7 +169,7 @@ def get_headshots(db):
         print("{}/{} - {:0.2f}%\r".format(i + 1, len(players), ((i + 1) / len(players)) * 100),
               end="")
         player = players[i]
-        if player.team:
+        if player.current_team.ID != 100:
             img_path = Path("/Users/everson/NFLCheatSheet/static/headshots/{}.png"
                             .format(player.ID))
             if not img_path.exists():
@@ -204,7 +212,8 @@ def add_players(database, players: List[Dict]) -> None:
                 position=player['Position'],
                 position_group=player['PositionCategory'],
                 team=player['Team'],
-                team_id=player['TeamID'],
+                team_id=player['TeamID'] if player['TeamID'] else 100,
+                prev_team_id=None,
                 bye=player['ByeWeek'],
                 college=player['College'],
                 status="Active",
@@ -274,7 +283,11 @@ def add_players(database, players: List[Dict]) -> None:
             player_obj.position = player['Position']
             player_obj.position_group = player['PositionCategory']
             player_obj.team = player['Team']
-            player_obj.team_id = player['TeamID']
+            if player['TeamID']:
+                player_obj.prev_team_id = player_obj.prev_team_id if player_obj.prev_team_id else None
+            else:
+                player_obj.prev_team_id = player_obj.prev_team_id if player_obj.prev_team_id else player_obj.team_id
+            player_obj.team_id = player['TeamID'] if player['TeamID'] else 100
             player_obj.bye = player['ByeWeek']
             player_obj.college = player['College']
             player_obj.status = "Active"
@@ -339,7 +352,7 @@ def update_player_status(database):
         print("Updating Player Statuses...{}/{} - {:0.2f}%\r"
               .format(i+1, len(players), ((i+1)/len(players))*100), end="")
         player = players[i]
-        if not player.team:
+        if player.current_team.ID == 100:
             continue
         if player.name in injured:
             player.update_status()
@@ -351,7 +364,7 @@ def get_schedule(database):
 
     print("Getting Schedule Data...\r", end="")
     sched = schedule.get_schedule()
-    print("Getting Schedule Data...COMPLETE\033[K")
+    print("Getting Schedule Data...\x1b[32mCOMPLETE!\x1b[0m\033[K")
     preseason = sched.get("pre")
     regseason = sched.get("reg")
 
@@ -467,9 +480,49 @@ def get_player_from_list(players, name):
     return None
 
 
+def get_player(game, players, name):
+
+    player = get_player_from_list(players, name)
+    if player:
+        return player
+    else:
+        player = Player.query.filter_by(name=name).all()
+        if len(player) == 1:
+            return player[-1]
+        else:
+            fname, lname = name.split(" ", 1)
+
+            player = Player.query.filter(
+                (Player.lname.contains(lname)) & (Player.team_id == game.home_team.ID) |
+                (Player.lname.contains(lname)) & (Player.team_id == game.away_team.ID)).all()
+
+            if len(player) == 1:
+                return player[-1]
+
+            elif len(player) > 1:
+
+                player = Player.query.filter(
+                    (Player.fname.like(fname)) & (Player.lname.contains(lname)) & (Player.team_id == game.home_team.ID) |
+                    (Player.fname.like(fname)) & (Player.lname.contains(lname)) & (Player.team_id == game.away_team.ID)).all()
+
+                return player[-1]
+
+            else:
+                player = Player.query.filter(
+                    (Player.fname == fname) & (Player.team_id == game.home_team.ID) |
+                    (Player.fname == fname) & (Player.team_id == game.away_team.ID)).all()
+
+                if len(player) == 1:
+                    return player[-1]
+
+                else:
+                    print(name, player)
+                    return None
+
+
 def update_week_stats(db):
 
-    print("Updating Weekly Stats...\r", end="")
+    print("Updating Weekly Stats...")
     # Get all finished games
     games = Game.query.all()
     games = [game for game in games if game.completed]
@@ -477,19 +530,24 @@ def update_week_stats(db):
     for game in games:
         passing, rushing, receiving = get_game_stats(game.ID)
 
+        stats = {}
+        stats.update(passing)
+        stats.update(rushing)
+        stats.update(receiving)
+
         players = []
         players.extend(game.home_team.players)
         players.extend(game.away_team.players)
 
         if not game.scraped_stats:
-            for i in range(len(players)):
-                print("Updating Weekly Stats...{}/{} - {:0.2f}%\r"
-                      .format(i + 1, len(players), ((i + 1) / len(players)) * 100), end="")
-                player = players[i]
+            for name, stats in stats.items():
+                player = get_player(game, players, name)
+                if not player:
+                    continue
                 weekly_stats = {
                     "preseason": game.preseason
                 }
-                pass_stats = passing.get(player.name)
+                pass_stats = passing.get(name)
                 if pass_stats:
                     weekly_stats.update({"passer": True})
                     for key, stat in pass_stats.items():
@@ -500,11 +558,13 @@ def update_week_stats(db):
                             else:
                                 stat1, stat2 = stat.split("-")
                             weekly_stats.update({key1: stat1, key2: stat2})
+                        elif key == "team":
+                            continue
                         else:
                             weekly_stats.update({key: stat})
                 else:
                     weekly_stats.update({"passer": False})
-                rush_stats = rushing.get(player.name)
+                rush_stats = rushing.get(name)
                 if rush_stats:
                     weekly_stats.update({"rusher": True})
                     for key, stat in rush_stats.items():
@@ -515,11 +575,13 @@ def update_week_stats(db):
                             else:
                                 stat1, stat2 = stat.split("-")
                             weekly_stats.update({key1: stat1, key2: stat2})
+                        elif key == "team":
+                            continue
                         else:
                             weekly_stats.update({key: stat})
                 else:
                     weekly_stats.update({"rusher": False})
-                rec_stats = receiving.get(player.name)
+                rec_stats = receiving.get(name)
                 if rec_stats:
                     weekly_stats.update({"receiver": True})
                     for key, stat in rec_stats.items():
@@ -527,18 +589,24 @@ def update_week_stats(db):
                             key1, key2 = key.split("/")
                             stat1, stat2 = stat.split("/")
                             weekly_stats.update({key1: float(stat1), key2: float(stat2)})
+                        elif key == "team":
+                            continue
                         else:
                             weekly_stats.update({key: float(stat)})
                 else:
                     weekly_stats.update({"receiver": False})
 
-                scoring = Scoring.query.first()
+                team = passing.get("team")
+                if team == "away":
+                    team_id = game.away_team.ID
+                else:
+                    team_id = game.home_team.ID
 
                 db.session.add(WeeklyStats(
                     player_id=int(player.ID),
                     game_id=int(game.ID),
                     week=int(game.week),
-                    team_id=int(player.current_team.ID),
+                    team_id=int(player.current_team.ID) if player.current_team else team_id,
                     preseason=weekly_stats["preseason"],
                     counted=False,
                     passer=weekly_stats["passer"],
@@ -568,7 +636,7 @@ def update_week_stats(db):
 
             game.scraped_stats = True
 
-    print("Updating Weekly Stats...\x1b[32mCOMPLETE!\x1b[0m\033[K")
+    #print("Updating Weekly Stats...\x1b[32mCOMPLETE!\x1b[0m\033[K")
 
 
 def update_season_stats(db):
@@ -655,6 +723,21 @@ def build_db(db):
     add_default_scoring(db)
 
     get_schedule(db)
+    update_schedule(db)
+
+    update_week_stats(db)
+    update_fantasy_points(db)
+    update_season_stats(db)
+
+    db.session.commit()
+
+
+def update_db(db):
+
+    players = get_all_player_data()
+    add_players(db, players)
+    update_player_status(db)
+
     update_schedule(db)
 
     update_week_stats(db)

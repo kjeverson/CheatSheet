@@ -38,7 +38,8 @@ class Team(db.Model):
     preseason_loses = db.Column(db.Integer)
     preseason_ties = db.Column(db.Integer)
 
-    players = db.relationship('Player', backref='current_team', lazy=True)
+    players = db.relationship('Player', backref='current_team', foreign_keys="Player.team_id", lazy=True)
+    prev_players = db.relationship('Player', backref='previous_team', foreign_keys="Player.prev_team_id", lazy=True)
     away_games = db.relationship('Game', foreign_keys="Game.away_team_id")
     home_games = db.relationship('Game', foreign_keys="Game.home_team_id")
     weekly_stats = db.relationship('WeeklyStats', back_populates='team')
