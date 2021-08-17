@@ -1,7 +1,6 @@
 .DS_Store
 .idea/*
 __pycache__/*
-app.py
 static/*
 database.db
 data/*
