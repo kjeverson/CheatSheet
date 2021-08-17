@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+{% block title %}
+    {{ matchup.home_team.name }} vs. {{matchup.away_team.name }}
+{% endblock %}
+{% block content %}
+<div class="container mt-4 pt-4">
+    <!-- Header -->
+    <form action="{{ url_for('team') }}" method="GET">
+    <div class="row justify-content-center text-white">
+        <!-- Home Team Section -->
+        <div class="col-5">
+            <div class="row">
+                <div class="col-8 align-self-center">
+                    <div class="row"><small class="text-end">{{ matchup.home_team.location}}</small></div>
+                    <div class="row"><h2 class="text-end text-uppercase">{{ matchup.home_team.name }}</h2></div>
+                    <div class="row"><small class="text-end font-weight-light">0-0</small></div>
+                </div>
+                <div class="col-4 text-center">
+                    <button id="{{ matchup.home_team.key }}" class="btn btn-dark btn-small" name="team" value="{{ matchup.home_team.key }}">
+                        <img src="{{ url_for('static', filename='logos/'+matchup.home_team.key+'.png') }}" class="img-fluid">
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Game Info Section -->
+        <div class="col-2 align-self-center">
+            <div class="row"><small class="text-center font-weight-light">Week {{matchup.week }}</small></div>
+            <div class="row"><small class="text-center font-weight-light">{{ date }}</small></div>
+            <div class="row"><small class="text-center font-weight-light">{{ time }}</small></div>
+        </div>
+        <!-- Away Team Section -->
+        <div class="col-5">
+            <div class="row">
+                <div class="col-4 text-center">
+                    <button id="{{ matchup.away_team.key }}" class="btn btn-dark btn-small" name="team" value="{{ matchup.away_team.key }}">
+                        <img src="{{ url_for('static', filename='logos/'+matchup.away_team.key+'.png') }}" class="img-fluid">
+                    </button>
+                </div>
+                <div class="col-8 align-self-center">
+                    <div class="row"><small class="text-start">{{ matchup.away_team.location}}</small></div>
+                    <div class="row"><h2 class="text-start text-uppercase">{{ matchup.away_team.name }}</h2></div>
+                    <div class="row"><small class="text-start font-weight-light">0-0</small></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+    <!-- Content -->
+    <div class="container mt-2 text-white">
+        <div class="row">
+            <!-- Left Side -->
+            <div class="col-3">
+                <!-- Home Team Stat Leaders -->
+                <div class="row mt-2">
+                    <div class="card bg-dark">
+                        <div class="card-title text-center">Stat Leaders</div>
+                        <div class="card-body">
+                            <!-- Passing Leader -->
+                            <div class="row mt-2">
+                                <button data-id="{{ home_leaders.pass.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
+                                    <div class="row">
+                                        <div class="col-6 position-relative">
+                                            <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + home_leaders.pass.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="row mt-2 text-end"><small>{{ home_leaders.pass.fname[0] }}. {{ home_leaders.pass.lname }}</small></div>
+                                            <div class="row mt-1 text-end"><small class="text-muted">{{ home_leaders.passStats.passComps }}-{{ home_leaders.passStats.passAtts }}, {{ home_leaders.passStats.passYDs }} YDs, {{ home_leaders.passStats.passTDs }} TDs</small></div>
+                                        </div>
+                                    </div>
+                                    <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Passing Yards</span>
+                                </button>
+                            </div>
+                            <!-- Rushing Leader -->
+                            <div class="row mt-2">
+                                <button data-id="{{ home_leaders.rush.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + home_leaders.rush.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="row mt-2 text-end"><small>{{ home_leaders.rush.fname[0] }}. {{ home_leaders.rush.lname }}</small></div>
+                                            <div class="row mt-1 text-end"><small class="text-muted">{{ home_leaders.rushStats.rushAtts }} CAR, {{ home_leaders.rushStats.rushYDs }} YDs, {{ home_leaders.rushStats.rushTDs }} TDs</small></div>
+                                        </div>
+                                    </div>
+                                    <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Rushing Yards</span>
+                                </button>
+                            </div>
+                            <!-- Receiving Leader -->
+                            <div class="row mt-2">
+                                <button data-id="{{ home_leaders.rec.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + home_leaders.rec.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="row mt-2 text-end"><small>{{ home_leaders.rec.fname[0] }}. {{ home_leaders.rec.lname }}</small></div>
+                                            <div class="row mt-1 text-end"><small class="text-muted">{{ home_leaders.recStats.recs }} REC, {{ home_leaders.recStats.recYDs }} YDs, {{ home_leaders.recStats.recTDs }} TDs</small></div>
+                                        </div>
+                                    </div>
+                                    <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Receiving Yards</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Main Content -->
+            <div class="col-6">
+                <!-- Injury Report -->
+                <div class="card bg-dark">
+                    <div class="card-title text-center">Injury Reports</div>
+                    <div class="card-body">
+                        <div class="row justify-content-center text-white">
+                            <!-- Home Team -->
+                            <div class="col-6 text-start justify-content-center">
+                                <table class="player-table table table-sm table-dark table-hover table-responsive">
+                                    <thead><td>Pos</td><td>Name</td><td>Injury</td></thead>
+                                    <tbody>
+                                        {% for player in matchup.home_team.players %}
+                                        <tr data-id="{{ player.ID }}">
+                                            {% if player.designation == 'Questionable' or player.designation == 'Doubtful' %}
+                                            <td>{{ player.position }}</td>
+                                            <td>{{  player.fname[0]  }}. {{ player.lname }} <div class="badge rounded-pill p-1 bg-warning"><span class="visually-hidden">N</span></div></td>
+                                            <td>{{ player.injury}} </td>
+                                            {% elif player.status != 'Active' %}
+                                            <td>{{ player.position }}</td>
+                                            <td>{{  player.fname[0]  }}. {{ player.lname }} <div class="badge rounded-pill p-1 bg-danger"><span class="visually-hidden">N</span></div></td>
+                                            <td>{{ player.injury}} </td>
+                                            {% endif %}
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- Away Team -->
+                            <div class="col-6 text-start">
+                                <table class="player-table table table-sm table-dark table-hover table-responsive">
+                                    <thead><td>Pos</td><td>Name</td><td>Injury</td></thead>
+                                    <tbody>
+                                        {% for player in matchup.away_team.players %}
+                                        <tr data-id="{{ player.ID }}">
+                                            {% if player.designation == 'Questionable' or player.designation == 'Doubtful' %}
+                                            <td>{{ player.position }}</td>
+                                            <td>{{  player.fname[0]  }}. {{ player.lname }} <div class="badge rounded-pill p-1 bg-warning"><span class="visually-hidden">N</span></div></td>
+                                            <td>{{ player.injury}} </td>
+                                            {% elif player.status != 'Active' %}
+                                            <td>{{ player.position }}</td>
+                                            <td>{{  player.fname[0]  }}. {{ player.lname }} <div class="badge rounded-pill p-1 bg-danger"><span class="visually-hidden">N</span></div></td>
+                                            <td>{{ player.injury}} </td>
+                                            {% endif %}
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Right Side -->
+            <div class="col-3">
+                <!-- Away Team Stat Leaders -->
+                <div class="row mt-2">
+                    <div class="card bg-dark">
+                        <div class="card-title text-center">Stat Leaders</div>
+                        <div class="card-body">
+                            <!-- Passing Leader -->
+                            <div class="row mt-2">
+                                <button data-id="{{ away_leaders.pass.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="row mt-2 text-start"><small>{{ away_leaders.pass.fname[0] }}. {{ away_leaders.pass.lname }}</small></div>
+                                            <div class="row mt-1 text-start"><small class="text-muted">{{ away_leaders.passStats.passComps }}-{{ away_leaders.passStats.passAtts }}, {{ away_leaders.passStats.passYDs }} YDs, {{ away_leaders.passStats.passTDs }} TDs</small></div>
+                                        </div>
+                                        <div class="col-6 position-relative">
+                                            <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + away_leaders.pass.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
+                                        </div>
+                                    </div>
+                                    <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Passing Yards</span>
+                                </button>
+                            </div>
+                            <!-- Rushing Leader -->
+                            <div class="row mt-2">
+                                <button data-id="{{ away_leaders.rush.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="row mt-2 text-start"><small>{{ away_leaders.rush.fname[0] }}. {{ away_leaders.rush.lname }}</small></div>
+                                            <div class="row mt-1 text-start"><small class="text-muted">{{ away_leaders.rushStats.rushAtts }} CAR, {{ away_leaders.rushStats.rushYDs }} YDs, {{ away_leaders.rushStats.rushTDs }} TDs</small></div>
+                                        </div>
+                                        <div class="col-6">
+                                            <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + away_leaders.rush.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
+                                        </div>
+                                    </div>
+                                    <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Rushing Yards</span>
+                                </button>
+                            </div>
+                            <!-- Receiving Leader -->
+                            <div class="row mt-2">
+                                <button data-id="{{ away_leaders.rec.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="row mt-2 text-start"><small>{{ away_leaders.rec.fname[0] }}. {{ away_leaders.rec.lname }}</small></div>
+                                            <div class="row mt-1 text-start"><small class="text-muted">{{ away_leaders.recStats.recs }} REC, {{ away_leaders.recStats.recYDs }} YDs, {{ away_leaders.recStats.recTDs }} TDs</small></div>
+                                        </div>
+                                        <div class="col-6">
+                                            <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + away_leaders.rec.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
+                                        </div>
+                                    </div>
+                                    <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Receiving Yards</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

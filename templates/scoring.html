@@ -1,0 +1,285 @@
+{% extends 'base.html' %}
+{% block title %}
+  Scoring
+{% endblock %}
+{% block content %}
+
+<form action="{{ url_for('scoring') }}" method="POST">
+<div class="container mt-4 pt-4">
+    <div class="container text-white">
+        <h2 align="center">Fantasy Scoring</h2>
+    </div>
+    <!-- Passing Scoring Section -->
+    <div class="container text-white">
+        <h3 >Passing</h3>
+         <div class="row justify-content-around">
+             <div class="col">
+                 <div class="row">
+                     <h5 class="col" >Standard Passing Scoring</h5>
+                 </div>
+                 <div class="row">
+                     <label for="passYDs" class="col-6 col-form-label">Passing Yards (per point)</label>
+                     <div class="col-2">
+                         <input disabled type="text" class="form-control" id="passYDs" name="passYDs" value="{{ scoring.passYDs }}">
+                     </div>
+                 </div>
+                 <div class="row">
+                     <label for="passTDs" class="col-6 col-form-label">Passing TD</label>
+                     <div class="col-2">
+                         <input disabled type="text" class="form-control" id="passTDs" name="passTDs" value="{{ scoring.passTDs }}">
+                     </div>
+                 </div>
+                 <div class="row">
+                     <label for="passINTs" class="col-6 col-form-label">Interceptions Thrown</label>
+                     <div class="col-2">
+                         <input disabled type="text" class="form-control" id="passINTs" name="passINTs" value="{{ scoring.passINTs }}">
+                     </div>
+                 </div>
+                 <div class="row">
+                     <label for="pass2PTs" class="col-6 col-form-label">Passing 2-Point Conversion</label>
+                     <div class="col-2">
+                         <input disabled type="text" class="form-control" id="pass2PTs" name="pass2PTs" value="{{ scoring.pass2PTs }}">
+                     </div>
+                 </div>
+                 <div class="row">
+                     <label for="passSacks" class="col-6 col-form-label">Sack Taken</label>
+                     <div class="col-2">
+                         <input disabled type="text" class="form-control" id="passSacks" name="passSacks" value="{{ scoring.passSacks }}">
+                     </div>
+                 </div>
+                 <div class="row">
+                     <label for="passAtts" class="col-6 col-form-label">Pass Attempt</label>
+                     <div class="col-2">
+                         <input disabled type="text" class="form-control" id="passAtts" name="passAtts" value="{{ scoring.passAtts }}">
+                     </div>
+                 </div>
+                 <div class="row">
+                     <label for="passComps" class="col-6 col-form-label">Completed Pass</label>
+                     <div class="col-2">
+                         <input disabled type="text" class="form-control" id="passComps" name="passComps" value="{{ scoring.passComps }}">
+                     </div>
+                 </div>
+                 <div class="row">
+                     <label for="passIncs" class="col-6 col-form-label">Incomplete Pass</label>
+                     <div class="col-2">
+                         <input disabled type="text" class="form-control" id="passIncs" name="passIncs" value="{{ scoring.passIncs }}">
+                     </div>
+                 </div>
+             </div>
+             <div class="col">
+                 <div class="row">
+                     <h5 class="col" >Bonus Passing Scoring</h5>
+                 </div>
+                 <div class="row">
+                     <label for="pass40TD" class="col-6 col-form-label">40-49 Yard Passing TD</label>
+                     <div class="col-2">
+                         <input disabled type="text" class="form-control" id="pass40TD" name="pass40TD" value="{{ scoring.pass40TD }}">
+                     </div>
+                 </div>
+                 <div class="row">
+                     <label for="pass50TD" class="col-6 col-form-label">50+ Yard Passing TD</label>
+                     <div class="col-2">
+                         <input disabled type="text" class="form-control" id="pass50TD" name="pass50TD" value="{{ scoring.pass50TD }}">
+                     </div>
+                 </div>
+                 <div class="row">
+                     <label for="passOver300Yards" class="col-6 col-form-label">300-399 Passing Yards</label>
+                     <div class="col-2">
+                         <input disabled type="text" class="form-control" id="passOver300Yards" name="passOver300Yards" value="{{ scoring.passOver300Yards }}">
+                     </div>
+                 </div>
+                 <div class="row">
+                     <label for="passOver400Yards" class="col-6 col-form-label">400+ Passing Yards</label>
+                     <div class="col-2">
+                         <input disabled type="text" class="form-control" id="passOver400Yards" name="passOver400Yards" value="{{ scoring.passOver400Yards }}">
+                     </div>
+                 </div>
+             </div>
+         </div>
+    </div>
+    <hr class="text-white"/>
+    <!-- Rushing Scoring Section -->
+    <div class="container text-white">
+        <h3 >Rushing</h3>
+          <div class="row justify-content-around">
+              <div class="col">
+                <div class="row">
+                    <h5 class="col" >Standard Rushing Scoring</h5>
+                </div>
+                <div class="row">
+                    <label for="rushYDs" class="col-6 col-form-label">Rushing Yards (per point)</label>
+                    <div class="col-2">
+                        <input disabled type="text" class="form-control" id="rushYDs" name="rushYDs" value="{{ scoring.rushYDs }}">
+                    </div>
+                </div>
+                <div class="row">
+                    <label for="rushTDs" class="col-6 col-form-label">Rushing TD</label>
+                    <div class="col-2">
+                        <input disabled type="text" class="form-control" id="rushTDs" name="rushTDs" value="{{ scoring.rushTDs }}">
+                    </div>
+                </div>
+                <div class="row">
+                    <label for="rush2PT" class="col-6 col-form-label">Rushing 2-Point Conversion</label>
+                    <div class="col-2">
+                        <input disabled type="text" class="form-control" id="rush2PT" name="rush2PT" value="{{ scoring.rush2PT }}">
+                    </div>
+                </div>
+                <div class="row">
+                    <label for="rushAtts" class="col-6 col-form-label">Rush Attempt</label>
+                    <div class="col-2">
+                        <input disabled type="text" class="form-control" id="rushAtts" name="rushAtts" value="{{ scoring.rushAtts }}">
+                    </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="row">
+                    <h5 class="col" >Bonus Rushing Scoring</h5>
+                </div>
+                <div class="row">
+                    <label for="rush40TD" class="col-6 col-form-label">40-49 Yard Rushing TD</label>
+                    <div class="col-2">
+                        <input disabled type="text" class="form-control" id="rush40TD" name="rush40TD" value="{{ scoring.rush40TD }}">
+                    </div>
+                </div>
+                <div class="row">
+                    <label for="rush50TD" class="col-6 col-form-label">50+ Yard Rushing TD</label>
+                    <div class="col-2">
+                        <input disabled type="text" class="form-control" id="rush50TD" name="rush50TD" value="{{ scoring.pass50TD }}">
+                    </div>
+                </div>
+                <div class="row">
+                    <label for="rushOver100Yards" class="col-6 col-form-label">100-199 Rushing Yards</label>
+                    <div class="col-2">
+                        <input disabled type="text" class="form-control" id="rushOver100Yards" name="rushOver100Yards" value="{{ scoring.rushOver100Yards }}">
+                    </div>
+                </div>
+                <div class="row">
+                    <label for="rushOver200Yards" class="col-6 col-form-label">200+ Rushing Yards</label>
+                    <div class="col-2">
+                        <input disabled type="text" class="form-control" id="rushOver200Yards" name="rushOver200Yards" value="{{ scoring.rushOver200Yards }}">
+                    </div>
+                </div>
+              </div>
+          </div>
+      </div>
+    <hr class="text-white"/>
+    <!-- Receiving Scoring Section -->
+    <div class="container text-white">
+        <h3 >Receiving</h3>
+          <div class="row justify-content-around">
+              <div class="col">
+                <div class="row">
+                    <h5 class="col">Standard Receiving Scoring</h5>
+                </div>
+                <div class="row">
+                    <label for="recs" class="col-6 col-form-label">Reception</label>
+                    <div class="col-2">
+                        <input disabled type="text" class="form-control" id="recs" name="recs" value="{{ scoring.recs }}">
+                    </div>
+                </div>
+                <div class="row">
+                    <label for="recYDs" class="col-6 col-form-label">Receiving Yards (per point)</label>
+                    <div class="col-2">
+                        <input disabled type="text" class="form-control" id="recYDs" name="recYDs" value="{{ scoring.recYDs }}">
+                    </div>
+                </div>
+                <div class="row">
+                    <label for="recTDs" class="col-6 col-form-label">Receiving TD</label>
+                    <div class="col-2">
+                        <input disabled type="text" class="form-control" id="recTDs" name="recTDs" value="{{ scoring.recTDs }}">
+                    </div>
+                </div>
+                <div class="row">
+                    <label for="rec2PT" class="col-6 col-form-label">Receiving 2-Point Conversion</label>
+                    <div class="col-2">
+                        <input disabled type="text" class="form-control" id="rec2PT" name="rec2PT" value="{{ scoring.rec2PT }}">
+                    </div>
+                </div>
+
+              </div>
+              <div class="col">
+                <div class="row">
+                    <h5 class="col">Bonus Receiving Scoring</h5>
+                </div>
+                <div class="row">
+                    <label for="rec40TD" class="col-6 col-form-label">40-49 Yard Receiving TD</label>
+                    <div class="col-2">
+                        <input disabled type="text" class="form-control" id="rec40TD" name="rec40TD" value="{{ scoring.rec40TD }}">
+                    </div>
+                </div>
+                <div class="row">
+                    <label for="rec50TD" class="col-6 col-form-label">50+ Yard Receiving TD</label>
+                    <div class="col-2">
+                        <input disabled type="text" class="form-control" id="rec50TD" name="rec50TD" value="{{ scoring.rec50TD }}">
+                    </div>
+                </div>
+                <div class="row">
+                    <label for="recOver100Yards" class="col-6 col-form-label">100-199 Receiving Yards</label>
+                    <div class="col-2">
+                        <input disabled type="text" class="form-control" id="recOver100Yards" name="recOver100Yards" value="{{ scoring.recOver100Yards }}">
+                    </div>
+                </div>
+                <div class="row">
+                    <label for="recOver200Yards" class="col-6 col-form-label">200+ Receiving Yards</label>
+                    <div class="col-2">
+                        <input disabled type="text" class="form-control" id="recOver200Yards" name="recOver200Yards" value="{{ scoring.recOver200Yards }}">
+                    </div>
+                </div>
+              </div>
+          </div>
+      </div>
+    <hr class="text-white"/>
+    <!-- Fumble Scoring Section -->
+    <div class="container text-white">
+        <h3 >Fumbles</h3>
+          <div class="row justify-content-around">
+              <div class="col">
+                <div class="row">
+                    <label for="fumLost" class="col-6 col-form-label">Fumble Lost</label>
+                    <div class="col-2">
+                        <input disabled type="text" class="form-control" id="fumLost" name="fumLost" value="{{ scoring.fumLost }}">
+                    </div>
+                </div>
+                <div class="row">
+                    <label for="fum" class="col-6 col-form-label">Fumble</label>
+                    <div class="col-2">
+                        <input disabled type="text" class="form-control" id="fum" name="fum" value="{{ scoring.fum }}">
+                    </div>
+                </div>
+                <div class="row">
+                    <label for="fumRecTD" class="col-6 col-form-label">Fumble Recovery TD</label>
+                    <div class="col-2">
+                        <input disabled type="text" class="form-control" id="fumRecTD" name="fumRecTD" value="{{ scoring.fumRecTD }}">
+                    </div>
+                </div>
+              </div>
+              <div class="col"></div>
+          </div>
+      </div>
+</div>
+<nav class="nav navbar-nav fixed-bottom navbar-dark navbar-right bg-dark">
+    <div class="row align-self-end m-1">
+        <div class="col">
+            <button id="editButton" class="btn btn-sm btn-secondary">Edit</button>
+        </div>
+        <div class="col">
+            <button disabled id="clearButton" class="form-control btn btn-sm btn-secondary">Clear</button>
+        </div>
+        <div class="col">
+           <button disabled type="submit" id="saveButton" class="form-control btn btn-sm btn-secondary">Save</button>
+        </div>
+    </div>
+</nav>
+</form>
+<script>
+$("#editButton").click(function(event){
+   event.preventDefault();
+   $('.form-control').prop("disabled", false); // Input Elements are now enabled.
+   $('#editButton').prop("disabled", true);
+});
+$("#clearButton").click(function(event){
+    event.preventDefault();
+    $('.form-control').attr("value", "");
+});
+</script>
+{% endblock %}

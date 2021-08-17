@@ -1,0 +1,552 @@
+{% extends 'base.html' %}
+{% block title %}
+  {{ team.fullname }}
+{% endblock %}
+{% block content %}'
+<div class="container mt-4 pt-4">
+  <!-- Header -->
+  <div class="row">
+    <!-- Header Left -->
+    <div class="col-5">
+      <div class="row text-white">
+        <div class="col-4 text-center">
+          <img src="{{ url_for('static', filename='logos/'+team.key+'.png') }}" class="img-fluid">
+        </div>
+        <div class="col-8 align-self-center">
+          <div class="row"><small class="text-start">{{ team.location}}</small></div>
+          <div class="row"><h2 class="text-start text-uppercase">{{ team.name }}</h2></div>
+          <div class="row"><small class="text-start font-weight-light">{{ team.wins }}-{{ team.loses }}</small></div>
+        </div>
+      </div>
+    </div>
+    <!-- Header Right -->
+    <div class="col-7 align-self-center">
+      <!-- Team Rankings -->
+      <div class="row">
+        <!-- DVOA -->
+        <div class="col text-center">
+          <button class="btn btn-block btn-secondary position-relative">
+            <div class="row mt-3">
+              <h2>BLANK</h2>
+            </div>
+            <div class="row">
+            </div>
+            <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">DVOA</span>
+          </button>
+        </div>
+        <!-- OFF Rank -->
+        <div class="col text-center">
+          <button class="btn btn-block btn-secondary position-relative">
+            <div class="row mt-3">
+              <h2>BLANK</h2>
+            </div>
+            <div class="row">
+            </div>
+            <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">OFF Rank</span>
+          </button>
+        </div>
+        <!-- DEF Rank -->
+        <div class="col text-center">
+          <button class="btn btn-block btn-secondary position-relative">
+            <div class="row mt-3">
+              <h2>BLANK</h2>
+            </div>
+            <div class="row">
+            </div>
+            <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">DEF Rank</span>
+          </button>
+        </div>
+        <!-- ST Rank -->
+        <div class="col text-center">
+          <button class="btn btn-block btn-secondary position-relative">
+            <div class="row mt-3">
+              <h2>BLANK</h2>
+            </div>
+            <div class="row">
+            </div>
+            <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">ST Rank</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Content -->
+  <div class="container text-white">
+    <div class="row">
+      <!-- LEFT COLUMN -->
+      <div class="col-2">
+        <!-- PRESEASON SCHEDULE -->
+        <div class="row mt-2">
+          <div class="card bg-dark">
+          <div class="card-title text-center">Preseason Schedule</div>
+          <div class="card-body">
+            <form action="{{ url_for('matchup') }}" method="GET">
+              {% for game in preschedule %}
+              <div class="row justify-content-center mt-1">
+                {% if game.home_team.key == team.key %}
+                <button type="submit" class="btn btn-dark text-white p-2 position-relative" name="matchup" value="{{ game.ID }}">
+                  <div class="row px-1 mx-1">
+                    <span class="text-center"><small>vs. {{ game.away_team.name }}</small></span>
+                  </div>
+                  <span class="position-absolute top-50 start-0 translate-middle badge rounded-pill text-dark"><img src="{{ url_for('static', filename='logos/'+game.away_team.key+'.png') }}" height="40"></span>
+                  {% if game.completed %}
+                    {% if game.winner == team.key %}
+                    <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill text-dark bg-success">W</span>
+                    {% else %}
+                    <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill text-dark bg-danger">L</span>
+                    {% endif %}
+                  {% else %}
+                  <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill text-dark bg-light">{{game.week}}</span>
+                  {% endif %}
+                </button>
+                {% else %}
+                <button type="submit" class="btn btn-dark text-white p-2 position-relative" name="matchup" value="{{ game.ID }}">
+                  <div class="row px-1 mx-1">
+                    <span class="text-center"><small>@ {{ game.home_team.name }}</small></span>
+                  </div>
+                  <span class="position-absolute top-50 start-0 translate-middle badge rounded-pill text-dark"><img src="{{ url_for('static', filename='logos/'+game.home_team.key+'.png') }}" height="40"></span>
+                  {% if game.completed %}
+                    {% if game.winner == team.key %}
+                    <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill text-dark bg-success">W</span>
+                    {% else %}
+                    <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill text-dark bg-danger">L</span>
+                    {% endif %}
+                  {% else %}
+                  <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill text-dark bg-light">{{game.week}}</span>
+                  {% endif %}
+                </button>
+                {% endif %}
+              </div>
+              {% endfor %}
+            </form>
+          </div>
+        </div>
+        </div>
+        <!-- REGULAR SEASON SCHEDULE -->
+        <div class="row mt-2">
+          <div class="card bg-dark">
+          <div class="card-title text-center">Season Schedule</div>
+          <div class="card-body">
+            <form action="{{ url_for('matchup') }}" method="GET">
+              {% for game in schedule %}
+              <div class="row justify-content-center mt-1">
+                {% if game.home_team.key == team.key %}
+                <button type="submit" class="btn btn-dark text-white p-2 position-relative" name="matchup" value="{{ game.ID }}">
+                  <div class="row px-1 mx-1">
+                    <span class="text-center"><small>vs. {{ game.away_team.name }}</small></span>
+                  </div>
+                  <span class="position-absolute top-50 start-0 translate-middle badge rounded-pill text-dark"><img src="{{ url_for('static', filename='logos/'+game.away_team.key+'.png') }}" height="40"></span>
+                  <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill text-dark bg-light">{{game.week}}</span>
+                </button>
+                {% else %}
+                <button type="submit" class="btn btn-dark text-white p-2 position-relative" name="matchup" value="{{ game.ID }}">
+                  <div class="row px-1 mx-1">
+                    <span class="text-center"><small>@ {{ game.home_team.name }}</small></span>
+                  </div>
+                  <span class="position-absolute top-50 start-0 translate-middle badge rounded-pill text-dark"><img src="{{ url_for('static', filename='logos/'+game.home_team.key+'.png') }}" height="40"></span>
+                  <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill text-dark bg-light">{{game.week}}</span>
+                </button>
+                {% endif %}
+              </div>
+              {% endfor %}
+            </form>
+          </div>
+        </div>
+        </div>
+      </div>
+      <!-- MAIN CONTENT -->
+      <div class="col-7">
+        <!-- Team Leaders -->
+        <div class="row mt-2">
+          <div class="card bg-dark">
+            <div class="card-title text-center">Team Leaders</div>
+            <div class="card-body">
+              <div class="row">
+                <!-- Passing Yards Leader -->
+                <div class="col">
+                  {% if team_leaders.pass %}
+                  <button data-id="{{ team_leaders.pass.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
+                    <div class="row mt-2">
+                      <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + team_leaders.pass.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
+                    </div>
+                    <div class="row mt-1">
+                      <small>{{ team_leaders.pass.name }}</small>
+                    </div>
+                    <div class="row mt-1">
+                      <h3>{{ team_leaders.passYDs }}</h3>
+                    </div>
+                    <span class="position-absolute top-100 start-50 translate-middle badge rounded-pill text-dark bg-light">Passing Yards</span>
+                  </button>
+                  {% else %}
+                  <button class=" btn btn-block btn-dark position-relative">
+                    <div class="row mt-2">
+                      <img class="img-fluid" src="{{ url_for('static', filename='headshots/default.png') }}">
+                    </div>
+                    <div class="row mt-1">
+                      <small>-</small>
+                    </div>
+                    <div class="row mt-1">
+                      <h3>{{ team_leaders.passYDs }}</h3>
+                    </div>
+                    <span class="position-absolute top-100 start-50 translate-middle badge rounded-pill text-dark bg-light">Passing Yards</span>
+                  </button>
+                  {% endif %}
+                </div>
+                <!-- Rushing Yards Leader -->
+                <div class="col">
+                  {% if team_leaders.rush %}
+                  <button data-id="{{ team_leaders.rush.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
+                    <div class="row mt-2">
+                      <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + team_leaders.rush.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
+                    </div>
+                    <div class="row mt-1">
+                      <small>{{ team_leaders.rush.name }}</small>
+                    </div>
+                    <div class="row mt-1">
+                      <h3>{{ team_leaders.rushYDs }}</h3>
+                    </div>
+                    <span class="position-absolute top-100 start-50 translate-middle badge rounded-pill text-dark bg-light">Rushing Yards</span>
+                  </button>
+                  {% else %}
+                  <button class="btn btn-block btn-dark position-relative">
+                    <div class="row mt-2">
+                      <img class="img-fluid" src="{{ url_for('static', filename='headshots/default.png') }}">
+                    </div>
+                    <div class="row mt-1">
+                      <small>-</small>
+                    </div>
+                    <div class="row mt-1">
+                      <h3>{{ team_leaders.rushYDs }}</h3>
+                    </div>
+                    <span class="position-absolute top-100 start-50 translate-middle badge rounded-pill text-dark bg-light">Rushing Yards</span>
+                  </button>
+                  {% endif %}
+                </div>
+                <!-- Receiving Yards Leader -->
+                <div class="col">
+                  {% if team_leaders.rec %}
+                  <button data-id="{{ team_leaders.rec.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
+                    <div class="row mt-2">
+                      <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + team_leaders.rec.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
+                    </div>
+                    <div class="row mt-1">
+                      <small>{{ team_leaders.rec.name }}</small>
+                    </div>
+                    <div class="row mt-1">
+                      <h3>{{ team_leaders.recYDs }}</h3>
+                    </div>
+                    <span class="position-absolute top-100 start-50 translate-middle badge rounded-pill text-dark bg-light">Receiving Yards</span>
+                  </button>
+                  {% else %}
+                  <button class="btn btn-block btn-dark position-relative">
+                    <div class="row mt-2">
+                      <img class="img-fluid" src="{{ url_for('static', filename='headshots/default.png') }}">
+                    </div>
+                    <div class="row mt-1">
+                      <small>-</small>
+                    </div>
+                    <div class="row mt-1">
+                      <h3>{{ team_leaders.recYDs }}</h3>
+                    </div>
+                    <span class="position-absolute top-100 start-50 translate-middle badge rounded-pill text-dark bg-light">Receiving Yards</span>
+                  </button>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div class="card bg-dark">
+            <div class="card-title text-center">Player Stats</div>
+            <div class="card-body">
+              <div class="row">
+                <table class="table table-sm player-table table-dark">
+                  <thead>
+                    <th>Name</th>
+                    <th>GP</th>
+                    <th>CMP</th>
+                    <th>ATT</th>
+                    <th>CMP%</th>
+                    <th>YDS</th>
+                    <th>AVG</th>
+                    <th>YDS/G</th>
+                    <th>TD</th>
+                    <th>INT</th>
+                    <th>SACK</th>
+                    <th>SYL</th>
+                    <th>RTG</th>
+                  </thead>
+                  <tbody>
+                  {% for stat in stats %}
+                  {% if stat.passAtts > 0 %}
+                  <tr data-id="{{ stat.player.ID }}">
+                    <td>{{ stat.player.fname[0] }}. {{ stat.player.lname }} <span class="text-muted">{{ stat.player.position }}</span></td>
+                    <td>{{ stat.player.weekly_stats|length }}</td>
+                    <td>{{ stat.passComps }}</td>
+                    <td>{{ stat.passAtts }}</td>
+                    <td>{{ '%0.1f'|format(stat.passComps/stat.passAtts*100) }}</td>
+                    <td>{{ stat.passYDs }}</td>
+                    <td>{{ '%0.1f'|format(stat.passYDs/stat.passComps) }}</td>
+                    <td>{{ '%0.1f'|format(stat.passYDs/stat.player.weekly_stats|length) }}</td>
+                    <td>{{ stat.passTDs }}</td>
+                    <td>{{ stat.passINTs }}</td>
+                    <td>{{ stat.passSacks }}</td>
+                    <td>{{ stat.passSackYDs }}</td>
+                    <td>RTG</td>
+                  </tr>
+                  {% endif %}
+                  {% endfor %}
+                  </tbody>
+                </table>
+                <table class="table table-sm player-table table-dark">
+                  <thead>
+                    <th>Name</th>
+                    <th>GP</th>
+                    <th>ATT</th>
+                    <th>YDS</th>
+                    <th>AVG</th>
+                    <th>LNG</th>
+                    <th>TD</th>
+                    <th>YDS/G</th>
+                    <th>FUM</th>
+                    <th>LST</th>
+                  </thead>
+                  <tbody>
+                  {% for stat in stats %}
+                  {% if stat.rushAtts > 0 %}
+                  <tr data-id="{{ stat.player.ID }}">
+                    <td>{{ stat.player.fname[0] }}. {{ stat.player.lname }} <span class="text-muted">{{ stat.player.position }}</span></td>
+                    <td>{{ stat.player.weekly_stats|length }}</td>
+                    <td>{{ stat.rushAtts }}</td>
+                    <td>{{ stat.rushYDs }}</td>
+                    <td>{{ '%0.1f'|format(stat.rushYDs/stat.rushAtts) }}</td>
+                    <td>{{ stat.rushLng }}</td>
+                    <td>{{ stat.rushTDs }}</td>
+                    <td>{{ '%0.1f'|format(stat.rushYDs/stat.player.weekly_stats|length) }}</td>
+                    <td>{{ FUM }}</td>
+                    <td>{{ LST }}</td>
+                  </tr>
+                  {% endif %}
+                  {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              <div class="row"></div>
+              <div class="row"></div>
+            </div>
+          </div>
+        </div>
+        <!-- Team Stat Totals -->
+        <div class="row mt-2">
+          <div class="card bg-dark">
+            <div class="card-title text-center">Team Stats</div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-3 text-center">
+                  <button class="btn btn-block btn-secondary position-relative">
+                    <div class="row mt-3">
+                      <h2>BLANK</h2>
+                    </div>
+                    <div class="row">
+                      <small>23rd</small>
+                    </div>
+                    <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Passing Yards</span>
+                  </button>
+                </div>
+                <div class="col-3 text-center">
+                  <button class="btn btn-block btn-secondary position-relative">
+                    <div class="row mt-3">
+                      <h2>BLANK</h2>
+                    </div>
+                    <div class="row">
+                      <small>23rd</small>
+                    </div>
+                    <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Rushing Yards</span>
+                  </button>
+                </div>
+                <div class="col-3 text-center">
+                  <button class="btn btn-block btn-secondary position-relative">
+                    <div class="row mt-3">
+                      <h2>BLANK</h2>
+                    </div>
+                    <div class="row">
+                      <small>23rd</small>
+                    </div>
+                    <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Points For</span>
+                  </button>
+                </div>
+                <div class="col-3 text-center">
+                  <button class="btn btn-block btn-secondary position-relative">
+                    <div class="row mt-3">
+                      <h2>BLANK</h2>
+                    </div>
+                    <div class="row">
+                      <small>23rd</small>
+                    </div>
+                    <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Points Against</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Team Roster -->
+        <div class="row mt-2">
+          <div class="card bg-dark">
+            <div class="card-title text-center">Team Stats</div>
+            <div class="card-body">
+              <table class="table player-table table-sm table-dark">
+                <thead>
+                <th>No</th>
+                <th>Name</th>
+                <th>Position</th>
+                </thead>
+                <tbody>
+                {% for player in team.players %}
+                <tr data-id="{{ player.ID }}">
+                  <td>{{ player.number }}</td>
+                  <td>{{ player.name }}</td>
+                  <td>{{ player.position }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- RIGHT COLUMN -->
+      <div class="col-3">
+        <!-- Injury Report -->
+        <div class="row mt-2">
+          <div class="card bg-dark">
+            <div class="card-title text-center">Injury Report</div>
+            <div class="card-body">
+              <table class="player-table table table-sm table-dark table-hover">
+                <thead>
+                  <tr>
+                    <th>Pos</th>
+                    <th>Name</th>
+                    <th>Injury</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for player in players %}
+                    <tr data-id="{{ player.ID }}">
+                        {% if player.designation == 'Questionable' or player.designation == 'Doubtful' %}
+                        <td>{{ player.position }}</td>
+                        <td>{{ player.fname[0] }}. {{  player.lname  }} <div class="badge rounded-pill p-1 bg-warning"><span class="visually-hidden">N</span></div></td>
+                        <td>{{ player.injury}} </td>
+                        {% elif player.designation == 'Out' %}
+                        <td>{{ player.position }}</td>
+                        <td>{{ player.name }} <div class="badge rounded-pill p-1 bg-danger"><span class="visually-hidden">N</span></div></td>
+                        <td>{{ player.injury}} </td>
+                        {% endif %}
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <!-- Injured Reserve -->
+        <div class="row mt-2">
+          <div class="card bg-dark">
+            <div class="card-title text-center">Injured Reserve</div>
+            <div class="card-body">
+              <table class="player-table table table-sm table-dark table-hover">
+                <thead>
+                  <tr>
+                    <th>Pos</th>
+                    <th>Name</th>
+                    <th>Injury</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for player in players %}
+                    <tr data-id="{{ player.ID }}">
+                        {% if player.status == 'Out' and player.designation != 'Out' %}
+                        <td>{{ player.position }}</td>
+                        <td>{{ player.fname[0] }}. {{  player.lname  }} <div class="badge rounded-pill p-1 bg-danger"><span class="visually-hidden">N</span></div></td>
+                        <td>{{ player.injury}}</td>
+                        {% endif %}
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <!-- Division Standings -->
+        <div class="row mt-2">
+          <div class="card bg-dark">
+            <div class="card-title text-center">2021 {{team.conference}} {{team.division}} Standings</div>
+            <div class="card-body">
+              <div class="row">
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Draft Class -->
+        <div class="row mt-2">
+          <div class="card bg-dark">
+            <div class="card-title text-center">2021 Rookie Class</div>
+            <div class="card-body">
+              <table class="player-table table table-sm table-dark table-hover">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Pos</th>
+                    <th>College</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for player in players %}
+                    <tr data-id="{{ player.ID }}">
+                        {% if player.experience == 0 %}
+                        <td>{{ player.fname[0] }}. {{  player.lname  }}</td>
+                        <td>{{ player.position }} </td>
+                        <td>{{ player.college }}</td>
+                        {% endif %}
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- style="background: #{{ team.primary }}" -->
+<script>
+
+    // Set default number of entries to display to 'ALL"
+    //$(document).ready(function(){
+    //  $('#roster').DataTable({
+    //    "lengthMenu": [[-1, 10, 25, 50], ["All", 10, 25, 50]]
+    //  });
+    //});
+
+    // Disable filtered position button
+    $(document).ready(function(){
+      $("#{{ position }}").prop("disabled",true);
+    });
+
+  //$("#QB").click(function(){
+  //  var table = document.getElementById("roster");
+  //  for (var i = 0, row; row = table.rows[i]; i++) {
+  //      if (row.cells[2].innerHTML != "QB") {
+  //        row.setAttribute("style", "display:none;");
+  //      } else {
+  //        row.setAttribute("style", "visibility: visible;");
+  //      }
+  //   }
+  //});
+
+
+ </script>
+{% endblock %}

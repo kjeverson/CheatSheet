@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+{% block title %}
+  Matchups
+{% endblock %}
+{% block content %}
+<div class="container mt-4 pt-4">
+    <!-- Week Heading -->
+    <div class="row text-white text-center mt-4">
+      {% if 'pre' in week_string %}
+      <h2>Preseason Week {{ week }} Matchups</h2>
+      {% else %}
+      <h2> Week {{ week }} Matchups</h2>
+      {% endif %}
+    </div>
+    <!-- Content -->
+    <div class="container text-center text-white">
+    <!-- Week Selection Button -->
+    <div class="row justify-content-center m-2">
+      <form action="{{ url_for('matchups') }}" method="GET">
+        <div class="col btn-group text-center" role="group">
+          {% for n in range(1, 5) %}
+          {% if 'pre' in week_string and n == week %}
+          <button type="submit" class="btn btn-light" name="Sort" value="week-pre{{ n }}" disabled>{{ n }}</button>
+          {% else %}
+          <button type="submit" class="btn btn-light" name="Sort" value="week-pre{{ n }}">{{ n }}</button>
+          {% endif %}
+          {% endfor %}
+          {% for n in range(1, 19) %}
+          {% if 'pre' not in week_string and n == week %}
+          <button type="submit" class="btn btn-secondary" name="Sort" value="week-{{ n }}" disabled>{{ n }}</button>
+          {% else %}
+          <button type="submit" class="btn btn-secondary" name="Sort" value="week-{{ n }}">{{ n }}</button>
+          {% endif %}
+          {% endfor %}
+        </div>
+      </form>
+    </div>
+    <!-- Bye Teams -->
+    <div class="row">
+      <div class="col">
+        {% if bye_teams|length  %}
+        <div class="row text-white justify-content-center">
+          Teams on Bye:
+        </div>
+        {% else %}
+        {% endif %}
+        <form action="{{ url_for('team') }}" method="GET">
+          <div class="row justify-content-center">
+          {% for team in bye_teams %}
+            <div class="col-1 text-center">
+              <button id="{{ team.key }}" class="btn btn-dark btn-small" name="team" value="{{ team.key }}"><img src="{{ url_for('static', filename='logos/'+team.key+'.png') }}" height="40"></button>
+            </div>
+          {% endfor %}
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- Content -->
+    <div class="row">
+      <!-- Right Side -->
+      <div class="col-9">
+        <!-- Week Matchups -->
+        <div class="row">
+          {% for matchup in matchups %}
+          <!-- Matchup -->
+          <div class="col-4">
+            <div class="card text-white bg-dark m-1 border-secondary shadow">
+                <div class="card-body">
+                    <!-- Game Info -->
+                    <div class="row">
+                        <form class="text-end" action="{{ url_for('matchup') }}" method="GET">
+                            <button type="submit" class="btn-block btn bg-dark text-white card-title" name="matchup" value="{{ matchup.ID }}">
+                              {% if matchup.completed %}
+                                <small class="card-title text-end"><strong class="text-uppercase">Final</strong></small>
+                              {% else %}
+                                <small>{{ matchup.date }}</small>
+                              {% endif %}
+                            </button>
+                        </form>
+                    </div>
+                    <form action="{{ url_for('team') }}" method="GET">
+                        <!-- Away Team -->
+                        <div class="row">
+                            <button id="{{ matchup.away_team.key }}" class="btn btn-dark btn-small" name="team" value="{{ matchup.away_team.key }}">
+                                <div class="row">
+                                    <div class="col-2">
+                                        <img src="{{ url_for('static', filename='logos/'+matchup.away_team.key+'.png') }}" class="img-fluid">
+                                    </div>
+                                    <div class="col-7 text-start align-self-center">
+                                     {% if matchup.preseason %}
+                                     {{ matchup.away_team.name }} <small class="text-muted">{{ matchup.away_team.preseason_wins }}-{{ matchup.away_team.preseason_loses }}</small>
+                                     {% else %}
+                                     {{ matchup.away_team.name }} <small class="text-muted">{{ matchup.away_team.wins }}-{{ matchup.away_team.loses }}</small>
+                                     {% endif %}
+                                    </div>
+                                    {% if matchup.completed %}
+                                    {% if matchup.winner == matchup.away_team.key %}
+                                    <div class="col-3 text-end align-self-center">
+                                        <strong>• {{ matchup.away_team_score }}</strong>
+                                    </div>
+                                    {% else %}
+                                    <div class="col-3 text-end align-self-center">
+                                        {{ matchup.away_team_score }}
+                                    </div>
+                                    {% endif %}
+                                    {% endif %}
+                                </div>
+                            </button>
+                        </div>
+                        <!-- Home Team -->
+                        <div class="row mt-2">
+                            <button id="{{ matchup.home_team.key }}" class="btn btn-dark btn-small" name="team" value="{{ matchup.home_team.key }}">
+                                <div class="row">
+                                    <div class="col-2">
+                                        <img src="{{ url_for('static', filename='logos/'+matchup.home_team.key+'.png') }}" class="img-fluid">
+                                    </div>
+                                    <div class="col-7 text-start align-self-center">
+                                      {% if matchup.preseason %}
+                                      {{ matchup.home_team.name }} <small class="text-muted">{{ matchup.home_team.preseason_wins }}-{{ matchup.home_team.preseason_loses }}</small>
+                                      {% else %}
+                                      {{ matchup.home_team.name }} <small class="text-muted">{{ matchup.home_team.wins }}-{{ matchup.home_team.loses }}</small>
+                                      {% endif %}
+                                    </div>
+                                    {% if matchup.completed %}
+                                    {% if matchup.winner == matchup.home_team.key %}
+                                    <div class="col-3 text-end align-self-center">
+                                        <strong>• {{ matchup.home_team_score }}</strong>
+                                    </div>
+                                    {% else %}
+                                    <div class="col-3 text-end align-self-center">
+                                        {{ matchup.home_team_score }}
+                                    </div>
+                                    {% endif %}
+                                    {% endif %}
+                                </div>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $('#teamList').find('tr[data-key]').on('click', function(){
+      var KEY = $(this).data('key');
+      $('#'+KEY).click();
+    });
+
+</script>
+{% endblock %}
