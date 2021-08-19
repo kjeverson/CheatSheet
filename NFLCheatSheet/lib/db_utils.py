@@ -88,7 +88,14 @@ def add_teams(database, teams: List[Dict]) -> None:
         key="FA",
         location="",
         name="Free Agent",
-        fullname="Free Agent"
+        fullname="Free Agent",
+        wins=0,
+        loses=0,
+        ties=0,
+        preseason_wins=0,
+        preseason_loses=0,
+        preseason_ties=0,
+        preseason_games_played=0
     ))
 
     database.session.add(stats.TeamStats(
@@ -580,101 +587,93 @@ def add_player_week_stats(db):
     for game in games:
         passing, rushing, receiving = get_game_stats(game.ID)
 
-        player_names = set()
-
-        for name in passing.keys():
-            player_names.add(name)
-        for name in rushing.keys():
-            player_names.add(name)
-        for name in receiving.keys():
-            player_names.add(name)
-
         players = []
-        players.extend(game.home_team.players)
-        players.extend(game.away_team.players)
 
-        for name in player_names:
-            player = get_player(game, players, name)
-            if not player:
-                print(name)
-                continue
-            if player not in players:
-                players.append(player)
+        for i in range(0, 2):
 
-            week_stats = {"preseason": game.preseason}
-
-            team = passing.get("team")
-            if team == "away":
+            if i == 0:
                 team_id = game.away_team.ID
             else:
                 team_id = game.home_team.ID
 
             team = Team.query.get(team_id)
             team_stats = team.get_team_stats(preseason=game.preseason)
-                
-            pass_stats = passing.get(name)
-            if pass_stats:
-                week_stats.update({"passer": True})
-                week_stats.update(parse_week_stats(pass_stats))
-            else:
-                week_stats.update({"passer": False})
-                
-            rush_stats = rushing.get(name)
-            if rush_stats:
-                week_stats.update({"rusher": True})
-                week_stats.update(parse_week_stats(rush_stats))
-            else:
-                week_stats.update({"rusher": False})
-                
-            rec_stats = receiving.get(name)
-            if rec_stats:
-                week_stats.update({"receiver": True})
-                week_stats.update(parse_week_stats(rec_stats))
-            else:
-                week_stats.update({"receiver": False})
 
-            db.session.add(stats.WeeklyStats(
-                player_id=int(player.ID),
-                game_id=int(game.ID),
-                week=int(game.week),
-                team_id=int(player.current_team.ID) if player.current_team else team_id,
-                preseason=week_stats["preseason"],
-                counted=False,
-                passer=week_stats["passer"],
-                passComps=week_stats["passComps"] if week_stats.get("passComps") else 0,
-                passAtts=week_stats["passAtts"] if week_stats.get("passAtts") else 0,
-                passYDs=week_stats["passYDs"] if week_stats.get("passYDs") else 0,
-                passAVG=week_stats["passYDs"] / week_stats["passComps"] if week_stats.get("passComps") else 0,
-                passTDs=week_stats["passTDs"] if week_stats.get("passTDs") else 0,
-                passINTs=week_stats["passINTs"] if week_stats.get("passINTs") else 0,
-                passSacks=week_stats["passSacks"] if week_stats.get("passSacks") else 0,
-                passSackYDs=week_stats["passSackYDs"] if week_stats.get("passSackYDs") else 0,
-                passRTG=week_stats["passRTG"] if week_stats.get("passRTG") else 0,
-                rusher=week_stats["rusher"],
-                rushAtts=week_stats["rushAtts"] if week_stats.get("rushAtts") else 0,
-                rushYDs=week_stats["rushYDs"] if week_stats.get("rushYDs") else 0,
-                rushAVG=week_stats["rushYDs"] / week_stats["rushAtts"] if week_stats.get("rushAtts") else 0,
-                rushTDs=week_stats["rushTDs"] if week_stats.get("rushTDs") else 0,
-                rushLng=week_stats["rushLng"] if week_stats.get("rushLng") else 0,
-                receiver=week_stats["receiver"],
-                recs=week_stats["recs"] if week_stats.get("recs") else 0,
-                recYDs=week_stats["recYDs"] if week_stats.get("recYDs") else 0,
-                recAVG=week_stats["recYDs"] / week_stats["recs"] if week_stats.get("recs") else 0,
-                recTDs=week_stats["recTDs"] if week_stats.get("recTDs") else 0,
-                recLng=week_stats["recLng"] if week_stats.get("recLng") else 0,
-                recTGTS=week_stats["recTGTS"] if week_stats.get("recTGTS") else 0,
-                fumLost=0,
-                fum=0,
-                FPs=0,
-            ))
+            player_names = set()
 
-            for key, stat in week_stats.items():
-                if key in ['passer', 'rusher', 'receiver', 'preseason']:
+            for name in passing[i].keys():
+                player_names.add(name)
+            for name in rushing[i].keys():
+                player_names.add(name)
+            for name in receiving[i].keys():
+                player_names.add(name)
+
+            for name in player_names:
+                player = get_player(game, players, name)
+
+                if not player:
+                    print(name)
                     continue
-                try:
-                    setattr(team_stats, key, getattr(team_stats, key) + int(stat))
-                except AttributeError:
-                    pass
+
+                players.append(player)
+
+                week_stats = {"preseason": game.preseason}
+
+                pass_stats = passing[i].get(name)
+                if pass_stats:
+                    week_stats.update({"passer": True})
+                    week_stats.update(parse_week_stats(pass_stats))
+                else:
+                    week_stats.update({"passer": False})
+
+                rush_stats = rushing[i].get(name)
+                if rush_stats:
+                    week_stats.update({"rusher": True})
+                    week_stats.update(parse_week_stats(rush_stats))
+                else:
+                    week_stats.update({"rusher": False})
+
+                rec_stats = receiving[i].get(name)
+                if rec_stats:
+                    week_stats.update({"receiver": True})
+                    week_stats.update(parse_week_stats(rec_stats))
+                else:
+                    week_stats.update({"receiver": False})
+
+                db.session.add(stats.WeeklyStats(
+                    player_id=int(player.ID),
+                    game_id=int(game.ID),
+                    week=int(game.week),
+                    team_id=team.ID,
+                    preseason=week_stats["preseason"],
+                    counted=False,
+                    passer=week_stats["passer"],
+                    passComps=week_stats["passComps"] if week_stats.get("passComps") else 0,
+                    passAtts=week_stats["passAtts"] if week_stats.get("passAtts") else 0,
+                    passYDs=week_stats["passYDs"] if week_stats.get("passYDs") else 0,
+                    passAVG=week_stats["passYDs"] / week_stats["passComps"] if week_stats.get("passComps") else 0,
+                    passTDs=week_stats["passTDs"] if week_stats.get("passTDs") else 0,
+                    passINTs=week_stats["passINTs"] if week_stats.get("passINTs") else 0,
+                    passSacks=week_stats["passSacks"] if week_stats.get("passSacks") else 0,
+                    passSackYDs=week_stats["passSackYDs"] if week_stats.get("passSackYDs") else 0,
+                    passRTG=week_stats["passRTG"] if week_stats.get("passRTG") else 0,
+                    rusher=week_stats["rusher"],
+                    rushAtts=week_stats["rushAtts"] if week_stats.get("rushAtts") else 0,
+                    rushYDs=week_stats["rushYDs"] if week_stats.get("rushYDs") else 0,
+                    rushAVG=week_stats["rushYDs"] / week_stats["rushAtts"] if week_stats.get("rushAtts") else 0,
+                    rushTDs=week_stats["rushTDs"] if week_stats.get("rushTDs") else 0,
+                    rushLng=week_stats["rushLng"] if week_stats.get("rushLng") else 0,
+                    receiver=week_stats["receiver"],
+                    recs=week_stats["recs"] if week_stats.get("recs") else 0,
+                    recYDs=week_stats["recYDs"] if week_stats.get("recYDs") else 0,
+                    recAVG=week_stats["recYDs"] / week_stats["recs"] if week_stats.get("recs") else 0,
+                    recTDs=week_stats["recTDs"] if week_stats.get("recTDs") else 0,
+                    recLng=week_stats["recLng"] if week_stats.get("recLng") else 0,
+                    recTGTS=week_stats["recTGTS"] if week_stats.get("recTGTS") else 0,
+                    fumLost=0,
+                    fum=0,
+                    FPs=0,
+                ))
 
         pass_leader_id, rush_leader_id, rec_leader_id = stats.get_stats_leaders(players, game.week)
 
@@ -790,6 +789,47 @@ def update_team_stats(db):
         team_stats.rushingLeader_id = rush_leader_id
         team_stats.receivingLeader_id = rec_leader_id
 
+        week_stats = team.get_week_stats(preseason=True)
+        
+        for week_stat in week_stats:
+
+            team_stats.passComps += week_stat.passComps
+            team_stats.passAtts += week_stat.passAtts 
+            team_stats.passYDs += week_stat.passYDs
+            team_stats.passTDs += week_stat.passTDs
+            team_stats.passINTs += week_stat.passINTs
+            team_stats.passSacks += week_stat.passSacks
+            team_stats.passSackYDs += week_stat.passSackYDs
+
+            team_stats.rushAtts += week_stat.rushAtts
+            team_stats.rushYDs += week_stat.rushYDs
+            team_stats.rushTDs += week_stat.rushTDs
+
+            team_stats.recs += week_stat.recs
+            team_stats.recYDs += week_stat.recYDs
+            team_stats.recTDs += week_stat.recTDs
+            team_stats.recTGTS += week_stat.recTGTS
+
+        if team_stats.passComps:
+            team_stats.passAVG = team_stats.passYDs / team_stats.passComps
+        if team_stats.rushAtts:
+            team_stats.rushAVG = team_stats.rushYDs / team_stats.rushAtts
+        if team_stats.recs:
+            team_stats.recAVG = team_stats.recYDs / team_stats.recs
+
+        if team.preseason_games_played > 0:
+            team_stats.passYDsPerGame = team_stats.passYDs / team.preseason_games_played
+            team_stats.rushYDsPerGame = team_stats.rushYDs / team.preseason_games_played
+
+        team_stats.totalYards = team_stats.passYDs + team_stats.rushYDs
+
+        for game in team.get_games(preseason=True, completed=True, home=True):
+            team_stats.pointsFor += game.home_team_score
+            team_stats.pointsAgainst += game.away_team_score
+        for game in team.get_games(preseason=True, completed=True, away=True):
+            team_stats.pointsFor = game.away_team_score
+            team_stats.pointsAgainst = game.home_team_score
+
 
 def update_fantasy_points(db):
 
@@ -818,7 +858,7 @@ def build_db(db):
 
     players = get_all_player_data()
     add_players(db, players)
-    #update_player_status(db)
+    update_player_status(db)
 
     add_default_scoring(db)
 

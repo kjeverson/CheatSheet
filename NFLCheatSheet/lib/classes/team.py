@@ -1,5 +1,7 @@
 from app import db
 from NFLCheatSheet.lib.classes import stats
+from NFLCheatSheet.lib.classes.game import Game
+
 
 class Team(db.Model):
 
@@ -60,7 +62,24 @@ class Team(db.Model):
         return stats.TeamStats.query.filter_by(
             team_id=self.ID).filter_by(preseason=preseason).first()
 
-    def get_week_stats_by_team(self, preseason):
+    def get_week_stats(self, preseason):
 
         return stats.WeeklyStats.query.filter_by(
             team_id=self.ID).filter_by(preseason=preseason).all()
+
+    def get_games(self, preseason=False, completed=True, home=False, away=False):
+
+        games = []
+        if home:
+            games.extend(self.home_games)
+
+        if away:
+            games.extend(self.away_games)
+
+        if preseason:
+            games = [game for game in games if game.preseason]
+
+        if completed:
+            games = [game for game in games if game.completed]
+
+        return games

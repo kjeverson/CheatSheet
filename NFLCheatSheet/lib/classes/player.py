@@ -1,10 +1,8 @@
 from app import db
-from NFLCheatSheet.lib.scrape.status import player_status_from_id, get_injured_list
+from NFLCheatSheet.lib.scrape.status import player_status_from_id
 from NFLCheatSheet.lib.classes import stats
-from NFLCheatSheet.lib.scrape.images import get_headshot
 
 import json
-from pathlib import Path
 
 
 class Player(db.Model):

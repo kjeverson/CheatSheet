@@ -1,7 +1,5 @@
 from flask import Flask, render_template, request, jsonify, url_for
 from flask_sqlalchemy import SQLAlchemy
-from pathlib import Path
-import os
 import zulu
 import logging
 
@@ -246,6 +244,7 @@ def team():
             player_id=recLeader.ID).filter_by(preseason=True).first()
 
         return render_template("team.html", teams=teams, players=players, team=team, stats=stats,
+                               team_stats=team.get_team_stats(preseason=True),
                                position=position, schedule=schedule, preschedule=preschedule,
                                passLeader=passLeader, passLeaderStats=passLeaderStats,
                                rushLeader=rushLeader, rushLeaderStats=rushLeaderStats,
