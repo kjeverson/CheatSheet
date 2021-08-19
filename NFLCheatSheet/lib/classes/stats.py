@@ -107,6 +107,35 @@ class WeeklyStats(db.Model):
             return self.FPs < other.FPs
 
 
+class TeamStats(db.Model):
+
+    ID = db.Column(db.Integer, primary_key=True)
+    team_id = db.Column(db.Integer, db.ForeignKey('team.ID'), nullable=False)
+    team = db.relationship('Team', back_populates='stats', uselist=False)
+
+    preseason = db.Column(db.Boolean)
+
+    PPG = db.Column(db.Integer)
+    totalPoints = db.Column(db.Integer)
+    totalYards = db.Column(db.Integer)
+
+    passComps = db.Column(db.Integer)
+    passAtts = db.Column(db.Integer)
+    passYDs = db.Column(db.Integer)
+    passTDs = db.Column(db.Integer)
+    passINTs = db.Column(db.Integer)
+    passSacks = db.Column(db.Integer)
+    passSackYDs = db.Column(db.Integer)
+
+    rushAtts = db.Column(db.Integer)
+    rushYDs = db.Column(db.Integer)
+    rushTDs = db.Column(db.Integer)
+
+    passingLeader_id = db.Column(db.Integer, db.ForeignKey('player.ID'))
+    rushingLeader_id = db.Column(db.Integer, db.ForeignKey('player.ID'))
+    receivingLeader_id = db.Column(db.Integer, db.ForeignKey('player.ID'))
+
+
 def get_stats_leaders(players, week=None):
 
     if not players:
@@ -180,14 +209,4 @@ def get_stats_leaders(players, week=None):
         recYDs_leader = None
         recYDs = "-"
 
-    team_leaders = {"pass": passYDs_leader,
-                    "passStats": passYDs_leader_stats,
-                    "passYDs": passYDs,
-                    "rush": rushYDs_leader,
-                    "rushStats": rushYDs_leader_stats,
-                    "rushYDs": rushYDs,
-                    "rec": recYDs_leader,
-                    "recStats": recYDs_leader_stats,
-                    "recYDs": recYDs}
-
-    return team_leaders
+    return passYDs_leader.ID, rushYDs_leader.ID, recYDs_leader.ID

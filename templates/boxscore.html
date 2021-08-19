@@ -5,7 +5,7 @@
 {% block content %}
 <div class="container mt-4 pt-4">
     <form action="{{ url_for('team') }}" method="GET">
-    <div class="row mt-2 justify-content-center text-white">
+    <div class="row mt-4 justify-content-center text-white">
         <div class="col-5">
             <div class="row">
                 <div class="col-6 align-self-center">
@@ -107,14 +107,14 @@
                         <div class="card-body">
                             <!-- Passing Leader -->
                             <div class="row mt-2">
-                                <button data-id="{{ week_leaders.pass.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
+                                <button data-id="{{ passLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
                                     <div class="row">
                                         <div class="col-6 position-relative">
-                                            <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + week_leaders.pass.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
+                                            <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + passLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
                                         </div>
                                         <div class="col-6">
-                                            <div class="row mt-2 text-end"><small>{{ week_leaders.pass.fname[0] }}. {{ week_leaders.pass.lname }}</small></div>
-                                            <div class="row mt-1 text-end"><small class="text-muted">{{ week_leaders.passStats.passComps }}-{{ week_leaders.passStats.passAtts }}, {{ week_leaders.passStats.passYDs }} YDs, {{ week_leaders.passStats.passTDs }} TDs</small></div>
+                                            <div class="row mt-2 text-end"><small>{{ passLeader.fname[0] }}. {{ passLeader.lname }}</small></div>
+                                            <div class="row mt-1 text-end"><small class="text-muted">{{ passLeaderStats.passComps }}-{{ passLeaderStats.passAtts }}, {{ passLeaderStats.passYDs }} YDs, {{ passLeaderStats.passTDs }} TDs</small></div>
                                         </div>
                                     </div>
                                     <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Passing Yards</span>
@@ -122,14 +122,14 @@
                             </div>
                             <!-- Rushing Leader -->
                             <div class="row mt-2">
-                                <button data-id="{{ week_leaders.rush.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
+                                <button data-id="{{ rushLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
                                     <div class="row">
                                         <div class="col-6">
-                                            <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + week_leaders.rush.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
+                                            <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + rushLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
                                         </div>
                                         <div class="col-6">
-                                            <div class="row mt-2 text-end"><small>{{ week_leaders.rush.fname[0] }}. {{ week_leaders.rush.lname }}</small></div>
-                                            <div class="row mt-1 text-end"><small class="text-muted">{{ week_leaders.rushStats.rushAtts }} CAR, {{ week_leaders.rushStats.rushYDs }} YDs, {{ week_leaders.rushStats.rushTDs }} TDs</small></div>
+                                            <div class="row mt-2 text-end"><small>{{ rushLeader.fname[0] }}. {{ rushLeader.lname }}</small></div>
+                                            <div class="row mt-1 text-end"><small class="text-muted">{{ rushLeaderStats.rushAtts }} CAR, {{ rushLeaderStats.rushYDs }} YDs, {{ rushLeaderStats.rushTDs }} TDs</small></div>
                                         </div>
                                     </div>
                                     <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Rushing Yards</span>
@@ -137,14 +137,14 @@
                             </div>
                             <!-- Receiving Leader -->
                             <div class="row mt-2">
-                                <button data-id="{{ week_leaders.rec.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
+                                <button data-id="{{ recLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
                                     <div class="row">
                                         <div class="col-6">
-                                            <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + week_leaders.rec.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
+                                            <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + recLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
                                         </div>
                                         <div class="col-6">
-                                            <div class="row mt-2 text-end"><small>{{ week_leaders.rec.fname[0] }}. {{ week_leaders.rec.lname }}</small></div>
-                                            <div class="row mt-1 text-end"><small class="text-muted">{{ week_leaders.recStats.recs }} REC, {{ week_leaders.recStats.recYDs }} YDs, {{ week_leaders.recStats.recTDs }} TDs</small></div>
+                                            <div class="row mt-2 text-end"><small>{{ recLeader.fname[0] }}. {{ recLeader.lname }}</small></div>
+                                            <div class="row mt-1 text-end"><small class="text-muted">{{ recLeaderStats.recs }} REC, {{ recLeaderStats.recYDs }} YDs, {{ recLeaderStats.recTDs }} TDs</small></div>
                                         </div>
                                     </div>
                                     <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Receiving Yards</span>

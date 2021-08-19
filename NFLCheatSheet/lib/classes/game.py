@@ -29,6 +29,10 @@ class Game(db.Model):
 
     winner = db.Column(db.String(3))
 
+    passingLeader_id = db.Column(db.Integer, db.ForeignKey('player.ID'))
+    rushingLeader_id = db.Column(db.Integer, db.ForeignKey('player.ID'))
+    receivingLeader_id = db.Column(db.Integer, db.ForeignKey('player.ID'))
+
     def __repr__(self):
 
         return "Game(Week {}: {} vs. {})".format(self.week,

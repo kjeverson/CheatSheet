@@ -57,14 +57,14 @@
                         <div class="card-body">
                             <!-- Passing Leader -->
                             <div class="row mt-2">
-                                <button data-id="{{ home_leaders.pass.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
+                                <button data-id="{{ homePassLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
                                     <div class="row">
                                         <div class="col-6 position-relative">
-                                            <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + home_leaders.pass.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
+                                            <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + homePassLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
                                         </div>
                                         <div class="col-6">
-                                            <div class="row mt-2 text-end"><small>{{ home_leaders.pass.fname[0] }}. {{ home_leaders.pass.lname }}</small></div>
-                                            <div class="row mt-1 text-end"><small class="text-muted">{{ home_leaders.passStats.passComps }}-{{ home_leaders.passStats.passAtts }}, {{ home_leaders.passStats.passYDs }} YDs, {{ home_leaders.passStats.passTDs }} TDs</small></div>
+                                            <div class="row mt-2 text-end"><small>{{ homePassLeader.fname[0] }}. {{ homePassLeader.lname }}</small></div>
+                                            <div class="row mt-1 text-end"><small class="text-muted">{{ homePassLeaderStats.passComps }}-{{ homePassLeaderStats.passAtts }}, {{ homePassLeaderStats.passYDs }} YDs, {{ homePassLeaderStats.passTDs }} TDs</small></div>
                                         </div>
                                     </div>
                                     <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Passing Yards</span>
@@ -72,14 +72,14 @@
                             </div>
                             <!-- Rushing Leader -->
                             <div class="row mt-2">
-                                <button data-id="{{ home_leaders.rush.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
+                                <button data-id="{{ homeRushLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
                                     <div class="row">
                                         <div class="col-6">
-                                            <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + home_leaders.rush.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
+                                            <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + homeRushLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
                                         </div>
                                         <div class="col-6">
-                                            <div class="row mt-2 text-end"><small>{{ home_leaders.rush.fname[0] }}. {{ home_leaders.rush.lname }}</small></div>
-                                            <div class="row mt-1 text-end"><small class="text-muted">{{ home_leaders.rushStats.rushAtts }} CAR, {{ home_leaders.rushStats.rushYDs }} YDs, {{ home_leaders.rushStats.rushTDs }} TDs</small></div>
+                                            <div class="row mt-2 text-end"><small>{{ homeRushLeader.fname[0] }}. {{ homeRushLeader.lname }}</small></div>
+                                            <div class="row mt-1 text-end"><small class="text-muted">{{ homeRushLeaderStats.rushAtts }} CAR, {{ homeRushLeaderStats.rushYDs }} YDs, {{ homeRushLeaderStats.rushTDs }} TDs</small></div>
                                         </div>
                                     </div>
                                     <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Rushing Yards</span>
@@ -87,14 +87,14 @@
                             </div>
                             <!-- Receiving Leader -->
                             <div class="row mt-2">
-                                <button data-id="{{ home_leaders.rec.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
+                                <button data-id="{{ homeRecLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
                                     <div class="row">
                                         <div class="col-6">
-                                            <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + home_leaders.rec.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
+                                            <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + homeRecLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
                                         </div>
                                         <div class="col-6">
-                                            <div class="row mt-2 text-end"><small>{{ home_leaders.rec.fname[0] }}. {{ home_leaders.rec.lname }}</small></div>
-                                            <div class="row mt-1 text-end"><small class="text-muted">{{ home_leaders.recStats.recs }} REC, {{ home_leaders.recStats.recYDs }} YDs, {{ home_leaders.recStats.recTDs }} TDs</small></div>
+                                            <div class="row mt-2 text-end"><small>{{ homeRecLeader.fname[0] }}. {{ homeRecLeader.lname }}</small></div>
+                                            <div class="row mt-1 text-end"><small class="text-muted">{{ homeRecLeaderStats.recs }} REC, {{ homeRecLeaderStats.recYDs }} YDs, {{ homeRecLeaderStats.recTDs }} TDs</small></div>
                                         </div>
                                     </div>
                                     <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Receiving Yards</span>
@@ -166,14 +166,14 @@
                         <div class="card-body">
                             <!-- Passing Leader -->
                             <div class="row mt-2">
-                                <button data-id="{{ away_leaders.pass.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
+                                <button data-id="{{ awayPassLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
                                     <div class="row">
                                         <div class="col-6">
-                                            <div class="row mt-2 text-start"><small>{{ away_leaders.pass.fname[0] }}. {{ away_leaders.pass.lname }}</small></div>
-                                            <div class="row mt-1 text-start"><small class="text-muted">{{ away_leaders.passStats.passComps }}-{{ away_leaders.passStats.passAtts }}, {{ away_leaders.passStats.passYDs }} YDs, {{ away_leaders.passStats.passTDs }} TDs</small></div>
+                                            <div class="row mt-2 text-start"><small>{{ awayPassLeader.fname[0] }}. {{ awayPassLeader.lname }}</small></div>
+                                            <div class="row mt-1 text-start"><small class="text-muted">{{ awayPassLeaderStats.passComps }}-{{ awayPassLeaderStats.passAtts }}, {{ awayPassLeaderStats.passYDs }} YDs, {{ awayPassLeaderStats.passTDs }} TDs</small></div>
                                         </div>
                                         <div class="col-6 position-relative">
-                                            <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + away_leaders.pass.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
+                                            <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + awayPassLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
                                         </div>
                                     </div>
                                     <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Passing Yards</span>
@@ -181,14 +181,14 @@
                             </div>
                             <!-- Rushing Leader -->
                             <div class="row mt-2">
-                                <button data-id="{{ away_leaders.rush.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
+                                <button data-id="{{ awayRushLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
                                     <div class="row">
                                         <div class="col-6">
-                                            <div class="row mt-2 text-start"><small>{{ away_leaders.rush.fname[0] }}. {{ away_leaders.rush.lname }}</small></div>
-                                            <div class="row mt-1 text-start"><small class="text-muted">{{ away_leaders.rushStats.rushAtts }} CAR, {{ away_leaders.rushStats.rushYDs }} YDs, {{ away_leaders.rushStats.rushTDs }} TDs</small></div>
+                                            <div class="row mt-2 text-start"><small>{{ awayRushLeader.fname[0] }}. {{ awayRushLeader.lname }}</small></div>
+                                            <div class="row mt-1 text-start"><small class="text-muted">{{ awayRushLeaderStats.rushAtts }} CAR, {{ awayRushLeaderStats.rushYDs }} YDs, {{ awayRushLeaderStats.rushTDs }} TDs</small></div>
                                         </div>
                                         <div class="col-6">
-                                            <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + away_leaders.rush.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
+                                            <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + awayRushLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
                                         </div>
                                     </div>
                                     <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Rushing Yards</span>
@@ -196,14 +196,14 @@
                             </div>
                             <!-- Receiving Leader -->
                             <div class="row mt-2">
-                                <button data-id="{{ away_leaders.rec.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
+                                <button data-id="{{ awayRecLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
                                     <div class="row">
                                         <div class="col-6">
-                                            <div class="row mt-2 text-start"><small>{{ away_leaders.rec.fname[0] }}. {{ away_leaders.rec.lname }}</small></div>
-                                            <div class="row mt-1 text-start"><small class="text-muted">{{ away_leaders.recStats.recs }} REC, {{ away_leaders.recStats.recYDs }} YDs, {{ away_leaders.recStats.recTDs }} TDs</small></div>
+                                            <div class="row mt-2 text-start"><small>{{ awayRecLeader.fname[0] }}. {{ awayRecLeader.lname }}</small></div>
+                                            <div class="row mt-1 text-start"><small class="text-muted">{{ awayRecLeaderStats.recs }} REC, {{ awayRecLeaderStats.recYDs }} YDs, {{ awayRecLeaderStats.recTDs }} TDs</small></div>
                                         </div>
                                         <div class="col-6">
-                                            <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + away_leaders.rec.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
+                                            <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + awayRecLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
                                         </div>
                                     </div>
                                     <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Receiving Yards</span>

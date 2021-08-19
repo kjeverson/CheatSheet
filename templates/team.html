@@ -164,16 +164,16 @@
               <div class="row">
                 <!-- Passing Yards Leader -->
                 <div class="col">
-                  {% if team_leaders.pass %}
-                  <button data-id="{{ team_leaders.pass.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
+                  {% if passLeader %}
+                  <button data-id="{{ passLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
                     <div class="row mt-2">
-                      <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + team_leaders.pass.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
+                      <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + passLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
                     </div>
                     <div class="row mt-1">
-                      <small>{{ team_leaders.pass.name }}</small>
+                      <small>{{ passLeader.name }}</small>
                     </div>
                     <div class="row mt-1">
-                      <h3>{{ team_leaders.passYDs }}</h3>
+                      <h3>{{ passLeaderStats.passYDs }}</h3>
                     </div>
                     <span class="position-absolute top-100 start-50 translate-middle badge rounded-pill text-dark bg-light">Passing Yards</span>
                   </button>
@@ -186,7 +186,7 @@
                       <small>-</small>
                     </div>
                     <div class="row mt-1">
-                      <h3>{{ team_leaders.passYDs }}</h3>
+                      <h3>-</h3>
                     </div>
                     <span class="position-absolute top-100 start-50 translate-middle badge rounded-pill text-dark bg-light">Passing Yards</span>
                   </button>
@@ -194,16 +194,16 @@
                 </div>
                 <!-- Rushing Yards Leader -->
                 <div class="col">
-                  {% if team_leaders.rush %}
-                  <button data-id="{{ team_leaders.rush.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
+                  {% if rushLeader %}
+                  <button data-id="{{ rushLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
                     <div class="row mt-2">
-                      <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + team_leaders.rush.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
+                      <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + rushLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
                     </div>
                     <div class="row mt-1">
-                      <small>{{ team_leaders.rush.name }}</small>
+                      <small>{{ rushLeader.name }}</small>
                     </div>
                     <div class="row mt-1">
-                      <h3>{{ team_leaders.rushYDs }}</h3>
+                      <h3>{{ rushLeaderStats.rushYDs }}</h3>
                     </div>
                     <span class="position-absolute top-100 start-50 translate-middle badge rounded-pill text-dark bg-light">Rushing Yards</span>
                   </button>
@@ -216,7 +216,7 @@
                       <small>-</small>
                     </div>
                     <div class="row mt-1">
-                      <h3>{{ team_leaders.rushYDs }}</h3>
+                      <h3>-</h3>
                     </div>
                     <span class="position-absolute top-100 start-50 translate-middle badge rounded-pill text-dark bg-light">Rushing Yards</span>
                   </button>
@@ -224,16 +224,16 @@
                 </div>
                 <!-- Receiving Yards Leader -->
                 <div class="col">
-                  {% if team_leaders.rec %}
-                  <button data-id="{{ team_leaders.rec.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
+                  {% if recLeader %}
+                  <button data-id="{{ recLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
                     <div class="row mt-2">
-                      <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + team_leaders.rec.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
+                      <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + recLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
                     </div>
                     <div class="row mt-1">
-                      <small>{{ team_leaders.rec.name }}</small>
+                      <small>{{ recLeader.name }}</small>
                     </div>
                     <div class="row mt-1">
-                      <h3>{{ team_leaders.recYDs }}</h3>
+                      <h3>{{ recLeaderStats.recYDs }}</h3>
                     </div>
                     <span class="position-absolute top-100 start-50 translate-middle badge rounded-pill text-dark bg-light">Receiving Yards</span>
                   </button>
@@ -246,7 +246,7 @@
                       <small>-</small>
                     </div>
                     <div class="row mt-1">
-                      <h3>{{ team_leaders.recYDs }}</h3>
+                      <h3>-</h3>
                     </div>
                     <span class="position-absolute top-100 start-50 translate-middle badge rounded-pill text-dark bg-light">Receiving Yards</span>
                   </button>
@@ -388,30 +388,6 @@
                   </button>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-        <!-- Team Roster -->
-        <div class="row mt-2">
-          <div class="card bg-dark">
-            <div class="card-title text-center">Team Stats</div>
-            <div class="card-body">
-              <table class="table player-table table-sm table-dark">
-                <thead>
-                <th>No</th>
-                <th>Name</th>
-                <th>Position</th>
-                </thead>
-                <tbody>
-                {% for player in team.players %}
-                <tr data-id="{{ player.ID }}">
-                  <td>{{ player.number }}</td>
-                  <td>{{ player.name }}</td>
-                  <td>{{ player.position }}</td>
-                </tr>
-                {% endfor %}
-                </tbody>
-              </table>
             </div>
           </div>
         </div>

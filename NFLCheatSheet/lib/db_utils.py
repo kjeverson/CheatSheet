@@ -10,7 +10,7 @@ import requests
 
 from NFLCheatSheet.lib.classes.team import Team
 from NFLCheatSheet.lib.classes.player import Player
-from NFLCheatSheet.lib.classes.stats import SeasonStats, WeeklyStats
+from NFLCheatSheet.lib.classes import stats
 from NFLCheatSheet.lib.classes.game import Game
 
 from NFLCheatSheet.lib.fantasy.scoring import Scoring, get_score
@@ -69,6 +69,16 @@ def add_teams(database, teams: List[Dict]) -> None:
             preseason_wins=0,
             preseason_loses=0,
             preseason_ties=0
+        ))
+
+        database.session.add(stats.TeamStats(
+            team_id=team['TeamID'],
+            preseason=True
+        ))
+
+        database.session.add(stats.TeamStats(
+            team_id=team['TeamID'],
+            preseason=False
         ))
 
     database.session.add(Team(
@@ -144,12 +154,12 @@ def get_all_player_data(position: str = "ALL") -> List[Dict]:
     print("Getting Player Data...\r", end="")
 
     # API CAll for all Player data
-    # response = requests.get("https://api.sportsdata.io/v3/nfl/scores/json/Players?"
+    #response = requests.get("https://api.sportsdata.io/v3/nfl/scores/json/Players?"
     #                        "key=2810c12201be4499bff03931c186f9f5")
-    # player_data = response.json()
+    #player_data = response.json()
 
     player_file_path = Path("/Users/everson/NFLCheatSheet/data/players.json")
-    # with player_file_path.open("w") as player_file:
+    #with player_file_path.open("w") as player_file:
     #    json.dump(player_data, player_file)
 
     with player_file_path.open("r") as player_file:
@@ -222,7 +232,7 @@ def add_players(database, players: List[Dict]) -> None:
                 ret="",
             ))
 
-            database.session.add(SeasonStats(
+            database.session.add(stats.SeasonStats(
                 player_id=player['PlayerID'],
                 preseason=False,
                 passComps=0,
@@ -244,7 +254,7 @@ def add_players(database, players: List[Dict]) -> None:
                 recTGTS=0
             ))
 
-            database.session.add(SeasonStats(
+            database.session.add(stats.SeasonStats(
                 player_id=player['PlayerID'],
                 preseason=True,
                 passComps=0,
@@ -520,7 +530,7 @@ def get_player(game, players, name):
                     return None
 
 
-def update_week_stats(db):
+def update_player_week_stats(db):
 
     print("Updating Weekly Stats...")
     # Get all finished games
@@ -530,23 +540,25 @@ def update_week_stats(db):
     for game in games:
         passing, rushing, receiving = get_game_stats(game.ID)
 
-        stats = {}
-        stats.update(passing)
-        stats.update(rushing)
-        stats.update(receiving)
+        game_stats = {}
+        game_stats.update(passing)
+        game_stats.update(rushing)
+        game_stats.update(receiving)
 
         players = []
         players.extend(game.home_team.players)
         players.extend(game.away_team.players)
 
         if not game.scraped_stats:
-            for name, stats in stats.items():
+            for name, game_stats in game_stats.items():
                 player = get_player(game, players, name)
                 if not player:
                     continue
                 weekly_stats = {
                     "preseason": game.preseason
                 }
+                if player not in players:
+                    players.append(player)
                 pass_stats = passing.get(name)
                 if pass_stats:
                     weekly_stats.update({"passer": True})
@@ -602,7 +614,7 @@ def update_week_stats(db):
                 else:
                     team_id = game.home_team.ID
 
-                db.session.add(WeeklyStats(
+                db.session.add(stats.WeeklyStats(
                     player_id=int(player.ID),
                     game_id=int(game.ID),
                     week=int(game.week),
@@ -634,12 +646,17 @@ def update_week_stats(db):
                     FPs=0,
                 ))
 
+            passLeader_id, rushLeader_id, recLeader_id = stats.get_stats_leaders(players, game.week)
+
             game.scraped_stats = True
+            game.passingLeader_id = passLeader_id
+            game.rushingLeader_id = rushLeader_id
+            game.receivingLeader_id = recLeader_id
 
     #print("Updating Weekly Stats...\x1b[32mCOMPLETE!\x1b[0m\033[K")
 
 
-def update_season_stats(db):
+def update_player_season_stats(db):
 
     players = Player.query.all()
 
@@ -653,7 +670,7 @@ def update_season_stats(db):
         weekly_stats = player.weekly_stats
         season_stats = player.season_stats
 
-        ps = SeasonStats.query.filter_by(player_id=player.ID).filter_by(preseason=True).first()
+        ps = stats.SeasonStats.query.filter_by(player_id=player.ID).filter_by(preseason=True).first()
 
         pws = [week for week in weekly_stats if week.preseason and not week.counted]
 
@@ -693,6 +710,27 @@ def update_season_stats(db):
     print("Update Season Stats...\x1b[32mCOMPLETE!\x1b[0m\033[K")
 
 
+def update_team_stats(db):
+
+    teams = Team.query.all()
+
+    for i in range(len(teams)):
+        team = teams[i]
+
+        print(team)
+
+        passLeader, rushLeader, recLeader = stats.get_stats_leaders(team.players)
+        team_stats = stats.TeamStats.query.filter_by(
+            team_id=team.ID).filter_by(preseason=True).first()
+
+        if not team_stats:
+            continue
+
+        team_stats.passingLeader_id = passLeader
+        team_stats.rushingLeader_id = rushLeader
+        team_stats.receivingLeader_id = recLeader
+
+
 def update_fantasy_points(db):
 
     print("Calculating Fantasy Points...\r", end="")
@@ -727,9 +765,9 @@ def build_db(db):
     get_schedule(db)
     update_schedule(db)
 
-    update_week_stats(db)
+    update_player_week_stats(db)
     update_fantasy_points(db)
-    update_season_stats(db)
+    update_player_season_stats(db)
 
     db.session.commit()
 
@@ -742,8 +780,8 @@ def update_db(db):
 
     update_schedule(db)
 
-    update_week_stats(db)
+    update_player_week_stats(db)
     update_fantasy_points(db)
-    update_season_stats(db)
+    update_player_season_stats(db)
 
     db.session.commit()
