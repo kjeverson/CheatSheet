@@ -13,6 +13,8 @@ class SeasonStats(db.Model):
     passComps = db.Column(db.Integer)
     passAtts = db.Column(db.Integer)
     passYDs = db.Column(db.Integer)
+    passYDsPerGame = db.Column(db.Integer)
+    passAVG = db.Column(db.Integer)
     passTDs = db.Column(db.Integer)
     passINTs = db.Column(db.Integer)
     passSacks = db.Column(db.Integer)
@@ -22,12 +24,16 @@ class SeasonStats(db.Model):
     # Rushing
     rushAtts = db.Column(db.Integer)
     rushYDs = db.Column(db.Integer)
+    rushYDsPerGame = db.Column(db.Integer)
+    rushAVG = db.Column(db.Integer)
     rushTDs = db.Column(db.Integer)
     rushLng = db.Column(db.Integer)
 
     # Receiving
     recs = db.Column(db.Integer)
     recYDs = db.Column(db.Integer)
+    recYDsPerGame = db.Column(db.Integer)
+    recAVG = db.Column(db.Integer)
     recTDs = db.Column(db.Integer)
     recLng = db.Column(db.Integer)
     recTGTS = db.Column(db.Integer)
@@ -61,6 +67,7 @@ class WeeklyStats(db.Model):
     passComps = db.Column(db.Integer)
     passAtts = db.Column(db.Integer)
     passYDs = db.Column(db.Integer)
+    passAVG = db.Column(db.Integer)
     passTDs = db.Column(db.Integer)
     passINTs = db.Column(db.Integer)
     passSacks = db.Column(db.Integer)
@@ -71,6 +78,7 @@ class WeeklyStats(db.Model):
     rusher = db.Column(db.Boolean)
     rushAtts = db.Column(db.Integer)
     rushYDs = db.Column(db.Integer)
+    rushAVG = db.Column(db.Integer)
     rushTDs = db.Column(db.Integer)
     rushLng = db.Column(db.Integer)
 
@@ -78,6 +86,7 @@ class WeeklyStats(db.Model):
     receiver = db.Column(db.Boolean)
     recs = db.Column(db.Integer)
     recYDs = db.Column(db.Integer)
+    recAVG = db.Column(db.Integer)
     recTDs = db.Column(db.Integer)
     recLng = db.Column(db.Integer)
     recTGTS = db.Column(db.Integer)
@@ -116,12 +125,15 @@ class TeamStats(db.Model):
     preseason = db.Column(db.Boolean)
 
     PPG = db.Column(db.Integer)
-    totalPoints = db.Column(db.Integer)
+    pointsFor = db.Column(db.Integer)
+    pointsAgainst = db.Column(db.Integer)
     totalYards = db.Column(db.Integer)
 
     passComps = db.Column(db.Integer)
     passAtts = db.Column(db.Integer)
     passYDs = db.Column(db.Integer)
+    passAVG = db.Column(db.Integer)
+    passYDsPerGame = db.Column(db.Integer)
     passTDs = db.Column(db.Integer)
     passINTs = db.Column(db.Integer)
     passSacks = db.Column(db.Integer)
@@ -129,6 +141,8 @@ class TeamStats(db.Model):
 
     rushAtts = db.Column(db.Integer)
     rushYDs = db.Column(db.Integer)
+    rushAVG = db.Column(db.Integer)
+    rushYDsPerGame = db.Column(db.Integer)
     rushTDs = db.Column(db.Integer)
 
     passingLeader_id = db.Column(db.Integer, db.ForeignKey('player.ID'))
@@ -199,14 +213,11 @@ def get_stats_leaders(players, week=None):
 
     if passYDs == 0:
         passYDs_leader = None
-        passYDs = "-"
 
     if rushYDs == 0:
         rushYDs_leader = None
-        rushYDs = "-"
 
     if recYDs == 0:
         recYDs_leader = None
-        recYDs = "-"
 
     return passYDs_leader.ID, rushYDs_leader.ID, recYDs_leader.ID
