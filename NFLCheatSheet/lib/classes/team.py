@@ -1,5 +1,5 @@
 from app import db
-
+from NFLCheatSheet.lib.classes import stats
 
 class Team(db.Model):
 
@@ -30,14 +30,17 @@ class Team(db.Model):
     stadium_city = db.Column(db.String(30))
     stadium_state = db.Column(db.String(2))
 
+    games_played = db.Column(db.Integer)
     wins = db.Column(db.Integer)
     loses = db.Column(db.Integer)
     ties = db.Column(db.Integer)
     winPCT = db.Column(db.Integer)
 
+    preseason_games_played = db.Column(db.Integer)
     preseason_wins = db.Column(db.Integer)
     preseason_loses = db.Column(db.Integer)
     preseason_ties = db.Column(db.Integer)
+    preseasonWinPCT = db.Column(db.Integer)
 
     players = db.relationship('Player', backref='current_team', foreign_keys="Player.team_id", lazy=True)
     prev_players = db.relationship('Player', backref='previous_team', foreign_keys="Player.prev_team_id", lazy=True)
@@ -51,3 +54,13 @@ class Team(db.Model):
     def __repr__(self):
 
         return "Team({})".format(self.fullname)
+
+    def get_team_stats(self, preseason):
+
+        return stats.TeamStats.query.filter_by(
+            team_id=self.ID).filter_by(preseason=preseason).first()
+
+    def get_week_stats_by_team(self, preseason):
+
+        return stats.WeeklyStats.query.filter_by(
+            team_id=self.ID).filter_by(preseason=preseason).all()

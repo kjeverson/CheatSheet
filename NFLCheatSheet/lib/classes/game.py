@@ -1,6 +1,7 @@
 from app import db
 from NFLCheatSheet.lib.scrape import boxscore
 import zulu
+from NFLCheatSheet.lib.scrape.boxscore import get_game_stats, get_scores
 
 
 class Game(db.Model):
