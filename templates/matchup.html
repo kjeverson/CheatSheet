@@ -13,7 +13,11 @@
                 <div class="col-8 align-self-center">
                     <div class="row"><small class="text-end">{{ matchup.home_team.location}}</small></div>
                     <div class="row"><h2 class="text-end text-uppercase">{{ matchup.home_team.name }}</h2></div>
-                    <div class="row"><small class="text-end font-weight-light">0-0</small></div>
+                    {% if matchup.preseason %}
+                    <div class="row"><small class="text-end font-weight-light">{{ matchup.home_team.preseason_wins }}-{{ matchup.home_team.preseason_loses }}</small></div>
+                    {% else %}
+                    <div class="row"><small class="text-end font-weight-light">{{ matchup.home_team.wins }}-{{ matchup.home_team.loses }}</small></div>
+                    {% endif %}
                 </div>
                 <div class="col-4 text-center">
                     <button id="{{ matchup.home_team.key }}" class="btn btn-dark btn-small" name="team" value="{{ matchup.home_team.key }}">
@@ -39,7 +43,11 @@
                 <div class="col-8 align-self-center">
                     <div class="row"><small class="text-start">{{ matchup.away_team.location}}</small></div>
                     <div class="row"><h2 class="text-start text-uppercase">{{ matchup.away_team.name }}</h2></div>
-                    <div class="row"><small class="text-start font-weight-light">0-0</small></div>
+                    {% if matchup.preseason %}
+                    <div class="row"><small class="text-start font-weight-light">{{ matchup.away_team.preseason_wins }}-{{ matchup.away_team.preseason_loses }}</small></div>
+                    {% else %}
+                    <div class="row"><small class="text-start font-weight-light">{{ matchup.away_team.wins }}-{{ matchup.away_team.loses }}</small></div>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -53,7 +61,7 @@
                 <!-- Home Team Stat Leaders -->
                 <div class="row mt-2">
                     <div class="card bg-dark">
-                        <div class="card-title text-center">Stat Leaders</div>
+                        <div class="card-title text-center">Home Stat Leaders</div>
                         <div class="card-body">
                             <!-- Passing Leader -->
                             <div class="row mt-2">
@@ -102,6 +110,62 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                <!-- Home Team Stats per Game -->
+                <div class="row mt-2">
+                    <div class="card bg-dark">
+                        <div class="card-title text-center">Team Stats/Game</div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-6 text-center">
+                                    <button class="btn text-dark bgcolor{{ home_team_stats.passYDsPerGameRank }} w-100 position-relative">
+                                        <div class="row mt-3">
+                                            <h2>{{ '%0.1f' |format(home_team_stats.passYDsPerGame) }}</h2>
+                                        </div>
+                                        <div class="row">
+                                            <small>#{{ home_team_stats.passYDsPerGameRank }}</small>
+                                        </div>
+                                        <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Passing Yards</span>
+                                    </button>
+                                </div>
+                                <div class="col-6 text-center">
+                                    <button class="btn text-dark bgcolor{{ home_team_stats.rushYDsPerGameRank }} w-100 position-relative">
+                                        <div class="row mt-3">
+                                            <h2>{{ '%0.1f' |format(home_team_stats.rushYDsPerGame) }}</h2>
+                                        </div>
+                                        <div class="row">
+                                            <small>#{{ home_team_stats.rushYDsPerGameRank }}</small>
+                                        </div>
+                                        <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Rushing Yards</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col text-center">
+                                  <button class="btn text-dark bgcolor{{ home_team_stats.PPGRank }} w-100 position-relative">
+                                    <div class="row mt-3">
+                                      <h2>{{ home_team_stats.PPG }}</h2>
+                                    </div>
+                                    <div class="row">
+                                      <small>#{{ home_team_stats.PPGRank }}</small>
+                                    </div>
+                                    <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Points For</span>
+                                  </button>
+                                </div>
+                                <div class="col text-center">
+                                  <button class="btn text-dark bgcolor{{ home_team_stats.PAPGRank }} w-100 position-relative">
+                                    <div class="row mt-3">
+                                      <h2>{{ home_team_stats.PAPG }}</h2>
+                                    </div>
+                                    <div class="row">
+                                      <small>#{{ home_team_stats.PAPGRank }}</small>
+                                    </div>
+                                    <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Points Against</span>
+                                  </button>
+                                </div>
+                            </div>
+                        </div>
+                      </div>
                 </div>
             </div>
             <!-- Main Content -->
@@ -211,6 +275,62 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                <!-- Away Team Stats per Game -->
+                <div class="row mt-2">
+                    <div class="card bg-dark">
+                        <div class="card-title text-center">Team Stats/Game</div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-6 text-center">
+                                    <button class="btn text-dark bgcolor{{ away_team_stats.passYDsPerGameRank }} w-100 position-relative">
+                                        <div class="row mt-3">
+                                            <h2>{{ '%0.1f' |format(away_team_stats.passYDsPerGame) }}</h2>
+                                        </div>
+                                        <div class="row">
+                                            <small>#{{ away_team_stats.passYDsPerGameRank }}</small>
+                                        </div>
+                                        <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Passing Yards</span>
+                                    </button>
+                                </div>
+                                <div class="col-6 text-center">
+                                    <button class="btn text-dark bgcolor{{ away_team_stats.rushYDsPerGameRank }} w-100 position-relative">
+                                        <div class="row mt-3">
+                                            <h2>{{ '%0.1f' |format(away_team_stats.rushYDsPerGame) }}</h2>
+                                        </div>
+                                        <div class="row">
+                                            <small>#{{ away_team_stats.rushYDsPerGameRank }}</small>
+                                        </div>
+                                        <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Rushing Yards</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col text-center">
+                                  <button class="btn text-dark bgcolor{{ away_team_stats.PPGRank }} w-100 position-relative">
+                                    <div class="row mt-3">
+                                      <h2>{{ away_team_stats.PPG }}</h2>
+                                    </div>
+                                    <div class="row">
+                                      <small>#{{ away_team_stats.PPGRank }}</small>
+                                    </div>
+                                    <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Points For</span>
+                                  </button>
+                                </div>
+                                <div class="col text-center">
+                                  <button class="btn text-dark bgcolor{{ away_team_stats.PAPGRank }} w-100 position-relative">
+                                    <div class="row mt-3">
+                                      <h2>{{ away_team_stats.PAPG }}</h2>
+                                    </div>
+                                    <div class="row">
+                                      <small>#{{ away_team_stats.PAPGRank }}</small>
+                                    </div>
+                                    <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Points Against</span>
+                                  </button>
+                                </div>
+                            </div>
+                        </div>
+                      </div>
                 </div>
             </div>
         </div>

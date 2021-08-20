@@ -174,13 +174,13 @@ def get_all_player_data(position: str = "ALL") -> List[Dict]:
     print("Getting Player Data...\r", end="")
 
     # API CAll for all Player data
-    #response = requests.get("https://api.sportsdata.io/v3/nfl/scores/json/Players?"
-    #                        "key=2810c12201be4499bff03931c186f9f5")
-    #player_data = response.json()
+    response = requests.get("https://api.sportsdata.io/v3/nfl/scores/json/Players?"
+                            "key=2810c12201be4499bff03931c186f9f5")
+    player_data = response.json()
 
     player_file_path = Path("/Users/everson/NFLCheatSheet/data/players.json")
-    #with player_file_path.open("w") as player_file:
-    #    json.dump(player_data, player_file)
+    with player_file_path.open("w") as player_file:
+        json.dump(player_data, player_file)
 
     with player_file_path.open("r") as player_file:
         player_data = json.load(player_file)
@@ -243,7 +243,6 @@ def add_players(database, players: List[Dict]) -> None:
                 position_group=player['PositionCategory'],
                 team=player['Team'],
                 team_id=player['TeamID'] if player['TeamID'] else 100,
-                prev_team_id=None,
                 bye=player['ByeWeek'],
                 college=player['College'],
                 status="Active",
@@ -313,10 +312,6 @@ def add_players(database, players: List[Dict]) -> None:
             player_obj.position = player['Position']
             player_obj.position_group = player['PositionCategory']
             player_obj.team = player['Team']
-            if player['TeamID']:
-                player_obj.prev_team_id = player_obj.prev_team_id if player_obj.prev_team_id else None
-            else:
-                player_obj.prev_team_id = player_obj.prev_team_id if player_obj.prev_team_id else player_obj.team_id
             player_obj.team_id = player['TeamID'] if player['TeamID'] else 100
             player_obj.bye = player['ByeWeek']
             player_obj.college = player['College']

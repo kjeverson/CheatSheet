@@ -58,7 +58,7 @@ class WeeklyStats(db.Model):
     team_id = db.Column(db.Integer, db.ForeignKey('team.ID'), nullable=False)
     team = db.relationship('Team', back_populates='weekly_stats')
 
-    week = db.column(db.Integer)
+    week = db.Column(db.Integer)
     preseason = db.Column(db.Boolean)
     counted = db.Column(db.Boolean)
 

@@ -27,7 +27,6 @@ class Player(db.Model):
 
     team = db.Column(db.String(5))
     team_id = db.Column(db.Integer, db.ForeignKey('team.ID'))
-    prev_team_id = db.Column(db.Integer, db.ForeignKey('team.ID'))
     bye = db.Column(db.Integer)
     college = db.Column(db.String(20))
 
@@ -55,6 +54,9 @@ class Player(db.Model):
 
         return stats.WeeklyStats.query.filter_by(
             player_id=self.ID).filter_by(game_id=game.ID).first()
+
+    def get_weekly_stats_by_week(self, preseason=False, week=None):
+        return stats.WeeklyStats.query.filter_by(player_id=self.ID).filter_by(preseason=preseason).filter_by(week=str(week)).first()
 
     def get_weekly_stats_list(self, preseason):
 

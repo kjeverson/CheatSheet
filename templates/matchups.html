@@ -57,6 +57,63 @@
     </div>
     <!-- Content -->
     <div class="row">
+        <div class="col-3">
+            {% if passLeader and rushLeader and recLeader %}
+            <!-- Week Stat Leaders -->
+            <div class="row mt-2">
+                    <div class="card bg-dark">
+                        <div class="card-title text-center">Week Stat Leaders</div>
+                        <div class="card-body">
+                            <!-- Passing Leader -->
+                            <div class="row mt-2">
+                                <button data-id="{{ passLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
+                                    <div class="row">
+                                        <div class="col-6 position-relative">
+                                            <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + passLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="row mt-2 text-end"><small>{{ passLeader.fname[0] }}. {{ passLeader.lname }}</small></div>
+                                            <div class="row mt-1 text-end"><small class="text-muted">{{ passLeaderStats.passComps }}-{{ passLeaderStats.passAtts }}, {{ passLeaderStats.passYDs }} YDs, {{ passLeaderStats.passTDs }} TDs</small></div>
+                                        </div>
+                                    </div>
+                                    <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Passing Yards</span>
+                                </button>
+                            </div>
+                            <!-- Rushing Leader -->
+                            <div class="row mt-2">
+                                <button data-id="{{ rushLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + rushLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="row mt-2 text-end"><small>{{ rushLeader.fname[0] }}. {{ rushLeader.lname }}</small></div>
+                                            <div class="row mt-1 text-end"><small class="text-muted">{{ rushLeaderStats.rushAtts }} CAR, {{ rushLeaderStats.rushYDs }} YDs, {{ rushLeaderStats.rushTDs }} TDs</small></div>
+                                        </div>
+                                    </div>
+                                    <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Rushing Yards</span>
+                                </button>
+                            </div>
+                            <!-- Receiving Leader -->
+                            <div class="row mt-2">
+                                <button data-id="{{ recLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + recLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="row mt-2 text-end"><small>{{ recLeader.fname[0] }}. {{ recLeader.lname }}</small></div>
+                                            <div class="row mt-1 text-end"><small class="text-muted">{{ recLeaderStats.recs }} REC, {{ recLeaderStats.recYDs }} YDs, {{ recLeaderStats.recTDs }} TDs</small></div>
+                                        </div>
+                                    </div>
+                                    <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Receiving Yards</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
       <!-- Right Side -->
       <div class="col-9">
         <!-- Week Matchups -->
