@@ -26,13 +26,16 @@
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="{{ url_for('matchups') }}" >Matchups</a>
         </li>
+        <!-- Teams Dropdown -->
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Teams
           </a>
           <div class="shadow dropdown-menu dropdown-menu-dark p-4 mw-50" style="width: 1000px" aria-labelledby="navbarDarkDropdownMenuLink">
             <form action="{{ url_for('team') }}" method="GET">
+            <!-- AFC Teams -->
             <div class="row m-2">
+              <!-- AFC North -->
               <div class="col-3">
                 <div class="row">AFC North</div>
                 {% for team in teams %}
@@ -46,6 +49,7 @@
                 {% endif %}
                 {% endfor %}
               </div>
+              <!-- AFC East -->
               <div class="col-3">
                 <div class="row">AFC East</div>
                 {% for team in teams %}
@@ -59,6 +63,7 @@
                 {% endif %}
                 {% endfor %}
               </div>
+              <!-- AFC South -->
               <div class="col-3">
                 <div class="row">AFC South</div>
                 {% for team in teams %}
@@ -72,6 +77,7 @@
                 {% endif %}
                 {% endfor %}
               </div>
+              <!-- AFC West -->
               <div class="col-3">
                 <div class="row">AFC West</div>
                 {% for team in teams %}
@@ -86,7 +92,9 @@
                 {% endfor %}
               </div>
             </div>
+            <!-- NFC Teams -->
             <div class="row m-2">
+              <!-- NFC North -->
               <div class="col-3">
                 <div class="row mt-3">NFC North</div>
                 {% for team in teams %}
@@ -100,6 +108,7 @@
                 {% endif %}
                 {% endfor %}
               </div>
+              <!-- NFC East -->
               <div class="col-3">
                 <div class="row mt-3">NFC East</div>
                 {% for team in teams %}
@@ -113,6 +122,7 @@
                 {% endif %}
                 {% endfor %}
               </div>
+              <!-- NFC South -->
               <div class="col-3">
                 <div class="row mt-3">NFC South</div>
                 {% for team in teams %}
@@ -126,6 +136,7 @@
                 {% endif %}
                 {% endfor %}
               </div>
+              <!-- NFC West -->
               <div class="col-3">
                 <div class="row mt-3">NFC West</div>
                 {% for team in teams %}
@@ -143,13 +154,14 @@
             </form>
           </div>
         </li>
+        <!-- Settings Dropdown -->
         <li class="nav-item dropdown dropdown-dark">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Settings
           </a>
           <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
             <li><a class="dropdown-item" href="#">Account</a></li>
-            <li><a class="dropdown-item" href="#">Database</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('database') }}">Database</a></li>
             <li><a class="dropdown-item" href="{{ url_for('scoring') }}">Scoring</a></li>
           </ul>
         </li>

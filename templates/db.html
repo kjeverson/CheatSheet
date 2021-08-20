@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% block title %}
+    Database Management
+{% endblock %}
+{% block content %}
+<div class="container mt-4 pt-4">
+    <div class="container text-white">
+        <h2 align="center">Database Management</h2>
+    </div>
+    <div class="container mt-2 text-white">
+        <div class="row justify-content-center">
+            <!-- Content -->
+            <div class="col-9">
+                <form>
+                    <!-- Update Utils -->
+                    <div class="row mt-2">
+                        <div class="row"><h4>Update Database</h4></div>
+                        <div class="card bg-dark border-light">
+                            <div class="card-body">
+                                  <ul class="list-group list-group-flush">
+                                    <!-- Update Rosters -->
+                                    <li class="list-group-item bg-dark text-white">
+                                        <div class="row">
+                                            <div class="col-9">
+                                            <div class="row text-start fw-bold">Update Rosters</div>
+                                            <div class="row text-start">Updates team rosters.</div>
+                                        </div>
+                                        <div class="col-3 text-end align-self-center">
+                                            <button class="btn btn-small btn-secondary">
+                                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                Update Rosters
+                                            </button>
+                                        </div>
+                                        </div>
+                                    </li>
+                                    <!-- Update Status -->
+                                    <li class="list-group-item bg-dark text-white">
+                                        <div class="row">
+                                            <div class="col-9">
+                                            <div class="row text-start fw-bold">Update Status</div>
+                                            <div class="row text-start">Updates player statuses.</div>
+                                        </div>
+                                        <div class="col-3 text-end align-self-center">
+                                            <button class="btn btn-small btn-secondary">
+                                                Update Status
+                                            </button>
+                                        </div>
+                                        </div>
+                                    </li>
+                                    <!-- Update Stats -->
+                                    <li class="list-group-item bg-dark text-white">
+                                        <div class="row">
+                                            <div class="col-9">
+                                            <div class="row text-start fw-bold">Update Stats</div>
+                                            <div class="row text-start">Updates player stats/statuses, games, and team stats/rankings.</div>
+                                        </div>
+                                        <div class="col-3 text-end align-self-center">
+                                            <button class="btn btn-small btn-secondary">
+                                                Update Stats
+                                            </button>
+                                        </div>
+                                        </div>
+                                    </li>
+                                    <!-- Update Entire Database -->
+                                    <li class="list-group-item bg-dark text-white">
+                                        <div class="row">
+                                            <div class="col-9">
+                                            <div class="row text-start fw-bold">Update Entire Database</div>
+                                            <div class="row text-start">Updates the database in its entirety. This includes rosters, player stats/statuses, games, fantasy points, and team stats/rankings.</div>
+                                        </div>
+                                        <div class="col-3 text-end align-self-center">
+                                            <button class="btn btn-small btn-secondary">
+                                                Update Database
+                                            </button>
+                                        </div>
+                                        </div>
+                                    </li>
+                                  </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Danger Zone -->
+                    <div class="row mt-2">
+                        <div class="row"><h4>Danger Zone</h4></div>
+                        <div class="card bg-dark border-danger">
+                            <div class="card-body">
+                                  <ul class="list-group list-group-flush">
+                                    <!-- Rebuild Database -->
+                                    <li class="list-group-item bg-dark text-white">
+                                        <div class="row">
+                                            <div class="col-9">
+                                            <div class="row text-start fw-bold">Rebuild Database</div>
+                                            <div class="row text-start">Rebuilds the database in its entirety.</div>
+                                        </div>
+                                        <div class="col-3 text-end align-self-center">
+                                            <button class="btn btn-small btn-danger">
+                                                Rebuild Database
+                                            </button>
+                                        </div>
+                                        </div>
+                                    </li>
+                                    <!-- Delete Database -->
+                                    <li class="list-group-item bg-dark text-white">
+                                        <div class="row">
+                                            <div class="col-9">
+                                            <div class="row text-start fw-bold">Delete Database</div>
+                                            <div class="row text-start">Deletes the database in its entirety. This cannot be reverted or undone.</div>
+                                        </div>
+                                        <div class="col-3 text-end align-self-center">
+                                            <button class="btn btn-small btn-danger">
+                                                Delete Database
+                                            </button>
+                                        </div>
+                                        </div>
+                                    </li>
+                                  </ul>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

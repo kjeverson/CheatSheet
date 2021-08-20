@@ -29,7 +29,11 @@ def get_all_team_data() -> List[Dict]:
     # 'https://fly.sportsdata.io/v3/nfl/scores/json/Teams?key=2810c12201be4499bff03931c186f9f5')
     #team_data = response.json()
 
-    with open("/Users/everson/flask/data/teams.json", "r") as teams_file:
+    team_file_path = Path("/Users/everson/NFLCheatSheet/data/teams.json")
+    #with team_file_path.open("w") as teams_file:
+    #    json.dump(team_data, teams_file)
+
+    with team_file_path.open("r") as teams_file:
         teams_data = json.load(teams_file)
 
     print("Getting Team Data...\x1b[32mCOMPLETE!\x1b[0m")
@@ -174,13 +178,13 @@ def get_all_player_data(position: str = "ALL") -> List[Dict]:
     print("Getting Player Data...\r", end="")
 
     # API CAll for all Player data
-    response = requests.get("https://api.sportsdata.io/v3/nfl/scores/json/Players?"
-                            "key=2810c12201be4499bff03931c186f9f5")
-    player_data = response.json()
+    # response = requests.get("https://api.sportsdata.io/v3/nfl/scores/json/Players?"
+    #                        "key=2810c12201be4499bff03931c186f9f5")
+    # player_data = response.json()
 
     player_file_path = Path("/Users/everson/NFLCheatSheet/data/players.json")
-    with player_file_path.open("w") as player_file:
-        json.dump(player_data, player_file)
+    # with player_file_path.open("w") as player_file:
+    #    json.dump(player_data, player_file)
 
     with player_file_path.open("r") as player_file:
         player_data = json.load(player_file)
