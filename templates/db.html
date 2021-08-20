@@ -26,8 +26,7 @@
                                             <div class="row text-start">Updates team rosters.</div>
                                         </div>
                                         <div class="col-3 text-end align-self-center">
-                                            <button class="btn btn-small btn-secondary">
-                                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                            <button id="updateRosters" class="btn btn-small btn-secondary">
                                                 Update Rosters
                                             </button>
                                         </div>
@@ -41,7 +40,7 @@
                                             <div class="row text-start">Updates player statuses.</div>
                                         </div>
                                         <div class="col-3 text-end align-self-center">
-                                            <button class="btn btn-small btn-secondary">
+                                            <button id="updateStatus" class="btn btn-small btn-secondary">
                                                 Update Status
                                             </button>
                                         </div>
@@ -55,7 +54,7 @@
                                             <div class="row text-start">Updates player stats/statuses, games, and team stats/rankings.</div>
                                         </div>
                                         <div class="col-3 text-end align-self-center">
-                                            <button class="btn btn-small btn-secondary">
+                                            <button id="updateStats" class="btn btn-small btn-secondary">
                                                 Update Stats
                                             </button>
                                         </div>
@@ -69,7 +68,7 @@
                                             <div class="row text-start">Updates the database in its entirety. This includes rosters, player stats/statuses, games, fantasy points, and team stats/rankings.</div>
                                         </div>
                                         <div class="col-3 text-end align-self-center">
-                                            <button class="btn btn-small btn-secondary">
+                                            <button id="updateDatabase" class="btn btn-small btn-secondary">
                                                 Update Database
                                             </button>
                                         </div>
@@ -93,7 +92,7 @@
                                             <div class="row text-start">Rebuilds the database in its entirety.</div>
                                         </div>
                                         <div class="col-3 text-end align-self-center">
-                                            <button class="btn btn-small btn-danger">
+                                            <button id="rebuildDatabase" class="btn btn-small btn-danger">
                                                 Rebuild Database
                                             </button>
                                         </div>
@@ -107,7 +106,7 @@
                                             <div class="row text-start">Deletes the database in its entirety. This cannot be reverted or undone.</div>
                                         </div>
                                         <div class="col-3 text-end align-self-center">
-                                            <button class="btn btn-small btn-danger">
+                                            <button id="deleteDatabase" class="btn btn-small btn-danger">
                                                 Delete Database
                                             </button>
                                         </div>
@@ -122,4 +121,74 @@
         </div>
     </div>
 </div>
+<script type=text/javascript>
+        $(function() {
+          $('#updateRosters').on('click', function(e) {
+            e.preventDefault()
+            $.getJSON('/updateRosters',
+                function(data) {
+              //do nothing
+            });
+            return false;
+          });
+        });
+
+        $(function() {
+          $('#updateStatus').on('click', function(e) {
+            e.preventDefault()
+            $.getJSON('/updateStatus',
+                function(data) {
+              //do nothing
+            });
+            return false;
+          });
+        });
+
+        $(function() {
+          $('#updateStats').on('click', function(e) {
+            e.preventDefault()
+            $.getJSON('/updateStats',
+                function(data) {
+              //do nothing
+            });
+            return false;
+          });
+        });
+
+        $(function() {
+          $('#updateDatabase').on('click', function(e) {
+            e.preventDefault()
+            $.getJSON('/updateDatabase',
+                function(data) {
+              //do nothing
+            });
+            return false;
+          });
+        });
+
+        $(function() {
+          $('#rebuildDatabase').on('click', function(e) {
+            e.preventDefault()
+            $.getJSON('/rebuildDatabase',
+                function(data) {
+              //do nothing
+            });
+            return false;
+          });
+        });
+
+        $(function() {
+          $('#deleteDatabase').on('click', function(e) {
+            e.preventDefault()
+            $.getJSON('/deleteDatabase',
+                function(data) {
+              //do nothing
+            });
+            return false;
+          });
+        });
+
+</script>
+<!--<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>-->
+
 {% endblock %}

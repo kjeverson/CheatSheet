@@ -355,3 +355,39 @@ def database():
     teams = Team.query.all()
 
     return render_template("db.html", teams=teams)
+
+
+@app.route('/updateRosters')
+def update_rosters():
+    print("Updating Rosters")
+    return "Success"
+
+
+@app.route('/updateStats')
+def update_stats():
+    print("Updating Stats")
+    return "Success"
+
+
+@app.route('/updateStatus')
+def update_status():
+    print("Updating Status")
+    return "Success"
+
+
+@app.route('/updateDatabase')
+def updateRosters():
+    print("Updating Database")
+    return "Success"
+
+
+@app.route('/rebuildDatabase')
+def rebuild_database():
+    print("Rebuilding Database")
+    return "Success"
+
+
+@app.route('/deleteDatabase')
+def delete_database():
+    print("Deleting Database")
+    return "Success"
