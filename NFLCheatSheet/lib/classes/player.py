@@ -1,6 +1,6 @@
 from app import db
 from NFLCheatSheet.lib.scrape.status import player_status_from_id
-from NFLCheatSheet.lib.scrape.stats import get_recent_stats, get_career_stats
+from NFLCheatSheet.lib.classes import stats
 
 import json
 
@@ -27,7 +27,6 @@ class Player(db.Model):
 
     team = db.Column(db.String(5))
     team_id = db.Column(db.Integer, db.ForeignKey('team.ID'))
-    prev_team_id = db.Column(db.Integer, db.ForeignKey('team.ID'))
     bye = db.Column(db.Integer)
     college = db.Column(db.String(20))
 
@@ -46,6 +45,24 @@ class Player(db.Model):
     def as_dict(self):
         return {col.name: getattr(self, col.name) for col in self.__table__.columns}
 
+    def get_season_stats(self, preseason):
+
+        return stats.SeasonStats.query.filter_by(
+            player_id=self.ID).filter_by(preseason=preseason).first()
+
+    def get_weekly_stats(self, game):
+
+        return stats.WeeklyStats.query.filter_by(
+            player_id=self.ID).filter_by(game_id=game.ID).first()
+
+    def get_weekly_stats_by_week(self, preseason=False, week=None):
+        return stats.WeeklyStats.query.filter_by(player_id=self.ID).filter_by(preseason=preseason).filter_by(week=str(week)).first()
+
+    def get_weekly_stats_list(self, preseason):
+
+        return stats.WeeklyStats.query.filter_by(
+            player_id=self.ID).filter_by(preseason=preseason).all()
+
     def update_status(self):
 
         status = player_status_from_id(self.rotowireID)
@@ -58,18 +75,6 @@ class Player(db.Model):
             self.status = 'Active'
 
         return
-
-    def update_stats(self, stat_type: str = "Recent"):
-
-        if stat_type == "Recent":
-            stats = get_recent_stats(self.fname, self.lname, self.position)
-        else:
-            stats = get_career_stats(self.fname, self.lname, self.position)
-
-        if stats:
-
-            stats_string = json.dumps(stats)
-            self.recent_stats = stats_string
 
     def get_weekly_points(self, scoring, week: int):
 

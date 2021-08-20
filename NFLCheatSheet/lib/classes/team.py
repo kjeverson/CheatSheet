@@ -1,4 +1,6 @@
 from app import db
+from NFLCheatSheet.lib.classes import stats
+from NFLCheatSheet.lib.classes.game import Game
 
 
 class Team(db.Model):
@@ -30,16 +32,19 @@ class Team(db.Model):
     stadium_city = db.Column(db.String(30))
     stadium_state = db.Column(db.String(2))
 
+    games_played = db.Column(db.Integer)
     wins = db.Column(db.Integer)
     loses = db.Column(db.Integer)
     ties = db.Column(db.Integer)
+    winPCT = db.Column(db.Integer)
 
+    preseason_games_played = db.Column(db.Integer)
     preseason_wins = db.Column(db.Integer)
     preseason_loses = db.Column(db.Integer)
     preseason_ties = db.Column(db.Integer)
+    preseasonWinPCT = db.Column(db.Integer)
 
     players = db.relationship('Player', backref='current_team', foreign_keys="Player.team_id", lazy=True)
-    prev_players = db.relationship('Player', backref='previous_team', foreign_keys="Player.prev_team_id", lazy=True)
 
     away_games = db.relationship('Game', foreign_keys="Game.away_team_id")
     home_games = db.relationship('Game', foreign_keys="Game.home_team_id")
@@ -50,3 +55,30 @@ class Team(db.Model):
     def __repr__(self):
 
         return "Team({})".format(self.fullname)
+
+    def get_team_stats(self, preseason):
+
+        return stats.TeamStats.query.filter_by(
+            team_id=self.ID).filter_by(preseason=preseason).first()
+
+    def get_week_stats(self, preseason):
+
+        return stats.WeeklyStats.query.filter_by(
+            team_id=self.ID).filter_by(preseason=preseason).all()
+
+    def get_games(self, preseason=False, completed=True, home=False, away=False):
+
+        games = []
+        if home:
+            games.extend(self.home_games)
+
+        if away:
+            games.extend(self.away_games)
+
+        if preseason:
+            games = [game for game in games if game.preseason]
+
+        if completed:
+            games = [game for game in games if game.completed]
+
+        return games

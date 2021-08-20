@@ -256,133 +256,52 @@
             </div>
           </div>
         </div>
+        <!-- Team Stat Per Game -->
         <div class="row mt-2">
           <div class="card bg-dark">
-            <div class="card-title text-center">Player Stats</div>
+            <div class="card-title text-center">Team Stats Per Game</div>
             <div class="card-body">
               <div class="row">
-                <table class="table table-sm player-table table-dark">
-                  <thead>
-                    <th>Name</th>
-                    <th>GP</th>
-                    <th>CMP</th>
-                    <th>ATT</th>
-                    <th>CMP%</th>
-                    <th>YDS</th>
-                    <th>AVG</th>
-                    <th>YDS/G</th>
-                    <th>TD</th>
-                    <th>INT</th>
-                    <th>SACK</th>
-                    <th>SYL</th>
-                    <th>RTG</th>
-                  </thead>
-                  <tbody>
-                  {% for stat in stats %}
-                  {% if stat.passAtts > 0 %}
-                  <tr data-id="{{ stat.player.ID }}">
-                    <td>{{ stat.player.fname[0] }}. {{ stat.player.lname }} <span class="text-muted">{{ stat.player.position }}</span></td>
-                    <td>{{ stat.player.weekly_stats|length }}</td>
-                    <td>{{ stat.passComps }}</td>
-                    <td>{{ stat.passAtts }}</td>
-                    <td>{{ '%0.1f'|format(stat.passComps/stat.passAtts*100) }}</td>
-                    <td>{{ stat.passYDs }}</td>
-                    <td>{{ '%0.1f'|format(stat.passYDs/stat.passComps) }}</td>
-                    <td>{{ '%0.1f'|format(stat.passYDs/stat.player.weekly_stats|length) }}</td>
-                    <td>{{ stat.passTDs }}</td>
-                    <td>{{ stat.passINTs }}</td>
-                    <td>{{ stat.passSacks }}</td>
-                    <td>{{ stat.passSackYDs }}</td>
-                    <td>RTG</td>
-                  </tr>
-                  {% endif %}
-                  {% endfor %}
-                  </tbody>
-                </table>
-                <table class="table table-sm player-table table-dark">
-                  <thead>
-                    <th>Name</th>
-                    <th>GP</th>
-                    <th>ATT</th>
-                    <th>YDS</th>
-                    <th>AVG</th>
-                    <th>LNG</th>
-                    <th>TD</th>
-                    <th>YDS/G</th>
-                    <th>FUM</th>
-                    <th>LST</th>
-                  </thead>
-                  <tbody>
-                  {% for stat in stats %}
-                  {% if stat.rushAtts > 0 %}
-                  <tr data-id="{{ stat.player.ID }}">
-                    <td>{{ stat.player.fname[0] }}. {{ stat.player.lname }} <span class="text-muted">{{ stat.player.position }}</span></td>
-                    <td>{{ stat.player.weekly_stats|length }}</td>
-                    <td>{{ stat.rushAtts }}</td>
-                    <td>{{ stat.rushYDs }}</td>
-                    <td>{{ '%0.1f'|format(stat.rushYDs/stat.rushAtts) }}</td>
-                    <td>{{ stat.rushLng }}</td>
-                    <td>{{ stat.rushTDs }}</td>
-                    <td>{{ '%0.1f'|format(stat.rushYDs/stat.player.weekly_stats|length) }}</td>
-                    <td>{{ FUM }}</td>
-                    <td>{{ LST }}</td>
-                  </tr>
-                  {% endif %}
-                  {% endfor %}
-                  </tbody>
-                </table>
-              </div>
-              <div class="row"></div>
-              <div class="row"></div>
-            </div>
-          </div>
-        </div>
-        <!-- Team Stat Totals -->
-        <div class="row mt-2">
-          <div class="card bg-dark">
-            <div class="card-title text-center">Team Stats</div>
-            <div class="card-body">
-              <div class="row">
-                <div class="col-3 text-center">
-                  <button class="btn btn-block btn-secondary position-relative">
+                <div class="col text-center">
+                  <button class="btn text-dark bgcolor{{ team_stats.passYDsPerGameRank }} w-100 position-relative">
                     <div class="row mt-3">
-                      <h2>BLANK</h2>
+                      <h1>{{ '%0.1f' |format(team_stats.passYDsPerGame) }}</h1>
                     </div>
                     <div class="row">
-                      <small>23rd</small>
+                      <small>#{{ team_stats.passYDsPerGameRank }}</small>
                     </div>
                     <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Passing Yards</span>
                   </button>
                 </div>
-                <div class="col-3 text-center">
-                  <button class="btn btn-block btn-secondary position-relative">
+                <div class="col text-center">
+                  <button class="btn text-dark bgcolor{{ team_stats.rushYDsPerGameRank }} w-100 position-relative">
                     <div class="row mt-3">
-                      <h2>BLANK</h2>
+                      <h1>{{ '%0.1f' |format(team_stats.rushYDsPerGame) }}</h1>
                     </div>
                     <div class="row">
-                      <small>23rd</small>
+                      <small>#{{ team_stats.rushYDsPerGameRank }}</small>
                     </div>
                     <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Rushing Yards</span>
                   </button>
                 </div>
-                <div class="col-3 text-center">
-                  <button class="btn btn-block btn-secondary position-relative">
+                <div class="col text-center">
+                  <button class="btn text-dark bgcolor{{ team_stats.PPGRank }} w-100 position-relative">
                     <div class="row mt-3">
-                      <h2>BLANK</h2>
+                      <h1>{{ team_stats.PPG }}</h1>
                     </div>
                     <div class="row">
-                      <small>23rd</small>
+                      <small>#{{ team_stats.PPGRank }}</small>
                     </div>
                     <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Points For</span>
                   </button>
                 </div>
-                <div class="col-3 text-center">
-                  <button class="btn btn-block btn-secondary position-relative">
+                <div class="col text-center">
+                  <button class="btn text-dark bgcolor{{ team_stats.PAPGRank }} w-100 position-relative">
                     <div class="row mt-3">
-                      <h2>BLANK</h2>
+                      <h1>{{ team_stats.PAPG }}</h1>
                     </div>
                     <div class="row">
-                      <small>23rd</small>
+                      <small>#{{ team_stats.PAPGRank }}</small>
                     </div>
                     <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Points Against</span>
                   </button>

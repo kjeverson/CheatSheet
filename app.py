@@ -1,7 +1,5 @@
 from flask import Flask, render_template, request, jsonify, url_for
 from flask_sqlalchemy import SQLAlchemy
-from pathlib import Path
-import os
 import zulu
 import logging
 
@@ -47,16 +45,39 @@ def matchups():
             else:
                 week = int(week_string)
 
-        m = Game.query.filter_by(week=week)
-
-        if preseason:
-            m = [matchup for matchup in m if matchup.preseason]
-        else:
-            m = [matchup for matchup in m if not matchup.preseason]
+        m = Game.query.filter_by(week=week).filter_by(preseason=preseason).all()
 
         bye_teams = Team.query.filter_by(bye=week).all()
 
         m = sort(m)
+
+        players = []
+        for match in m:
+            if not match.completed:
+                continue
+            else:
+                players.extend([match.passingLeader_id, match.rushingLeader_id,
+                                match.receivingLeader_id])
+
+        if players:
+            players = [Player.query.get(player_id) for player_id in players]
+
+            passLeader_id, rushLeader_id, receivingLeader_id = get_stats_leaders(players, week)
+
+            passLeader = Player.query.get(passLeader_id)
+            rushLeader = Player.query.get(rushLeader_id)
+            recLeader = Player.query.get(receivingLeader_id)
+            passLeaderStats = passLeader.get_weekly_stats_by_week(preseason=preseason, week=week)
+            rushLeaderStats = rushLeader.get_weekly_stats_by_week(preseason=preseason, week=week)
+            recLeaderStats = recLeader.get_weekly_stats_by_week(preseason=preseason, week=week)
+
+        else:
+            passLeader = None
+            rushLeader = None
+            recLeader = None
+            passLeaderStats = None
+            rushLeaderStats = None
+            recLeaderStats = None
 
         # Render Times
         for match in m:
@@ -65,7 +86,8 @@ def matchups():
                 match.date = dt.format('%a %b %d, %Y %I:%M %p', 'local')
 
         return render_template("matchups.html", teams=teams, week=week, week_string=week_string,
-                               matchups=m, bye_teams=bye_teams)
+                               matchups=m, bye_teams=bye_teams, passLeader=passLeader, recLeader=recLeader,
+                               rushLeader=rushLeader, passLeaderStats=passLeaderStats, rushLeaderStats=rushLeaderStats, recLeaderStats=recLeaderStats)
 
 
 @app.route('/matchup', methods=["GET", "POST"])
@@ -83,9 +105,13 @@ def matchup():
             away_team_line_score = game.away_team_line_score.split(" ")
             home_team_line_score = game.home_team_line_score.split(" ")
 
-            pass_stats = sorted([stats for stats in game.stats if stats.passer], reverse=True)
-            rush_stats = sorted([stats for stats in game.stats if stats.rusher], reverse=True)
-            rec_stats = sorted([stats for stats in game.stats if stats.receiver], reverse=True)
+            pass_stats = WeeklyStats.query.filter_by(game_id=game.ID).filter_by(passer=True).all()
+            rush_stats = WeeklyStats.query.filter_by(game_id=game.ID).filter_by(rusher=True).all()
+            rec_stats = WeeklyStats.query.filter_by(game_id=game.ID).filter_by(receiver=True).all()
+
+            pass_stats = sorted(pass_stats, reverse=True)
+            rush_stats = sorted(rush_stats, reverse=True)
+            rec_stats = sorted(rec_stats, reverse=True)
 
             players = []
             for stats in game.stats:
@@ -168,6 +194,8 @@ def matchup():
                                    homePassLeader=homePassLeader, homeRushLeader=homeRushLeader,
                                    homeRecLeader=homeRecLeader, awayPassLeader=awayPassLeader,
                                    awayRushLeader=awayRushLeader, awayRecLeader=awayRecLeader,
+                                   away_team_stats=game.away_team.get_team_stats(preseason=True),
+                                   home_team_stats=game.home_team.get_team_stats(preseason=True),
                                    homePassLeaderStats=homePassLeaderStats, homeRushLeaderStats=homeRushLeaderStats,
                                    homeRecLeaderStats=homeRecLeaderStats, awayPassLeaderStats=awayPassLeaderStats,
                                    awayRushLeaderStats=awayRushLeaderStats, awayRecLeaderStats=awayRecLeaderStats,
@@ -246,6 +274,7 @@ def team():
             player_id=recLeader.ID).filter_by(preseason=True).first()
 
         return render_template("team.html", teams=teams, players=players, team=team, stats=stats,
+                               team_stats=team.get_team_stats(preseason=True),
                                position=position, schedule=schedule, preschedule=preschedule,
                                passLeader=passLeader, passLeaderStats=passLeaderStats,
                                rushLeader=rushLeader, rushLeaderStats=rushLeaderStats,

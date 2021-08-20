@@ -5,11 +5,13 @@ import re
 
 def parse_table(tables, headers):
 
-    stat_dict = {}
+    stat_dict = {
+        0: {},  # Away
+        1: {}   # Home
+    }
 
     for i in range(len(tables)):
         table = tables[i]
-        head = table.find("thead")
         body = table.find("tbody")
 
         rows = body.find_all("tr")
@@ -20,10 +22,10 @@ def parse_table(tables, headers):
             name = stats[0].find("span").text
             stats = [stat.text for stat in row.find_all("td")][1:]
 
-            stat_dict.update({name: {}})
+            stat_dict[i].update({name: {}})
             for header in range(len(headers)):
-                stat_dict[name].update({headers[header]: stats[header]})
-            stat_dict[name].update({"team": "away" if i == 0 else "home"})
+                stat_dict[i][name].update({headers[header]: stats[header]})
+            stat_dict[i][name].pop('AVG')
 
     return stat_dict
 
