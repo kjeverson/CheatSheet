@@ -85,9 +85,14 @@ def matchups():
                 dt = zulu.parse(match.date, '%Y-%m-%dT%H:%MZ')
                 match.date = dt.format('%a %b %d, %Y %I:%M %p', 'local')
 
+        default_headshot_path = url_for('static', filename='headshots/default.png')
+
         return render_template("matchups.html", teams=teams, week=week, week_string=week_string,
-                               matchups=m, bye_teams=bye_teams, passLeader=passLeader, recLeader=recLeader,
-                               rushLeader=rushLeader, passLeaderStats=passLeaderStats, rushLeaderStats=rushLeaderStats, recLeaderStats=recLeaderStats)
+                               matchups=m, bye_teams=bye_teams, passLeader=passLeader,
+                               recLeader=recLeader, rushLeader=rushLeader,
+                               passLeaderStats=passLeaderStats, rushLeaderStats=rushLeaderStats,
+                               recLeaderStats=recLeaderStats,
+                               default_headshot_path=default_headshot_path)
 
 
 @app.route('/matchup', methods=["GET", "POST"])
@@ -342,3 +347,11 @@ def scoring():
         db.session.commit()
 
     return render_template("scoring.html", teams=teams, scoring=scoring)
+
+
+@app.route('/db', methods=["GET", "POST"])
+def database():
+
+    teams = Team.query.all()
+
+    return render_template("db.html", teams=teams)
