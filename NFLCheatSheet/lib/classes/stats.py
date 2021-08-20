@@ -124,16 +124,20 @@ class TeamStats(db.Model):
 
     preseason = db.Column(db.Boolean)
 
+    DVOA = db.Column(db.Integer, default=0)
+    OFF = db.Column(db.Integer, default=0)
+    DEF = db.Column(db.Integer, default=0)
+    ST = db.Column(db.Integer, default=0)
+
     PPG = db.Column(db.Integer, default=0)
     pointsFor = db.Column(db.Integer, default=0)
+    PAPG = db.Column(db.Integer, default=0)
     pointsAgainst = db.Column(db.Integer, default=0)
     totalYards = db.Column(db.Integer, default=0)
 
     passComps = db.Column(db.Integer, default=0)
     passAtts = db.Column(db.Integer, default=0)
     passYDs = db.Column(db.Integer, default=0)
-    passAVG = db.Column(db.Integer, default=0)
-    passYDsPerGame = db.Column(db.Integer, default=0)
     passTDs = db.Column(db.Integer, default=0)
     passINTs = db.Column(db.Integer, default=0)
     passSacks = db.Column(db.Integer, default=0)
@@ -141,20 +145,29 @@ class TeamStats(db.Model):
 
     rushAtts = db.Column(db.Integer, default=0)
     rushYDs = db.Column(db.Integer, default=0)
-    rushAVG = db.Column(db.Integer, default=0)
-    rushYDsPerGame = db.Column(db.Integer, default=0)
     rushTDs = db.Column(db.Integer, default=0)
 
     recs = db.Column(db.Integer, default=0)
     recYDs = db.Column(db.Integer, default=0)
-    recAVG = db.Column(db.Integer, default=0)
     recTDs = db.Column(db.Integer, default=0)
-    recLng = db.Column(db.Integer, default=0)
     recTGTS = db.Column(db.Integer, default=0)
 
     passingLeader_id = db.Column(db.Integer, db.ForeignKey('player.ID'))
     rushingLeader_id = db.Column(db.Integer, db.ForeignKey('player.ID'))
     receivingLeader_id = db.Column(db.Integer, db.ForeignKey('player.ID'))
+
+    passAVG = db.Column(db.Integer, default=0)
+    passYDsPerGame = db.Column(db.Integer, default=0)
+    rushAVG = db.Column(db.Integer, default=0)
+    rushYDsPerGame = db.Column(db.Integer, default=0)
+    recAVG = db.Column(db.Integer, default=0)
+
+    PPGRank = db.Column(db.Integer, default=0)
+    PAPGRank = db.Column(db.Integer, default=0)
+    passYDsPerGameRank = db.Column(db.Integer, default=0)
+    rushYDsPerGameRank = db.Column(db.Integer, default=0)
+    passYDsRank = db.Column(db.Integer, default=0)
+    rushYDsRank = db.Column(db.Integer, default=0)
 
 
 def get_stats_leaders(players, week=None):

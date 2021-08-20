@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Dict, List
 import re
 import zulu
+import operator
 import requests
 
 from NFLCheatSheet.lib.classes.team import Team
@@ -731,8 +732,6 @@ def update_player_season_stats(db):
 
             ps.FPs = ws.FPs if not ps.FPs else ps.FPs + ws.FPs
 
-            ws.counted = True
-
         season_week_stats = player.get_weekly_stats_list(preseason=False)
         ss = player.get_season_stats(preseason=False)
         for ws in season_week_stats:
@@ -769,8 +768,6 @@ def update_player_season_stats(db):
 
             ss.FPs = ws.FPs if not ss.FPs else ss.FPs + ws.FPs
 
-            ws.counted = True
-
     print("Update Season Stats...\x1b[32mCOMPLETE!\x1b[0m\033[K")
 
 
@@ -793,6 +790,9 @@ def update_team_stats(db):
         
         for week_stat in week_stats:
 
+            if week_stat.counted:
+                continue
+
             team_stats.passComps += week_stat.passComps
             team_stats.passAtts += week_stat.passAtts 
             team_stats.passYDs += week_stat.passYDs
@@ -809,6 +809,8 @@ def update_team_stats(db):
             team_stats.recYDs += week_stat.recYDs
             team_stats.recTDs += week_stat.recTDs
             team_stats.recTGTS += week_stat.recTGTS
+
+            week_stat.counted = True
 
         if team_stats.passComps:
             team_stats.passAVG = team_stats.passYDs / team_stats.passComps
@@ -827,8 +829,12 @@ def update_team_stats(db):
             team_stats.pointsFor += game.home_team_score
             team_stats.pointsAgainst += game.away_team_score
         for game in team.get_games(preseason=True, completed=True, away=True):
-            team_stats.pointsFor = game.away_team_score
-            team_stats.pointsAgainst = game.home_team_score
+            team_stats.pointsFor += game.away_team_score
+            team_stats.pointsAgainst += game.home_team_score
+
+        if team.preseason_games_played:
+            team_stats.PPG = team_stats.pointsFor / team.preseason_games_played
+            team_stats.PAPG = team_stats.pointsAgainst / team.preseason_games_played
 
 
 def update_fantasy_points(db):
@@ -850,6 +856,27 @@ def update_fantasy_points(db):
     print("Calculating Fantasy Points...\x1b[32mCOMPLETE!\x1b[0m\033[K")
 
 
+def update_rankings(db):
+
+    teams = Team.query.filter(Team.ID != 100).all()
+    s = stats.TeamStats.query.filter(stats.TeamStats.team_id != 100).filter_by(preseason=True).all()
+    passYDsPerGameRank = sorted(s, key=operator.attrgetter("passYDsPerGame"), reverse=True)
+    rushYDsPerGameRank = sorted(s, key=operator.attrgetter("rushYDsPerGame"), reverse=True)
+    passYDsRank = sorted(s, key=operator.attrgetter("passYDs"), reverse=True)
+    rushYDsRank = sorted(s, key=operator.attrgetter("passYDs"), reverse=True)
+    PPGRank = sorted(s, key=operator.attrgetter("PPG"), reverse=True)
+    PAPGRank = sorted(s, key=operator.attrgetter("PAPG"))
+
+    for team in teams:
+        s = team.get_team_stats(preseason=True)
+        s.passYDsPerGameRank = passYDsPerGameRank.index(s)+1
+        s.rushYDsPerGameRank = rushYDsPerGameRank.index(s)+1
+        s.passYDsRank = passYDsRank.index(s)+1
+        s.rushYDsRank = rushYDsRank.index(s)+1
+        s.PPGRank = PPGRank.index(s)+1
+        s.PAPGRank = PAPGRank.index(s)+1
+
+
 def build_db(db):
     db.create_all()
 
@@ -868,7 +895,9 @@ def build_db(db):
     add_player_week_stats(db)
     update_fantasy_points(db)
     update_player_season_stats(db)
+
     update_team_stats(db)
+    update_rankings(db)
 
     db.session.commit()
 
@@ -884,6 +913,9 @@ def update_db(db):
     add_player_week_stats(db)
     update_fantasy_points(db)
     update_player_season_stats(db)
+
     update_team_stats(db)
+
+    update_rankings(db)
 
     db.session.commit()
