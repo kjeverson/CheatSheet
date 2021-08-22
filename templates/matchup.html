@@ -144,7 +144,7 @@
                                 <div class="col text-center">
                                   <button class="btn text-dark bgcolor{{ home_team_stats.PPGRank }} w-100 position-relative">
                                     <div class="row mt-3">
-                                      <h2>{{ home_team_stats.PPG }}</h2>
+                                      <h2>{{ '%0.1f' |format(home_team_stats.PPG) }}</h2>
                                     </div>
                                     <div class="row">
                                       <small>#{{ home_team_stats.PPGRank }}</small>
@@ -155,7 +155,7 @@
                                 <div class="col text-center">
                                   <button class="btn text-dark bgcolor{{ home_team_stats.PAPGRank }} w-100 position-relative">
                                     <div class="row mt-3">
-                                      <h2>{{ home_team_stats.PAPG }}</h2>
+                                      <h2>{{ '%0.1f' |format(home_team_stats.PAPG) }}</h2>
                                     </div>
                                     <div class="row">
                                       <small>#{{ home_team_stats.PAPGRank }}</small>
@@ -309,7 +309,7 @@
                                 <div class="col text-center">
                                   <button class="btn text-dark bgcolor{{ away_team_stats.PPGRank }} w-100 position-relative">
                                     <div class="row mt-3">
-                                      <h2>{{ away_team_stats.PPG }}</h2>
+                                      <h2>{{ '%0.1f' |format(away_team_stats.PPG) }}</h2>
                                     </div>
                                     <div class="row">
                                       <small>#{{ away_team_stats.PPGRank }}</small>
@@ -320,7 +320,7 @@
                                 <div class="col text-center">
                                   <button class="btn text-dark bgcolor{{ away_team_stats.PAPGRank }} w-100 position-relative">
                                     <div class="row mt-3">
-                                      <h2>{{ away_team_stats.PAPG }}</h2>
+                                      <h2>{{ '%0.1f' |format(away_team_stats.PAPG) }}</h2>
                                     </div>
                                     <div class="row">
                                       <small>#{{ away_team_stats.PAPGRank }}</small>

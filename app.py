@@ -359,6 +359,13 @@ def database():
     return render_template("db.html", teams=teams)
 
 
+@app.route('/getHeadshots')
+def get_headshots():
+    db_utils.get_headshots(db)
+    print("Updating Headshots")
+    return jsonify("Done")
+
+
 @app.route('/updateRosters')
 def update_rosters():
     time.sleep(5)

@@ -37,7 +37,9 @@
             <div class="row m-2">
               <!-- AFC North -->
               <div class="col-3">
-                <div class="row">AFC North</div>
+                <div class="row justify-content-center">
+                  <div class="col-8"><h5>AFC North</h5></div>
+                </div>
                 {% for team in teams %}
                 {% if team.conference == "AFC" and team.division == "North" %}
                 <button id="{{ team.key }}" class="btn btn-small text-white" name="team" value="{{ team.key }}">
@@ -51,7 +53,9 @@
               </div>
               <!-- AFC East -->
               <div class="col-3">
-                <div class="row">AFC East</div>
+                <div class="row justify-content-center">
+                  <div class="col-8"><h5>AFC East</h5></div>
+                </div>
                 {% for team in teams %}
                 {% if team.conference == "AFC" and team.division == "East" %}
                 <button id="{{ team.key }}" class="btn btn-small text-white" name="team" value="{{ team.key }}">
@@ -65,7 +69,9 @@
               </div>
               <!-- AFC South -->
               <div class="col-3">
-                <div class="row">AFC South</div>
+                <div class="row justify-content-center">
+                  <div class="col-8"><h5>AFC South</h5></div>
+                </div>
                 {% for team in teams %}
                 {% if team.conference == "AFC" and team.division == "South" %}
                 <button id="{{ team.key }}" class="btn btn-small text-white" name="team" value="{{ team.key }}">
@@ -79,7 +85,9 @@
               </div>
               <!-- AFC West -->
               <div class="col-3">
-                <div class="row">AFC West</div>
+                <div class="row justify-content-center">
+                  <div class="col-8"><h5>AFC West</h5></div>
+                </div>
                 {% for team in teams %}
                 {% if team.conference == "AFC" and team.division == "West" %}
                 <button id="{{ team.key }}" class="btn btn-small text-white" name="team" value="{{ team.key }}">
@@ -96,7 +104,9 @@
             <div class="row m-2">
               <!-- NFC North -->
               <div class="col-3">
-                <div class="row mt-3">NFC North</div>
+                <div class="row justify-content-center">
+                  <div class="col-8"><h5>NFC North</h5></div>
+                </div>
                 {% for team in teams %}
                 {% if team.conference == "NFC" and team.division == "North" %}
                 <button id="{{ team.key }}" class="btn btn-small text-white" name="team" value="{{ team.key }}">
@@ -110,7 +120,9 @@
               </div>
               <!-- NFC East -->
               <div class="col-3">
-                <div class="row mt-3">NFC East</div>
+                <div class="row justify-content-center">
+                  <div class="col-8"><h5>NFC East</h5></div>
+                </div>
                 {% for team in teams %}
                 {% if team.conference == "NFC" and team.division == "East" %}
                 <button id="{{ team.key }}" class="btn btn-small text-white" name="team" value="{{ team.key }}">
@@ -124,7 +136,9 @@
               </div>
               <!-- NFC South -->
               <div class="col-3">
-                <div class="row mt-3">NFC South</div>
+                <div class="row justify-content-center">
+                  <div class="col-8"><h5>NFC South</h5></div>
+                </div>
                 {% for team in teams %}
                 {% if team.conference == "NFC" and team.division == "South" %}
                 <button id="{{ team.key }}" class="btn btn-small text-white" name="team" value="{{ team.key }}">
@@ -138,7 +152,9 @@
               </div>
               <!-- NFC West -->
               <div class="col-3">
-                <div class="row mt-3">NFC West</div>
+                <div class="row justify-content-center">
+                  <div class="col-8"><h5>NFC West</h5></div>
+                </div>
                 {% for team in teams %}
                 {% if team.conference == "NFC" and team.division == "West" %}
                 <button id="{{ team.key }}" class="btn btn-small text-white" name="team" value="{{ team.key }}">

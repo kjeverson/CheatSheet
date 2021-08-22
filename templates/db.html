@@ -18,6 +18,21 @@
                         <div class="card bg-dark border-light">
                             <div class="card-body">
                                   <ul class="list-group list-group-flush">
+                                    <!-- Get Headshots -->
+                                    <li class="list-group-item bg-dark text-white">
+                                        <div class="row">
+                                            <div class="col-9">
+                                            <div class="row text-start fw-bold">Get Headshots</div>
+                                            <div class="row text-start">Checks to see if player headshots exist, if they don't will try to download them.</div>
+                                        </div>
+                                        <div class="col-3 text-end align-self-center">
+                                            <button id="getHeadshots" class="btn btn-small btn-secondary">
+                                                <span id="getHeadshotsSpinner" class="spinner-border spinner-border-sm visually-hidden" role="status"></span>
+                                                <span id="getHeadshotsText"> Get Headshots </span>
+                                            </button>
+                                        </div>
+                                        </div>
+                                    </li>  
                                     <!-- Update Rosters -->
                                     <li class="list-group-item bg-dark text-white">
                                         <div class="row">
@@ -128,6 +143,26 @@
     </div>
 </div>
 <script type=text/javascript>
+
+        $(function() {
+          $('#getHeadshots').on('click', function(e) {
+            e.preventDefault()
+            disableButtons()
+            var button = document.getElementById("getHeadshots");
+            var spinner = document.getElementById("getHeadshotsSpinner");
+            $('#getHeadshotsText').html("Updating...");
+            spinner.classList.remove("visually-hidden");
+            $.ajax({
+              url: "/getHeadshots",
+              type: "get",
+              success: function(player) {
+                $('#getHeadshotsText').html("Get Headshots");
+                spinner.classList.add("visually-hidden");
+                enableButtons();
+                }
+            });
+          });
+        });
 
         $(function() {
           $('#updateRosters').on('click', function(e) {
