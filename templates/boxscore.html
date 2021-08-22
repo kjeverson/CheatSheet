@@ -283,12 +283,15 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                        {% set rush = namespace(rushAtts=0, rushYDs=0, rushTDs=0) %}
+                                        {% set rush = namespace(rushAtts=0, rushYDs=0, rushTDs=0, rushLng=0) %}
                                         {% for line in rush_stats %}
                                             {% if line.team_id == matchup.home_team.ID %}
                                                 {% set rush.rushAtts = rush.rushAtts + line.rushAtts %}
                                                 {% set rush.rushYDs = rush.rushYDs + line.rushYDs %}
                                                 {% set rush.rushTDs = rush.rushTDs + line.rushTDs %}
+                                                {% if line.rushLng > rush.rushLng %}
+                                                    {% set rush.rushLng = line.rushLng %}
+                                                {% endif %}
                                                 <tr data-id="{{ line.player.ID }}">
                                                     <td class="text-start">{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
                                                     <td class="text-start">{{ line.rushAtts }}</td>
@@ -299,8 +302,17 @@
                                                 </tr>
                                             {% endif %}
                                         {% endfor %}
-
                                         </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td class="text-start">Totals</td>
+                                                <td class="text-start">{{ rush.rushAtts }}</td>
+                                                <td class="text-start">{{ rush.rushYDs }}</td>
+                                                <td class="text-start">{{'%0.1f'| format(rush.rushYDs/rush.rushAtts)}}</td>
+                                                <td class="text-start">{{ rush.rushTDs }}</td>
+                                                <td class="text-start">{{ rush.rushLng }}</td>
+                                            </tr>
+                                        </tfoot>
                                     </table>
                                 </div>
                                 <!-- Away Rushing -->
@@ -318,8 +330,15 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                        {% set rush = namespace(rushAtts=0, rushYDs=0, rushTDs=0, rushLng=0) %}
                                         {% for line in rush_stats %}
                                             {% if line.team_id == matchup.away_team.ID %}
+                                                {% set rush.rushAtts = rush.rushAtts + line.rushAtts %}
+                                                {% set rush.rushYDs = rush.rushYDs + line.rushYDs %}
+                                                {% set rush.rushTDs = rush.rushTDs + line.rushTDs %}
+                                                {% if line.rushLng > rush.rushLng %}
+                                                    {% set rush.rushLng = line.rushLng %}
+                                                {% endif %}
                                                 <tr data-id="{{ line.player.ID }}">
                                                     <td class="text-start">{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
                                                     <td class="text-start">{{ line.rushAtts }}</td>
@@ -331,6 +350,16 @@
                                         {% endif %}
                                         {% endfor %}
                                         </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td class="text-start">Totals</td>
+                                                <td class="text-start">{{ rush.rushAtts }}</td>
+                                                <td class="text-start">{{ rush.rushYDs }}</td>
+                                                <td class="text-start">{{'%0.1f'| format(rush.rushYDs/rush.rushAtts)}}</td>
+                                                <td class="text-start">{{ rush.rushTDs }}</td>
+                                                <td class="text-start">{{ rush.rushLng }}</td>
+                                            </tr>
+                                        </tfoot>
                                     </table>
                                 </div>
                             </div>
@@ -352,8 +381,16 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                        {% set rec = namespace(recs=0, recYDs=0, recTDs=0, recLng=0, recTGTS=0) %}
                                         {% for line in rec_stats %}
                                             {% if line.team_id == matchup.home_team.ID %}
+                                                {% set rec.recs = rec.recs + line.recs %}
+                                                {% set rec.recYDs = rec.recYDs + line.recYDs %}
+                                                {% set rec.recTDs = rec.recTDs + line.recTDs %}
+                                                {% set rec.recTGTS = rec.recTGTS + line.recTGTS %}
+                                                {% if line.recLng > rec.recLng %}
+                                                    {% set rec.recLng = line.recLng %}
+                                                {% endif %}
                                                 <tr data-id="{{ line.player.ID }}">
                                                     <td class="text-start">{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
                                                     <td class="text-start">{{ line.recs }}</td>
@@ -370,6 +407,17 @@
                                             {% endif %}
                                         {% endfor %}
                                         </tbody>
+                                        <tfoot>
+                                            <tr data-id="">
+                                                    <td class="text-start">Totals</td>
+                                                    <td class="text-start">{{ rec.recs }}</td>
+                                                    <td class="text-start">{{ rec.recYDs }}</td>
+                                                    <td class="text-start">{{'%0.1f'| format(rec.recYDs/rec.recs|float) }}</td>
+                                                    <td class="text-start">{{ rec.recTDs }}</td>
+                                                    <td class="text-start">{{ rec.recLng }}</td>
+                                                    <td class="text-start">{{ rec.recTGTS }}</td>
+                                                </tr>
+                                        </tfoot>
                                     </table>
                                 </div>
                                 <!-- Away Receiving -->
@@ -388,8 +436,16 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                        {% set rec = namespace(recs=0, recYDs=0, recTDs=0, recLng=0, recTGTS=0) %}
                                         {% for line in rec_stats %}
                                             {% if line.team_id == matchup.away_team.ID %}
+                                                {% set rec.recs = rec.recs + line.recs %}
+                                                {% set rec.recYDs = rec.recYDs + line.recYDs %}
+                                                {% set rec.recTDs = rec.recTDs + line.recTDs %}
+                                                {% set rec.recTGTS = rec.recTGTS + line.recTGTS %}
+                                                {% if line.recLng > rec.recLng %}
+                                                    {% set rec.recLng = line.recLng %}
+                                                {% endif %}
                                                 <tr data-id="{{ line.player.ID }}">
                                                     <td class="text-start">{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
                                                     <td class="text-start">{{ line.recs }}</td>
@@ -406,6 +462,17 @@
                                             {% endif %}
                                         {% endfor %}
                                         </tbody>
+                                        <tfoot>
+                                            <tr data-id="">
+                                                    <td class="text-start">Totals</td>
+                                                    <td class="text-start">{{ rec.recs }}</td>
+                                                    <td class="text-start">{{ rec.recYDs }}</td>
+                                                    <td class="text-start">{{'%0.1f'| format(rec.recYDs/rec.recs|float) }}</td>
+                                                    <td class="text-start">{{ rec.recTDs }}</td>
+                                                    <td class="text-start">{{ rec.recLng }}</td>
+                                                    <td class="text-start">{{ rec.recTGTS }}</td>
+                                                </tr>
+                                        </tfoot>
                                     </table>
                                 </div>
                             </div>
