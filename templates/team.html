@@ -290,7 +290,7 @@
                       <h1>{{ team_stats.PPG }}</h1>
                     </div>
                     <div class="row">
-                      <small>#{{ team_stats.PPGRank }}</small>
+                      <small>#{{ '%0.1f'| format(team_stats.PPGRank|float) }}</small>
                     </div>
                     <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Points For</span>
                   </button>
@@ -298,7 +298,7 @@
                 <div class="col text-center">
                   <button class="btn text-dark bgcolor{{ team_stats.PAPGRank }} w-100 position-relative">
                     <div class="row mt-3">
-                      <h1>{{ team_stats.PAPG }}</h1>
+                      <h1>{{ '%0.1f'| format(team_stats.PAPGRank|float) }}</h1>
                     </div>
                     <div class="row">
                       <small>#{{ team_stats.PAPGRank }}</small>

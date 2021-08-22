@@ -824,6 +824,9 @@ def update_team_stats(db):
 
         team_stats.totalYards = team_stats.passYDs + team_stats.rushYDs
 
+        team_stats.pointsFor = 0
+        team_stats.pointsAgainst = 0
+
         for game in team.get_games(preseason=True, completed=True, home=True):
             team_stats.pointsFor += game.home_team_score
             team_stats.pointsAgainst += game.away_team_score

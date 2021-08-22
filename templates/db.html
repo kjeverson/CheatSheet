@@ -27,7 +27,8 @@
                                         </div>
                                         <div class="col-3 text-end align-self-center">
                                             <button id="updateRosters" class="btn btn-small btn-secondary">
-                                                Update Rosters
+                                                <span id="updateRostersSpinner" class="spinner-border spinner-border-sm visually-hidden" role="status"></span>
+                                                <span id="updateRostersText"> Update Rosters </span>
                                             </button>
                                         </div>
                                         </div>
@@ -41,7 +42,8 @@
                                         </div>
                                         <div class="col-3 text-end align-self-center">
                                             <button id="updateStatus" class="btn btn-small btn-secondary">
-                                                Update Status
+                                                <span id="updateStatusSpinner" class="spinner-border spinner-border-sm visually-hidden" role="status"></span>
+                                                <span id="updateStatusText"> Update Statuses </span>
                                             </button>
                                         </div>
                                         </div>
@@ -55,7 +57,8 @@
                                         </div>
                                         <div class="col-3 text-end align-self-center">
                                             <button id="updateStats" class="btn btn-small btn-secondary">
-                                                Update Stats
+                                                <span id="updateStatsSpinner" class="spinner-border spinner-border-sm visually-hidden" role="status"></span>
+                                                <span id="updateStatsText"> Update Stats </span>
                                             </button>
                                         </div>
                                         </div>
@@ -69,7 +72,8 @@
                                         </div>
                                         <div class="col-3 text-end align-self-center">
                                             <button id="updateDatabase" class="btn btn-small btn-secondary">
-                                                Update Database
+                                                <span id="updateDatabaseSpinner" class="spinner-border spinner-border-sm visually-hidden" role="status"></span>
+                                                <span id="updateDatabaseText"> Update Database </span>
                                             </button>
                                         </div>
                                         </div>
@@ -93,7 +97,8 @@
                                         </div>
                                         <div class="col-3 text-end align-self-center">
                                             <button id="rebuildDatabase" class="btn btn-small btn-danger">
-                                                Rebuild Database
+                                                <span id="rebuildDatabaseSpinner" class="spinner-border spinner-border-sm visually-hidden" role="status"></span>
+                                                <span id="rebuildDatabaseText"> Rebuild Database </span>
                                             </button>
                                         </div>
                                         </div>
@@ -107,7 +112,8 @@
                                         </div>
                                         <div class="col-3 text-end align-self-center">
                                             <button id="deleteDatabase" class="btn btn-small btn-danger">
-                                                Delete Database
+                                                <span id="deleteDatabaseSpinner" class="spinner-border spinner-border-sm visually-hidden" role="status"></span>
+                                                <span id="deleteDatabaseText"> Delete Database </span>
                                             </button>
                                         </div>
                                         </div>
@@ -122,71 +128,148 @@
     </div>
 </div>
 <script type=text/javascript>
+
         $(function() {
           $('#updateRosters').on('click', function(e) {
             e.preventDefault()
-            $.getJSON('/updateRosters',
-                function(data) {
-              //do nothing
+            disableButtons()
+            var button = document.getElementById("updateRosters");
+            var spinner = document.getElementById("updateRostersSpinner");
+            var text = document.getElementById("updateRostersText");
+            $('#updateRostersText').html("Updating...");
+            spinner.classList.remove("visually-hidden");
+            $.ajax({
+              url: "/updateRosters",
+              type: "get",
+              success: function(player) {
+                $('#updateRostersText').html("Update Rosters");
+                spinner.classList.add("visually-hidden");
+                enableButtons();
+                }
             });
-            return false;
           });
         });
-
+        
         $(function() {
           $('#updateStatus').on('click', function(e) {
             e.preventDefault()
-            $.getJSON('/updateStatus',
-                function(data) {
-              //do nothing
+            disableButtons()
+            var button = document.getElementById("updateStatus");
+            var spinner = document.getElementById("updateStatusSpinner");
+            var text = document.getElementById("updateStatusText");
+            $('#updateStatusText').html("Updating...");
+            spinner.classList.remove("visually-hidden");
+            $.ajax({
+              url: "/updateStatus",
+              type: "get",
+              success: function(player) {
+                $('#updateStatusText').html("Update Statuses");
+                spinner.classList.add("visually-hidden");
+                enableButtons();
+                }
             });
-            return false;
           });
         });
-
+        
         $(function() {
           $('#updateStats').on('click', function(e) {
             e.preventDefault()
-            $.getJSON('/updateStats',
-                function(data) {
-              //do nothing
+            disableButtons()
+            var button = document.getElementById("updateStats");
+            var spinner = document.getElementById("updateStatsSpinner");
+            var text = document.getElementById("updateStatsText");
+            $('#updateStatsText').html("Updating...");
+            spinner.classList.remove("visually-hidden");
+            $.ajax({
+              url: "/updateStats",
+              type: "get",
+              success: function(player) {
+                $('#updateStatsText').html("Update Stats");
+                spinner.classList.add("visually-hidden");
+                enableButtons();
+                }
             });
-            return false;
           });
         });
 
         $(function() {
           $('#updateDatabase').on('click', function(e) {
             e.preventDefault()
-            $.getJSON('/updateDatabase',
-                function(data) {
-              //do nothing
+            disableButtons()
+            var button = document.getElementById("updateDatabase");
+            var spinner = document.getElementById("updateDatabaseSpinner");
+            var text = document.getElementById("updateDatabaseText");
+            $('#updateDatabaseText').html("Updating...");
+            spinner.classList.remove("visually-hidden");
+            $.ajax({
+              url: "/updateDatabase",
+              type: "get",
+              success: function(player) {
+                $('#updateDatabaseText').html("Update Database");
+                spinner.classList.add("visually-hidden");
+                enableButtons();
+                }
             });
-            return false;
           });
         });
-
+        
         $(function() {
           $('#rebuildDatabase').on('click', function(e) {
             e.preventDefault()
-            $.getJSON('/rebuildDatabase',
-                function(data) {
-              //do nothing
+            disableButtons()
+            var button = document.getElementById("rebuildDatabase");
+            var spinner = document.getElementById("rebuildDatabaseSpinner");
+            var text = document.getElementById("rebuildDatabaseText");
+            $('#rebuildDatabaseText').html("Updating...");
+            spinner.classList.remove("visually-hidden");
+            $.ajax({
+              url: "/rebuildDatabase",
+              type: "get",
+              success: function(player) {
+                $('#rebuildDatabaseText').html("Rebuild Database");
+                spinner.classList.add("visually-hidden");
+                enableButtons();
+                }
             });
-            return false;
           });
         });
-
+        
         $(function() {
           $('#deleteDatabase').on('click', function(e) {
             e.preventDefault()
-            $.getJSON('/deleteDatabase',
-                function(data) {
-              //do nothing
+            disableButtons()
+            var button = document.getElementById("deleteDatabase");
+            var spinner = document.getElementById("deleteDatabaseSpinner");
+            var text = document.getElementById("deleteDatabaseText");
+            $('#deleteDatabaseText').html("Updating...");
+            spinner.classList.remove("visually-hidden");
+            $.ajax({
+              url: "/deleteDatabase",
+              type: "get",
+              success: function(player) {
+                $('#deleteDatabaseText').html("Delete Database");
+                spinner.classList.add("visually-hidden");
+                enableButtons();
+                }
             });
-            return false;
           });
         });
+
+       function disableButtons() {
+            var buttons = document.getElementsByTagName('button');
+            for (let i = 0; i < buttons.length; i++) {
+            let button = buttons[i];
+            button.setAttribute("disabled", true);
+            }
+       };
+
+       function enableButtons() {
+            var buttons = document.getElementsByTagName('button');
+            for (let i = 0; i < buttons.length; i++) {
+            let button = buttons[i];
+            button.removeAttribute("disabled");
+            }
+       };
 
 </script>
 <!--<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>-->

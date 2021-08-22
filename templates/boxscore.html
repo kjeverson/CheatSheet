@@ -179,8 +179,16 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            {% set pass = namespace(passComps=0, passAtts=0, passYDs=0, passTDs=0, passINTs=0, passSacks=0, passSackYDs=0) %}
                                             {% for line in pass_stats %}
                                             {% if line.team_id == matchup.home_team.ID %}
+                                                {% set pass.passComps = pass.passComps + line.passComps %}
+                                                {% set pass.passAtts = pass.passAtts + line.passAtts %}
+                                                {% set pass.passYDs = pass.passYDs + line.passYDs %}
+                                                {% set pass.passTDs = pass.passTDs + line.passTDs %}
+                                                {% set pass.passINTs = pass.passINTs + line.passINTs %}
+                                                {% set pass.passSacks = pass.passSacks + line.passSacks %}
+                                                {% set pass.passSackYDs = pass.passSackYDs + line.passSackYDs %}
                                                 <tr data-id="{{ line.player.ID }}">
                                                     <td class="text-start">{{line.player.fname[0] }}. {{ line.player.lname }}</td>
                                                     <td class="text-start">{{ line.passComps }}/{{ line.passAtts }}</td>
@@ -193,6 +201,17 @@
                                             {% endif %}
                                             {% endfor %}
                                         </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td class="text-start">Totals</td>
+                                                <td class="text-start">{{ pass.passComps }}/{{ pass.passAtts }}</td>
+                                                <td class="text-start">{{ pass.passYDs }}</td>
+                                                <td class="text-start">{{'%0.1f'| format(pass.passYDs/pass.passComps)}}</td>
+                                                <td class="text-start">{{ pass.passTDs }}</td>
+                                                <td class="text-start">{{ pass.passINTs }}</td>
+                                                <td class="text-start">{{ pass.passSacks }}-{{ pass.passSackYDs }}</td>
+                                            </tr>
+                                        </tfoot>
                                     </table>
                                 </div>
                                 <!-- Away Passing -->
@@ -211,8 +230,16 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            {% set pass = namespace(passComps=0, passAtts=0, passYDs=0, passTDs=0, passINTs=0, passSacks=0, passSackYDs=0) %}
                                             {% for line in pass_stats %}
                                             {% if line.team_id == matchup.away_team.ID %}
+                                                {% set pass.passComps = pass.passComps + line.passComps %}
+                                                {% set pass.passAtts = pass.passAtts + line.passAtts %}
+                                                {% set pass.passYDs = pass.passYDs + line.passYDs %}
+                                                {% set pass.passTDs = pass.passTDs + line.passTDs %}
+                                                {% set pass.passINTs = pass.passINTs + line.passINTs %}
+                                                {% set pass.passSacks = pass.passSacks + line.passSacks %}
+                                                {% set pass.passSackYDs = pass.passSackYDs + line.passSackYDs %}
                                                 <tr data-id="{{ line.player.ID }}">
                                                     <td class="text-start">{{line.player.fname[0] }}. {{ line.player.lname }}</td>
                                                     <td class="text-start">{{ line.passComps }}/{{ line.passAtts }}</td>
@@ -225,6 +252,17 @@
                                             {% endif %}
                                             {% endfor %}
                                         </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td class="text-start">Totals</td>
+                                                <td class="text-start">{{ pass.passComps }}/{{ pass.passAtts }}</td>
+                                                <td class="text-start">{{ pass.passYDs }}</td>
+                                                <td class="text-start">{{'%0.1f'| format(pass.passYDs/pass.passComps)}}</td>
+                                                <td class="text-start">{{ pass.passTDs }}</td>
+                                                <td class="text-start">{{ pass.passINTs }}</td>
+                                                <td class="text-start">{{ pass.passSacks }}-{{ pass.passSackYDs }}</td>
+                                            </tr>
+                                        </tfoot>
                                     </table>
                                 </div>
                             </div>
@@ -245,8 +283,12 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                        {% set rush = namespace(rushAtts=0, rushYDs=0, rushTDs=0) %}
                                         {% for line in rush_stats %}
                                             {% if line.team_id == matchup.home_team.ID %}
+                                                {% set rush.rushAtts = rush.rushAtts + line.rushAtts %}
+                                                {% set rush.rushYDs = rush.rushYDs + line.rushYDs %}
+                                                {% set rush.rushTDs = rush.rushTDs + line.rushTDs %}
                                                 <tr data-id="{{ line.player.ID }}">
                                                     <td class="text-start">{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
                                                     <td class="text-start">{{ line.rushAtts }}</td>
@@ -257,6 +299,7 @@
                                                 </tr>
                                             {% endif %}
                                         {% endfor %}
+
                                         </tbody>
                                     </table>
                                 </div>

@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify, url_for
 from flask_sqlalchemy import SQLAlchemy
 import zulu
 import logging
+import time
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
@@ -17,6 +18,7 @@ from NFLCheatSheet.lib.classes.team import Team
 from NFLCheatSheet.lib.fantasy.scoring import Scoring
 from NFLCheatSheet.lib.classes.game import Game, sort, get_week
 from NFLCheatSheet.lib.classes.stats import SeasonStats, WeeklyStats, get_stats_leaders, TeamStats
+from NFLCheatSheet.lib import db_utils
 
 
 @app.route('/')
@@ -359,35 +361,50 @@ def database():
 
 @app.route('/updateRosters')
 def update_rosters():
+    time.sleep(5)
     print("Updating Rosters")
-    return "Success"
+    return jsonify("Done")
 
 
 @app.route('/updateStats')
 def update_stats():
+    db_utils.update_player_status(db)
+    db_utils.update_schedule(db)
+    db_utils.add_player_week_stats(db)
+    db_utils.update_fantasy_points(db)
+    db_utils.update_player_season_stats(db)
+    db_utils.update_team_stats(db)
+    db_utils.update_rankings(db)
+    db.session.commit()
     print("Updating Stats")
-    return "Success"
+    return jsonify("Done")
 
 
 @app.route('/updateStatus')
 def update_status():
+    db_utils.update_player_status(db)
+    db.session.commit()
     print("Updating Status")
-    return "Success"
+    return jsonify("Done")
 
 
 @app.route('/updateDatabase')
-def updateRosters():
+def update_database():
+    db_utils.update_db(db)
+    db.session.commit()
     print("Updating Database")
-    return "Success"
+    return jsonify("Done")
 
 
 @app.route('/rebuildDatabase')
 def rebuild_database():
+    time.sleep(5)
     print("Rebuilding Database")
-    return "Success"
+    return jsonify("Done")
 
 
 @app.route('/deleteDatabase')
 def delete_database():
+    time.sleep(5)
     print("Deleting Database")
-    return "Success"
+    return jsonify("Done")
