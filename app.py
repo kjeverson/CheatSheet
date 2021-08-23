@@ -375,7 +375,6 @@ def update_rosters():
 
 @app.route('/updateStats')
 def update_stats():
-    db_utils.update_player_status(db)
     db_utils.update_schedule(db)
     db_utils.add_player_week_stats(db)
     db_utils.update_fantasy_points(db)

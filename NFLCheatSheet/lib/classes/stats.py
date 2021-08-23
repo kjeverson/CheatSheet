@@ -241,3 +241,37 @@ def get_stats_leaders(players, week=None):
         recYDs_leader = None
 
     return passYDs_leader.ID, rushYDs_leader.ID, recYDs_leader.ID
+
+
+def get_passer_rating(passAtts, passComps, passYDs, passTDs, passINTs):
+
+    a = passComps/passAtts - 0.3 * 5
+    b = passYDs / passAtts - 3 * 0.25
+    c = passTDs/passAtts * 20
+    d = 2.375 - passINTs/passAtts * 25
+
+    if a > 2.375:
+        a = 2.375
+
+    if a < 0:
+        a = 0
+
+    if b > 2.375:
+        b = 2.375
+
+    if b < 0:
+        b = 0
+
+    if c > 2.375:
+        c = 2.375
+
+    if c < 0:
+        c = 0
+
+    if d > 2.375:
+        d = 2.375
+
+    if d < 0:
+        d = 0
+
+    return a + b + c + d /6 * 100

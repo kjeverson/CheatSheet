@@ -710,7 +710,7 @@ def update_player_season_stats(db):
             ps.passSacks = ps.passSacks + int(ws.passSacks) if ws.passSacks else ps.passSacks
             ps.passSackYDs = ps.passSackYDs + int(ws.passSackYDs) if ws.passSackYDs else ps.passSackYDs
             if ws.passer:
-                ps.passRTG = ((((ps.passComps/ps.passAtts)-0.3)*5+((ps.passYDs/ps.passAtts)-3)*0.25+(ps.passTDs/ps.passAtts)*20+2.375-((ps.passINTs/ps.passAtts)*25))/6)*100
+                ps.passRTG = stats.get_passer_rating(ps.passAtts, ps.passComps, ps.passYDs, ps.passTDs, ps.passINTs)
 
             ps.rushAtts = ps.rushAtts + int(ws.rushAtts) if ws.rushAtts else ps.rushAtts
             ps.rushYDs = ps.rushYDs + int(ws.rushYDs) if ws.rushYDs else ps.rushYDs
@@ -746,7 +746,7 @@ def update_player_season_stats(db):
             ss.passSacks = ss.passSacks + int(ws.passSacks) if ws.passSacks else ss.passSacks
             ss.passSackYDs = ss.passSackYDs + int(ws.passSackYDs) if ws.passSackYDs else ss.passSackYDs
             if ws.passer:
-                ss.passRTG = ((((ss.passComps/ss.passAtts)-0.3)*5+((ss.passYDs/ss.passAtts)-3)*0.25+(ss.passTDs/ss.passAtts)*20+2.375-((ss.passINTs/ss.passAtts)*25))/6)*100
+                ss.passRTG = stats.get_passer_rating(ss.passAtts, ss.passComps, ss.passYDs, ss.passTDs, ss.passINTs)
 
             ss.rushAtts = ss.rushAtts + int(ws.rushAtts) if ws.rushAtts else ss.rushAtts
             ss.rushYDs = ss.rushYDs + int(ws.rushYDs) if ws.rushYDs else ss.rushYDs
