@@ -403,7 +403,34 @@
             <div class="card-title text-center">2021 {{team.conference}} {{team.division}} Standings</div>
             <div class="card-body">
               <div class="row">
-
+                <table class="table table-sm table-dark table-hover">
+                  <thead>
+                    <tr>
+                      <td>TEAM</td>
+                      <td>W</td>
+                      <td>L</td>
+                      <td>T</td>
+                      <td>PCT</td>
+                      <td>PF</td>
+                      <td>PA</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for t in teams|sort(attribute='preseason_wins', reverse=True) %}
+                    {% if t.conference == team.conference and t.division == team.division %}
+                    <tr>
+                      <td>{{ t.name }}</td>
+                      <td>{{ t.preseason_wins }}</td>
+                      <td>{{ t.preseason_loses }}</td>
+                      <td>{{ t.preseason_ties }}</td>
+                      <td>{{ '%0.1f' |format(t.preseason_wins/t.preseason_games_played) }}</td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
@@ -481,7 +508,7 @@
                 <div class="row">
                   <h5>Passing</h5>
                 </div>
-                <table class="player-table table table-sm table-dark table-hover">
+                <table class="sortable player-table table table-sm table-dark table-hover">
                   <thead>
                     <tr>
                       <td>Name</td>
@@ -529,7 +556,7 @@
                 <div class="row">
                   <h5>Rushing</h5>
                 </div>
-                <table class="player-table table table-sm table-dark table-hover">
+                <table class="sortable player-table table table-sm table-dark table-hover">
                   <thead>
                     <tr>
                       <td>Name</td>
@@ -567,7 +594,7 @@
                 <div class="row">
                   <h5>Receiving</h5>
                 </div>
-                <table class="player-table table table-sm table-dark table-hover">
+                <table class="sortable player-table table table-sm table-dark table-hover">
                   <thead>
                     <tr>
                       <td>Name</td>
@@ -610,7 +637,6 @@
           </div>
         </div>
       </div>
-
     </div>
   </div>
   <!-- Roster Page Content -->
@@ -624,7 +650,7 @@
             <div class="card-title text-center">Roster</div>
             <div class="card-body">
               <div class="row text-white">
-                <table class="player-table table table-dark table-hover">
+                <table class="sortable player-table table table-dark table-hover">
                   <thead>
                     <tr>
                       <td>#</td>

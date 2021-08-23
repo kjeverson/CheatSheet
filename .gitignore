@@ -2,7 +2,8 @@
 .idea/*
 __pycache__/*
 __pycache__/
-static/*
+static/headshots/*
+static/logos/*
 database.db
 data/*
 *.pyc
