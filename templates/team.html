@@ -85,10 +85,7 @@
           <a class="nav-link" href="">Schedule</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="">Roster</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="">Depth Chart</a>
+          <a class="nav-link" href="" id="rosterSelection">Roster</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="" id="injurySelection" >Injuries</a>
@@ -411,7 +408,62 @@
             </div>
           </div>
         </div>
-        <!-- Draft Class -->
+      </div>
+    </div>
+  </div>
+  <!-- Roster Page Content -->
+  <div id="rosterPage" class="container text-white visually-hidden">
+    <div class="row">
+      <!-- MAIN CONTENT -->
+      <div class="col-8">
+        <!-- Team Roster -->
+        <div class="row mt-2">
+          <div class="card bg-dark">
+            <div class="card-title text-center">Roster</div>
+            <div class="card-body">
+              <div class="row text-white">
+                <table class="player-table table table-dark table-hover">
+                  <thead>
+                    <tr>
+                      <td>#</td>
+                      <td>Name</td>
+                      <td>Pos</td>
+                      <td>Age</td>
+                      <td>Ht</td>
+                      <td>Wt</td>
+                      <td>Exp</td>
+                      <td>College</td>
+                    </tr>
+                  </thead>
+                  {% for player in players %}
+                  <tr data-id="{{ player.ID }}">
+                    {% if player.number %}
+                    <td>{{ player.number }}</td>
+                    {% else %}
+                    <td>-</td>
+                    {% endif %}
+                    <td>{{ player.name }}</td>
+                    <td>{{ player.position }}</td>
+                    <td>{{ player.age }}</td>
+                    <td>{{ player.height }}</td>
+                    <td>{{ player.weight }}</td>
+                    {% if player.experience == 0 %}
+                    <td>R</td>
+                    {% else %}
+                    <td>{{ player.experience }}</td>
+                    {% endif %}
+                    <td>{{ player.college }}</td>
+                  </tr>
+                  {% endfor %}
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- RIGHT COLUMN -->
+      <div class="col-4">
+        <!-- Rookie Class -->
         <div class="row mt-2">
           <div class="card bg-dark">
             <div class="card-title text-center">2021 Rookie Class</div>
@@ -446,7 +498,7 @@
   <div id="injuryPage" class="container text-white visually-hidden">
     <div class="row">
       <!-- MAIN CONTENT -->
-      <div class="col-9">
+      <div class="col-8">
         <!-- Injury News -->
         <div class="row mt-2">
           <div class="card bg-dark">
@@ -503,7 +555,7 @@
         </div>
       </div>
       <!-- RIGHT COLUMN -->
-      <div class="col-3">
+      <div class="col-4">
         <!-- Injury Report -->
         <div class="row mt-2">
           <div class="card bg-dark">
@@ -593,6 +645,17 @@
   //      }
   //   }
   //});
+
+  $(function() {
+          $('#rosterSelection').on('click', function(e) {
+            e.preventDefault()
+            hideContainers();
+            document.getElementById("mainContainer").classList.remove("visually-hidden");
+            document.getElementById("teamNav").classList.remove("visually-hidden");
+            document.getElementById("rosterPage").classList.remove("visually-hidden");
+            document.getElementById("playerCardContainer").classList.remove("visually-hidden");
+          });
+        });
 
   $(function() {
           $('#injurySelection').on('click', function(e) {
