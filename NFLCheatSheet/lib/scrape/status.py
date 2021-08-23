@@ -21,6 +21,8 @@ def player_status_from_id(id: str) -> Dict:
 
     status = soup.find("div", {"class": "p-card__injury"})
 
+    news = soup.find("div", {"class": "news-update__news"})
+
     if status:
 
         status = status.text.split("\n")
@@ -45,7 +47,8 @@ def player_status_from_id(id: str) -> Dict:
         status_dict = {
             "status": status_short,
             "designation": status[0],
-            "injury": injury
+            "injury": injury,
+            "news": news.text if news else ""
         }
 
         return status_dict

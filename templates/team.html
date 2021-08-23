@@ -70,6 +70,33 @@
       </div>
     </div>
   </div>
+  <!-- Team Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+  <div class="container-fluid">
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Stats</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Schedule</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Roster</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Depth Chart</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Injury</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
   <!-- Content -->
   <div class="container text-white">
     <div class="row">
@@ -306,6 +333,51 @@
                     <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Points Against</span>
                   </button>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Injured -->
+        <div class="row mt-2">
+          <div class="card bg-dark">
+            <div class="card-title text-center">Injuries</div>
+            <div class="card-body">
+              <div class="row text-white">
+                <table class="player-table table table-sm table-dark table-hover">
+                  {% for player in players %}
+                  {% if player.status != "Active" %}
+                  <tr data-id="{{ player.ID }}">
+                    <td>
+                      <div class="row text-white">
+                        <div class="col-4">
+                          <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + player.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
+                        </div>
+                        <div class="col-8 align-self-center">
+                          <div class="row">
+                            <div class="col">{{player.name}} <small class="text-muted">{{player.position}}</small></div>
+                          </div>
+                          {% if player.status == 'Q' or player.status == 'D' %}
+                          <div class="row">
+                            <div class="col"><small class="text-muted">Status:  <div class="badge rounded-pill p-1 bg-warning"><span>{{ player.designation }}</span></div></small></div>
+                          </div>
+                          {% else %}
+                          <div class="row">
+                            <div class="col"><small class="text-muted">Status:  <div class="badge rounded-pill p-1 bg-danger"><span>{{ player.designation }}</span></div></small></div>
+                          </div>
+                          {% endif %}
+                          <div class="row">
+                            <div class="col"><small class="text-muted">Injury: {{ player.injury }}</small></div>
+                          </div>
+                          <div class="row">
+                            <div class="col"><small class="text-muted">{{ player.news }}</small></div>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  {% endif %}
+                  {% endfor %}
+                </table>
               </div>
             </div>
           </div>
