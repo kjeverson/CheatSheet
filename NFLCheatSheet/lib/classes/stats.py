@@ -9,6 +9,8 @@ class SeasonStats(db.Model):
 
     preseason = db.Column(db.Boolean)
 
+    gamesPlayed = db.Column(db.Integer, default=0)
+
     # Passing
     passComps = db.Column(db.Integer, default=0)
     passAtts = db.Column(db.Integer, default=0)

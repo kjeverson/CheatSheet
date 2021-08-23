@@ -181,7 +181,7 @@
                                         <tbody>
                                             {% set pass = namespace(passComps=0, passAtts=0, passYDs=0, passTDs=0, passINTs=0, passSacks=0, passSackYDs=0) %}
                                             {% for line in pass_stats %}
-                                            {% if line.team_id == matchup.home_team.ID %}
+                                            {% if line.team_id == matchup.home_team.ID and line.passer %}
                                                 {% set pass.passComps = pass.passComps + line.passComps %}
                                                 {% set pass.passAtts = pass.passAtts + line.passAtts %}
                                                 {% set pass.passYDs = pass.passYDs + line.passYDs %}
@@ -193,7 +193,11 @@
                                                     <td class="text-start">{{line.player.fname[0] }}. {{ line.player.lname }}</td>
                                                     <td class="text-start">{{ line.passComps }}/{{ line.passAtts }}</td>
                                                     <td class="text-start">{{ line.passYDs }}</td>
+                                                    {% if line.passComps %}
                                                     <td class="text-start">{{'%0.1f'| format(line.passYDs/line.passComps|float)}}</td>
+                                                    {% else %}
+                                                    <td class="text-start">0.0</td>
+                                                    {% endif %}
                                                     <td class="text-start">{{ line.passTDs }}</td>
                                                     <td class="text-start">{{ line.passINTs }}</td>
                                                     <td class="text-start">{{ line.passSacks }}-{{ line.passSackYDs }}</td>
@@ -232,7 +236,7 @@
                                         <tbody>
                                             {% set pass = namespace(passComps=0, passAtts=0, passYDs=0, passTDs=0, passINTs=0, passSacks=0, passSackYDs=0) %}
                                             {% for line in pass_stats %}
-                                            {% if line.team_id == matchup.away_team.ID %}
+                                            {% if line.team_id == matchup.away_team.ID and line.passer %}
                                                 {% set pass.passComps = pass.passComps + line.passComps %}
                                                 {% set pass.passAtts = pass.passAtts + line.passAtts %}
                                                 {% set pass.passYDs = pass.passYDs + line.passYDs %}
@@ -244,7 +248,11 @@
                                                     <td class="text-start">{{line.player.fname[0] }}. {{ line.player.lname }}</td>
                                                     <td class="text-start">{{ line.passComps }}/{{ line.passAtts }}</td>
                                                     <td class="text-start">{{ line.passYDs }}</td>
+                                                    {% if line.passComps %}
                                                     <td class="text-start">{{'%0.1f'| format(line.passYDs/line.passComps|float)}}</td>
+                                                    {% else %}
+                                                    <td class="text-start">0.0</td>
+                                                    {% endif %}
                                                     <td class="text-start">{{ line.passTDs }}</td>
                                                     <td class="text-start">{{ line.passINTs }}</td>
                                                     <td class="text-start">{{ line.passSacks }}-{{ line.passSackYDs }}</td>
@@ -285,7 +293,7 @@
                                         <tbody>
                                         {% set rush = namespace(rushAtts=0, rushYDs=0, rushTDs=0, rushLng=0) %}
                                         {% for line in rush_stats %}
-                                            {% if line.team_id == matchup.home_team.ID %}
+                                            {% if line.team_id == matchup.home_team.ID and line.rusher %}
                                                 {% set rush.rushAtts = rush.rushAtts + line.rushAtts %}
                                                 {% set rush.rushYDs = rush.rushYDs + line.rushYDs %}
                                                 {% set rush.rushTDs = rush.rushTDs + line.rushTDs %}
@@ -332,7 +340,7 @@
                                         <tbody>
                                         {% set rush = namespace(rushAtts=0, rushYDs=0, rushTDs=0, rushLng=0) %}
                                         {% for line in rush_stats %}
-                                            {% if line.team_id == matchup.away_team.ID %}
+                                            {% if line.team_id == matchup.away_team.ID and line.rusher %}
                                                 {% set rush.rushAtts = rush.rushAtts + line.rushAtts %}
                                                 {% set rush.rushYDs = rush.rushYDs + line.rushYDs %}
                                                 {% set rush.rushTDs = rush.rushTDs + line.rushTDs %}
@@ -383,7 +391,7 @@
                                         <tbody>
                                         {% set rec = namespace(recs=0, recYDs=0, recTDs=0, recLng=0, recTGTS=0) %}
                                         {% for line in rec_stats %}
-                                            {% if line.team_id == matchup.home_team.ID %}
+                                            {% if line.team_id == matchup.home_team.ID and line.receiver %}
                                                 {% set rec.recs = rec.recs + line.recs %}
                                                 {% set rec.recYDs = rec.recYDs + line.recYDs %}
                                                 {% set rec.recTDs = rec.recTDs + line.recTDs %}
@@ -438,7 +446,7 @@
                                         <tbody>
                                         {% set rec = namespace(recs=0, recYDs=0, recTDs=0, recLng=0, recTGTS=0) %}
                                         {% for line in rec_stats %}
-                                            {% if line.team_id == matchup.away_team.ID %}
+                                            {% if line.team_id == matchup.away_team.ID and line.receiver %}
                                                 {% set rec.recs = rec.recs + line.recs %}
                                                 {% set rec.recYDs = rec.recYDs + line.recYDs %}
                                                 {% set rec.recTDs = rec.recTDs + line.recTDs %}

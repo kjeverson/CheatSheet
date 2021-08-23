@@ -697,6 +697,7 @@ def update_player_season_stats(db):
 
         preseason_week_stats = player.get_weekly_stats_list(preseason=True)
         ps = player.get_season_stats(preseason=True)
+        ps.gamesPlayed = len(preseason_week_stats)
         for ws in preseason_week_stats:
             if ws.counted:
                 continue
@@ -733,6 +734,7 @@ def update_player_season_stats(db):
 
         season_week_stats = player.get_weekly_stats_list(preseason=False)
         ss = player.get_season_stats(preseason=False)
+        ss.gamesPlayed = len(season_week_stats)
         for ws in season_week_stats:
             if ws.counted:
                 continue
