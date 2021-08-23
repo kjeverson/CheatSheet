@@ -34,7 +34,9 @@ class Player(db.Model):
     designation = db.Column(db.String(25))
     injury = db.Column(db.String(10))
     ret = db.Column(db.String(10))
-    news = db.Column(db.String(1000))
+    news = db.Column(db.String(250))
+    analysis = db.Column(db.String(2000))
+    date = db.Column(db.String(25))
 
     season_stats = db.relationship('SeasonStats', back_populates='player')
     weekly_stats = db.relationship('WeeklyStats', back_populates='player')
@@ -71,7 +73,10 @@ class Player(db.Model):
             self.status = status.get('status')
             self.designation = status.get('designation')
             self.injury = status.get('injury')
+            self.date = status.get('date')
             self.news = status.get('news')
+            self.analysis = status.get('analysis')
+            self.ret = status.get('return')
 
         else:
             self.status = 'Active'

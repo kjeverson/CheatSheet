@@ -22,6 +22,11 @@ def player_status_from_id(id: str) -> Dict:
     status = soup.find("div", {"class": "p-card__injury"})
 
     news = soup.find("div", {"class": "news-update__news"})
+    date = soup.find("div", {"class": "news-update__timestamp"})
+    analysis = soup.find("div", {"class": "news-update__analysis"})
+
+    if analysis:
+        analysis = analysis.text[8:]
 
     if status:
 
@@ -44,11 +49,19 @@ def player_status_from_id(id: str) -> Dict:
             status_short = status[0]
             injury = status[1].split()[-1]
 
+        try:
+            ret = status[2].strip("Est. Return ")
+        except IndexError:
+            ret = ""
+
         status_dict = {
             "status": status_short,
             "designation": status[0],
             "injury": injury,
-            "news": news.text if news else ""
+            "news": news.text if news else "",
+            "analysis": analysis if analysis else "",
+            "date": date.text if date else "",
+            "return": ret if ret else ""
         }
 
         return status_dict
