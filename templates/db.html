@@ -66,7 +66,7 @@
                                             <div class="row text-start">Updates player statuses.</div>
                                         </div>
                                         <div class="col-3 text-end align-self-center">
-                                            <button id="updateStatus" class="btn btn-small btn-secondary">
+                                            <button id="updateStatus" data-id="{{ thread_ids[2] }}" class="btn btn-small btn-secondary" data-bs-toggle="modal" data-bs-target="#progressModal">
                                                 <span id="updateStatusSpinner" class="spinner-border spinner-border-sm visually-hidden" role="status"></span>
                                                 <span id="updateStatusText"> Update Statuses </span>
                                             </button>
@@ -96,7 +96,7 @@
                                             <div class="row text-start">Updates the database in its entirety. This includes rosters, player stats/statuses, games, fantasy points, and team stats/rankings.</div>
                                         </div>
                                         <div class="col-3 text-end align-self-center">
-                                            <button id="updateDatabase" class="btn btn-small btn-secondary">
+                                            <button id="updateDatabase" data-id="{{ thread_ids[4] }}" class="btn btn-small btn-secondary">
                                                 <span id="updateDatabaseSpinner" class="spinner-border spinner-border-sm visually-hidden" role="status"></span>
                                                 <span id="updateDatabaseText"> Update Database </span>
                                             </button>
@@ -151,6 +151,21 @@
             </div>
         </div>
     </div>
+    <!-- Progress Modal -->
+    <div class="modal fade" id="progressModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+      <div class="modal-dialog bg-dark text-white">
+        <div class="modal-content bg-dark">
+          <div class="modal-body bg-dark">
+            <div class="row">
+                <h6 id="stateText"></h6>
+            </div>
+            <div class="progress">
+                <div id="progressBar" class="progress-bar progress-bar-striped bg-dark progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 </div>
 <script type=text/javascript>
 
@@ -199,6 +214,7 @@
           $('#updateStatus').on('click', function(e) {
             e.preventDefault()
             disableButtons()
+            var thread_id = $(this).data("id");
             var button = document.getElementById("updateStatus");
             var spinner = document.getElementById("updateStatusSpinner");
             var text = document.getElementById("updateStatusText");
@@ -206,13 +222,20 @@
             spinner.classList.remove("visually-hidden");
             $.ajax({
               url: "/updateStatus",
+              async: true,
               type: "get",
-              success: function(player) {
+              data: { 'id': thread_id},
+              success: function() {
                 $('#updateStatusText').html("Update Statuses");
                 spinner.classList.add("visually-hidden");
+                $('#progressModal').modal("hide");
+                clearInterval(progress);
                 enableButtons();
                 }
             });
+            var progress = setInterval( function(){
+                check_progress(thread_id);
+                }, 1000);
           });
         });
         
@@ -228,7 +251,7 @@
             $.ajax({
               url: "/updateStats",
               type: "get",
-              success: function(player) {
+              success: function() {
                 $('#updateStatsText').html("Update Stats");
                 spinner.classList.add("visually-hidden");
                 enableButtons();
@@ -316,7 +339,16 @@
             }
        };
 
+       function check_progress(thread_id){
+        $.get('progress/' + thread_id, function(data) {
+            $('#stateText').html(data.state+' . . . ');
+            $('#progressBar').attr('aria-valuenow', parseInt(data.progress));
+            $('#progressBar').attr('aria-valuemax', parseInt(data.total));
+            var number = (parseInt(data.progress)/parseInt(data.total))*100;
+            $('#progressBar').attr('style','width:'+number.toString()+'%');
+        });
+    };
+
 </script>
-<!--<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>-->
 
 {% endblock %}

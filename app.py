@@ -3,10 +3,15 @@ from flask_sqlalchemy import SQLAlchemy
 import zulu
 import logging
 import time
+import random
+from NFLCheatSheet.lib.classes.update_thread import UpdateThread
 
+
+update_threads = {}
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
@@ -359,7 +364,14 @@ def database():
 
     teams = Team.query.all()
 
-    return render_template("db.html", teams=teams)
+    thread_ids = []
+    for i in range(0, 8):
+        thread_id = random.randint(0, 10000)
+        update_threads[thread_id] = UpdateThread()
+        update_threads[thread_id].state = "INIT"
+        thread_ids.append(thread_id)
+
+    return render_template("db.html", teams=teams, thread_ids=thread_ids)
 
 
 @app.route('/getHeadshots')
@@ -391,7 +403,14 @@ def update_stats():
 
 @app.route('/updateStatus')
 def update_status():
-    db_utils.update_player_status(db)
+
+    thread_id = int(request.args.get('id'))
+    global update_threads
+    update_threads[thread_id].state = "STARTED"
+    update_threads[thread_id].start()
+
+    update_threads[thread_id].state = "Updating Player Statuses"
+    db_utils.update_player_status(db, update_threads[thread_id])
     db.session.commit()
     print("Updating Status")
     return jsonify("Done")
@@ -399,7 +418,13 @@ def update_status():
 
 @app.route('/updateDatabase')
 def update_database():
-    db_utils.update_db(db)
+    thread_id = int(request.args.get('id'))
+    global update_threads
+    update_threads[thread_id].state = "STARTED"
+    update_threads[thread_id].start()
+
+    update_threads[thread_id].state = "Updating"
+    db_utils.update_db(db, update_threads[thread_id])
     db.session.commit()
     print("Updating Database")
     return jsonify("Done")
@@ -417,3 +442,12 @@ def delete_database():
     time.sleep(5)
     print("Deleting Database")
     return jsonify("Done")
+
+
+@app.route('/progress/<int:thread_id>')
+def progress(thread_id):
+    global update_threads
+
+    return {"state": str(update_threads[thread_id].state),
+            "progress": str(update_threads[thread_id].progress),
+            "total": str(update_threads[thread_id].total)}

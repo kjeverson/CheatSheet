@@ -211,7 +211,7 @@ def get_headshots(db):
     print("")
 
 
-def add_players(database, players: List[Dict]) -> None:
+def add_players(database, players: List[Dict], thread) -> None:
     """
     Add players to the database
     :param players: Player data list
@@ -219,10 +219,13 @@ def add_players(database, players: List[Dict]) -> None:
     :return:
     """
 
+    thread.state = "Adding Players to Database"
+    thread.total = len(players)
     print("Adding Players to Database..\r", end="")
     for i in range(len(players)):
         print("Adding Players to Database...{}/{} - {:0.2f}%\r"
               .format(i+1, len(players), ((i+1)/len(players))*100), end="")
+        thread.progress = i+1
 
         player = players[i]
         player_obj = Player.query.get(player['PlayerID'])
@@ -370,16 +373,18 @@ def add_default_scoring(database):
     print("Adding Default Scoring to Database...\x1b[32mCOMPLETE!\x1b[0m")
 
 
-def update_player_status(database):
+def update_player_status(database, thread):
 
     print("Updating Player Statuses...\r", end="")
 
     injured = get_injured_list()
 
     players = Player.query.all()
+    thread.total = len(players)
     for i in range(len(players)):
         print("Updating Player Statuses...{}/{} - {:0.2f}%\r"
               .format(i+1, len(players), ((i+1)/len(players))*100), end="")
+        thread.progress = i+1
         player = players[i]
         if player.current_team.ID == 100:
             continue
@@ -906,11 +911,11 @@ def build_db(db):
     db.session.commit()
 
 
-def update_db(db):
+def update_db(db, thread):
 
     players = get_all_player_data()
-    add_players(db, players)
-    update_player_status(db)
+    add_players(db, players, thread)
+    update_player_status(db, thread)
 
     update_schedule(db)
 
