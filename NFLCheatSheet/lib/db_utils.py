@@ -133,7 +133,7 @@ def filter_by_position(player_data: List[Dict], position: str = 'ALL') -> List[D
     for i in range(len(player_data)):
         experience_string = player_data[i]['ExperienceString']
         if experience_string:
-            year = re.search(r'\d+', experience_string.split('0')[0])
+            year = re.search(r'\d+', experience_string)
             if year:
                 experience = year.group(0)
             else:
@@ -183,12 +183,12 @@ def get_all_player_data(thread, position: str = "ALL") -> List[Dict]:
     time.sleep(5)
 
     # API CAll for all Player data
-    # response = requests.get("https://api.sportsdata.io/v3/nfl/scores/json/Players?"
+    #response = requests.get("https://api.sportsdata.io/v3/nfl/scores/json/Players?"
     #                        "key=2810c12201be4499bff03931c186f9f5")
-    # player_data = response.json()
+    #player_data = response.json()
 
     player_file_path = Path("/Users/everson/NFLCheatSheet/data/players.json")
-    # with player_file_path.open("w") as player_file:
+    #with player_file_path.open("w") as player_file:
     #    json.dump(player_data, player_file)
 
     with player_file_path.open("r") as player_file:

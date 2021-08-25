@@ -5,6 +5,7 @@ import logging
 import time
 import random
 from NFLCheatSheet.lib.classes.update_thread import UpdateThread
+from datetime import datetime
 
 
 update_threads = {}
@@ -287,13 +288,21 @@ def team():
 
         player_stats = [player.get_season_stats(preseason=True) for player in players]
 
+        injured = [player for player in players if player.date]
+
+        for player in injured:
+            player.date = datetime.strptime(player.date, '%B %d, %Y')
+
+        injured.sort(key=lambda x: x.date, reverse=True)
+        for player in injured:
+            player.date = player.date.strftime('%B %d, %Y')
+
         return render_template("team.html", teams=teams, players=players, team=team, stats=stats,
-                               team_stats=team.get_team_stats(preseason=True),
                                position=position, schedule=schedule, preschedule=preschedule,
                                passLeader=passLeader, passLeaderStats=passLeaderStats,
                                rushLeader=rushLeader, rushLeaderStats=rushLeaderStats,
                                recLeader=recLeader, recLeaderStats=recLeaderStats,
-                               player_stats=player_stats,
+                               player_stats=player_stats, injured=injured,
                                default_headshot_path=default_headshot_path)
 
 
@@ -401,6 +410,7 @@ def update_rosters():
 
     thread.state = "Updating Player Database"
     db_utils.add_players(db, players, thread)
+    db.session.commit()
     print("Updating Rosters")
     return jsonify("Done")
 
