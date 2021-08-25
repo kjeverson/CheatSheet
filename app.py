@@ -376,26 +376,55 @@ def database():
 
 @app.route('/getHeadshots')
 def get_headshots():
-    db_utils.get_headshots(db)
+    thread_id = int(request.args.get('id'))
+    global update_threads
+    thread = update_threads[thread_id]
+    thread.state = "STARTED"
+    thread.start()
+
+    thread.state = "Updating Player Headshots"
+    db_utils.get_headshots(db, thread)
     print("Updating Headshots")
     return jsonify("Done")
 
 
 @app.route('/updateRosters')
 def update_rosters():
-    time.sleep(5)
+    thread_id = int(request.args.get('id'))
+    global update_threads
+    thread = update_threads[thread_id]
+    thread.state = "STARTED"
+    thread.start()
+
+    thread.state = "Collecting Player Data"
+    players = db_utils.get_all_player_data(thread)
+
+    thread.state = "Updating Player Database"
+    db_utils.add_players(db, players, thread)
     print("Updating Rosters")
     return jsonify("Done")
 
 
 @app.route('/updateStats')
 def update_stats():
-    db_utils.update_schedule(db)
-    db_utils.add_player_week_stats(db)
-    db_utils.update_fantasy_points(db)
-    db_utils.update_player_season_stats(db)
-    db_utils.update_team_stats(db)
-    db_utils.update_rankings(db)
+    thread_id = int(request.args.get('id'))
+    global update_threads
+    thread = update_threads[thread_id]
+    thread.state = "STARTED"
+    thread.start()
+
+    thread.state = "Updating Matchups"
+    db_utils.update_schedule(db, thread)
+    thread.state = "Adding Weekly Stats to Database"
+    db_utils.add_player_week_stats(db, thread)
+    thread.state = "Updating Player Fantasy Points"
+    db_utils.update_fantasy_points(db, thread)
+    thread.state = "Updating Player Season Stats"
+    db_utils.update_player_season_stats(db, thread)
+    thread.state = "Updating Team Stats"
+    db_utils.update_team_stats(db, thread)
+    thread.state = "Updating Team Rankings"
+    db_utils.update_rankings(db, thread)
     db.session.commit()
     print("Updating Stats")
     return jsonify("Done")

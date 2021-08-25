@@ -8,6 +8,7 @@ import re
 import zulu
 import operator
 import requests
+import time
 
 from NFLCheatSheet.lib.classes.team import Team
 from NFLCheatSheet.lib.classes.player import Player
@@ -168,14 +169,18 @@ def filter_by_position(player_data: List[Dict], position: str = 'ALL') -> List[D
     return players
 
 
-def get_all_player_data(position: str = "ALL") -> List[Dict]:
+def get_all_player_data(thread, position: str = "ALL") -> List[Dict]:
     """
     Get all player data from json file.
     :param position: Position to get, supports 'ALL', 'OFF', 'DEF', 'SKILL', 'REC'. Default = 'ALL'
     :return: List of Player data in dictionaries
     """
 
+    thread.progress = 0
+    thread.total = 1
     print("Getting Player Data...\r", end="")
+
+    time.sleep(5)
 
     # API CAll for all Player data
     # response = requests.get("https://api.sportsdata.io/v3/nfl/scores/json/Players?"
@@ -192,16 +197,20 @@ def get_all_player_data(position: str = "ALL") -> List[Dict]:
     players = filter_by_position(player_data, position)
 
     print("Getting Player Data...\x1b[32mCOMPLETE!\x1b[0m")
+    thread.progress = 1
+    time.sleep(5)
     return players
 
 
-def get_headshots(db):
+def get_headshots(db, thread):
 
     players = Player.query.all()
 
+    thread.total = len(players)
     for i in range(len(players)):
         print("{}/{} - {:0.2f}%\r".format(i + 1, len(players), ((i + 1) / len(players)) * 100),
               end="")
+        thread.progress = i+1
         player = players[i]
         if player.current_team.ID != 100:
             img_path = Path("/Users/everson/NFLCheatSheet/static/headshots/{}.png"
@@ -450,7 +459,7 @@ def get_schedule(database):
     print("Adding Regular Season Games to Database...\x1b[32mCOMPLETE!\x1b[0m\033[K")
 
 
-def update_schedule(db):
+def update_schedule(db, thread):
 
     print("Updating Games...\r", end="")
     # Get all unfinished games
@@ -459,10 +468,16 @@ def update_schedule(db):
     games = [game for game in games if game.get_time() < dt_now]
     games = [game for game in games if game.is_complete() and not game.scraped_stats]
 
+    thread.progress = 0
+    thread.total = len(games)
+    if len(games) == 0:
+        time.sleep(5)
     for i in range(len(games)):
 
         print("Updating Games...{}/{} - {:0.2f}%\r"
               .format(i + 1, len(games), ((i + 1) / len(games)) * 100), end="")
+
+        thread.progress = i+1
         game = games[i]
 
         if game.completed:
@@ -585,11 +600,18 @@ def parse_week_stats(stats):
     return week_stats
 
 
-def add_player_week_stats(db):
+def add_player_week_stats(db, thread):
 
     games = Game.query.filter_by(completed=True).filter_by(scraped_stats=False).all()
 
-    for game in games:
+    thread.progress = 0
+    if len(games) > 0:
+        thread.total = len(games)
+    else:
+        thread.total = 1
+    for i in range(len(games)):
+        game = games[i]
+        thread.progress = i+1
         passing, rushing, receiving = get_game_stats(game.ID)
 
         players = []
@@ -688,15 +710,23 @@ def add_player_week_stats(db):
 
         game.scraped_stats = True
 
+        thread.progress = 1
 
-def update_player_season_stats(db):
+        if len(games) == 0:
+            time.sleep(5)
+
+
+def update_player_season_stats(db, thread):
 
     players = Player.query.all()
 
+    thread.progress = 0
+    thread.total = len(players)
     print("Update Season Stats...\r", end="")
     for i in range(len(players)):
 
         player = players[i]
+        thread.progress = i+1
         print("Update Season Stats...{}/{} - {:0.2f}%\r"
               .format(i + 1, len(players), ((i + 1) / len(players)) * 100),end="")
 
@@ -777,11 +807,15 @@ def update_player_season_stats(db):
     print("Update Season Stats...\x1b[32mCOMPLETE!\x1b[0m\033[K")
 
 
-def update_team_stats(db):
+def update_team_stats(db, thread):
 
     teams = Team.query.all()
 
+    thread.progress = 0
+    thread.total = len(teams)
     for i in range(len(teams)):
+        thread.progress = i+1
+
         team = teams[i]
 
         team_stats = team.get_team_stats(preseason=True)
@@ -846,16 +880,19 @@ def update_team_stats(db):
             team_stats.PAPG = team_stats.pointsAgainst / team.preseason_games_played
 
 
-def update_fantasy_points(db):
+def update_fantasy_points(db, thread):
 
     print("Calculating Fantasy Points...\r", end="")
     scoring = Scoring.query.first()
 
     players = Player.query.all()
+    thread.progress = 0
+    thread.total = len(players)
     for i in range(len(players)):
         print("Calculating Fantasy Points...{}/{} - {:0.2f}%\r"
               .format(i + 1, len(players), ((i + 1) / len(players)) * 100), end="")
         player = players[i]
+        thread.progress = i+1
         week_stats = player.weekly_stats
         if not week_stats:
             continue
@@ -865,7 +902,9 @@ def update_fantasy_points(db):
     print("Calculating Fantasy Points...\x1b[32mCOMPLETE!\x1b[0m\033[K")
 
 
-def update_rankings(db):
+def update_rankings(db, thread):
+
+    thread.progress = 0
 
     teams = Team.query.filter(Team.ID != 100).all()
     s = stats.TeamStats.query.filter(stats.TeamStats.team_id != 100).filter_by(preseason=True).all()
@@ -876,7 +915,10 @@ def update_rankings(db):
     PPGRank = sorted(s, key=operator.attrgetter("PPG"), reverse=True)
     PAPGRank = sorted(s, key=operator.attrgetter("PAPG"))
 
-    for team in teams:
+    thread.total = len(teams)
+    for i in range(len(teams)):
+        thread.progress = i+1
+        team = teams[i]
         s = team.get_team_stats(preseason=True)
         s.passYDsPerGameRank = passYDsPerGameRank.index(s)+1
         s.rushYDsPerGameRank = rushYDsPerGameRank.index(s)+1

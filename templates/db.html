@@ -26,7 +26,7 @@
                                             <div class="row text-start">Checks to see if player headshots exist, if they don't will try to download them.</div>
                                         </div>
                                         <div class="col-3 text-end align-self-center">
-                                            <button id="getHeadshots" class="btn btn-small btn-secondary">
+                                            <button id="getHeadshots" data-id="{{ thread_ids[0] }}" class="btn btn-small btn-secondary" data-bs-toggle="modal" data-bs-target="#progressModal">
                                                 <span id="getHeadshotsSpinner" class="spinner-border spinner-border-sm visually-hidden" role="status"></span>
                                                 <span id="getHeadshotsText"> Get Headshots </span>
                                             </button>
@@ -51,7 +51,7 @@
                                             <div class="row text-start">Updates team rosters.</div>
                                         </div>
                                         <div class="col-3 text-end align-self-center">
-                                            <button id="updateRosters" class="btn btn-small btn-secondary">
+                                            <button id="updateRosters" data-id="{{ thread_ids[1] }}" class="btn btn-small btn-secondary" data-bs-toggle="modal" data-bs-target="#progressModal">
                                                 <span id="updateRostersSpinner" class="spinner-border spinner-border-sm visually-hidden" role="status"></span>
                                                 <span id="updateRostersText"> Update Rosters </span>
                                             </button>
@@ -81,7 +81,7 @@
                                             <div class="row text-start">Updates player stats, games stats, and team stats/rankings.</div>
                                         </div>
                                         <div class="col-3 text-end align-self-center">
-                                            <button id="updateStats" class="btn btn-small btn-secondary">
+                                            <button id="updateStats" data-id="{{ thread_ids[3] }}" class="btn btn-small btn-secondary" data-bs-toggle="modal" data-bs-target="#progressModal">
                                                 <span id="updateStatsSpinner" class="spinner-border spinner-border-sm visually-hidden" role="status"></span>
                                                 <span id="updateStatsText"> Update Stats </span>
                                             </button>
@@ -173,6 +173,7 @@
           $('#getHeadshots').on('click', function(e) {
             e.preventDefault()
             disableButtons()
+            var thread_id = $(this).data("id");
             var button = document.getElementById("getHeadshots");
             var spinner = document.getElementById("getHeadshotsSpinner");
             $('#getHeadshotsText').html("Updating...");
@@ -180,12 +181,18 @@
             $.ajax({
               url: "/getHeadshots",
               type: "get",
+              data: { 'id': thread_id},
               success: function(player) {
                 $('#getHeadshotsText').html("Get Headshots");
                 spinner.classList.add("visually-hidden");
+                $('#progressModal').modal("hide");
+                clearInterval(progress);
                 enableButtons();
                 }
             });
+            var progress = setInterval( function(){
+                check_progress(thread_id);
+                }, 1000);
           });
         });
 
@@ -193,6 +200,7 @@
           $('#updateRosters').on('click', function(e) {
             e.preventDefault()
             disableButtons()
+            var thread_id = $(this).data("id");
             var button = document.getElementById("updateRosters");
             var spinner = document.getElementById("updateRostersSpinner");
             var text = document.getElementById("updateRostersText");
@@ -201,12 +209,18 @@
             $.ajax({
               url: "/updateRosters",
               type: "get",
+              data: { 'id': thread_id},
               success: function(player) {
                 $('#updateRostersText').html("Update Rosters");
                 spinner.classList.add("visually-hidden");
+                $('#progressModal').modal("hide");
+                clearInterval(progress);
                 enableButtons();
                 }
             });
+            var progress = setInterval( function(){
+                check_progress(thread_id);
+                }, 1000);
           });
         });
         
@@ -243,6 +257,7 @@
           $('#updateStats').on('click', function(e) {
             e.preventDefault()
             disableButtons()
+            var thread_id = $(this).data("id");
             var button = document.getElementById("updateStats");
             var spinner = document.getElementById("updateStatsSpinner");
             var text = document.getElementById("updateStatsText");
@@ -251,12 +266,18 @@
             $.ajax({
               url: "/updateStats",
               type: "get",
+              data: { 'id': thread_id},
               success: function() {
                 $('#updateStatsText').html("Update Stats");
                 spinner.classList.add("visually-hidden");
+                $('#progressModal').modal("hide");
+                clearInterval(progress);
                 enableButtons();
                 }
             });
+            var progress = setInterval( function(){
+                check_progress(thread_id);
+                }, 1000);
           });
         });
 
