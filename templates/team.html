@@ -15,7 +15,11 @@
         <div class="col-8 align-self-center">
           <div class="row"><small class="text-start">{{ team.location}}</small></div>
           <div class="row"><h2 class="text-start text-uppercase">{{ team.name }}</h2></div>
+          {% if preseason %}
+          <div class="row"><small class="text-start font-weight-light">{{ team.preseason_wins }}-{{ team.preseason_loses }}</small></div>
+          {% else %}
           <div class="row"><small class="text-start font-weight-light">{{ team.wins }}-{{ team.loses }}</small></div>
+          {% endif %}
         </div>
       </div>
     </div>

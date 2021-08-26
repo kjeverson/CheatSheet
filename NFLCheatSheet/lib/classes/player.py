@@ -94,3 +94,4 @@ class Player(db.Model):
             points = scoring.get_points(week_stats)
 
         return points
+

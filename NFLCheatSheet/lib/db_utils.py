@@ -562,13 +562,14 @@ def get_player(game, players, name):
 
             elif len(player) > 1:
 
-                return None
+                player = Player.query.filter(
+                    (Player.fname.like(fname)) & (Player.lname.contains(lname)) & (Player.team_id == game.home_team.ID) |
+                    (Player.fname.like(fname)) & (Player.lname.contains(lname)) & (Player.team_id == game.away_team.ID)).all()
 
-                #player = Player.query.filter(
-                #    (Player.fname.like(fname)) & (Player.lname.contains(lname)) & (Player.team_id == game.home_team.ID) |
-                #    (Player.fname.like(fname)) & (Player.lname.contains(lname)) & (Player.team_id == game.away_team.ID)).all()
-
-                #return player[-1]
+                if player:
+                    return player[-1]
+                else:
+                    return None
 
             else:
                 player = Player.query.filter(

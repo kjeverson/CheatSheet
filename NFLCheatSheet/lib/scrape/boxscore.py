@@ -23,6 +23,8 @@ def parse_table(tables, headers):
             if "No" in row.text and "Interceptions" in row.text:
                 continue
             stats = row.find_all("td")
+            #espnIDTag = stats[0].find("a")
+            #espnID = espnIDTag["data-player-uid"].split(":")[-1]
             name = stats[0].find("span").text
             stats = [stat.text for stat in row.find_all("td")][1:]
 
