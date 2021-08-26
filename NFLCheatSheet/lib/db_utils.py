@@ -562,11 +562,13 @@ def get_player(game, players, name):
 
             elif len(player) > 1:
 
-                player = Player.query.filter(
-                    (Player.fname.like(fname)) & (Player.lname.contains(lname)) & (Player.team_id == game.home_team.ID) |
-                    (Player.fname.like(fname)) & (Player.lname.contains(lname)) & (Player.team_id == game.away_team.ID)).all()
+                return None
 
-                return player[-1]
+                #player = Player.query.filter(
+                #    (Player.fname.like(fname)) & (Player.lname.contains(lname)) & (Player.team_id == game.home_team.ID) |
+                #    (Player.fname.like(fname)) & (Player.lname.contains(lname)) & (Player.team_id == game.away_team.ID)).all()
+
+                #return player[-1]
 
             else:
                 player = Player.query.filter(
@@ -583,7 +585,7 @@ def get_player(game, players, name):
 
 def parse_week_stats(stats):
     week_stats = {}
-    
+
     for key, stat in stats.items():
         if key == "team":
             continue
@@ -612,13 +614,12 @@ def add_player_week_stats(db, thread):
     for i in range(len(games)):
         game = games[i]
         thread.progress = i+1
-        passing, rushing, receiving = get_game_stats(game.ID)
-
+        passing, rushing, receiving, fumbles, defense = get_game_stats(game.ID)
         players = []
 
-        for i in range(0, 2):
+        for j in range(0, 2):
 
-            if i == 0:
+            if j == 0:
                 team_id = game.away_team.ID
             else:
                 team_id = game.home_team.ID
@@ -628,11 +629,15 @@ def add_player_week_stats(db, thread):
 
             player_names = set()
 
-            for name in passing[i].keys():
+            for name in passing[j].keys():
                 player_names.add(name)
-            for name in rushing[i].keys():
+            for name in rushing[j].keys():
                 player_names.add(name)
-            for name in receiving[i].keys():
+            for name in receiving[j].keys():
+                player_names.add(name)
+            for name in fumbles[j].keys():
+                player_names.add(name)
+            for name in defense[j].keys():
                 player_names.add(name)
 
             for name in player_names:
@@ -646,26 +651,37 @@ def add_player_week_stats(db, thread):
 
                 week_stats = {"preseason": game.preseason}
 
-                pass_stats = passing[i].get(name)
+                pass_stats = passing[j].get(name)
                 if pass_stats:
                     week_stats.update({"passer": True})
                     week_stats.update(parse_week_stats(pass_stats))
                 else:
                     week_stats.update({"passer": False})
 
-                rush_stats = rushing[i].get(name)
+                rush_stats = rushing[j].get(name)
                 if rush_stats:
                     week_stats.update({"rusher": True})
                     week_stats.update(parse_week_stats(rush_stats))
                 else:
                     week_stats.update({"rusher": False})
 
-                rec_stats = receiving[i].get(name)
+                rec_stats = receiving[j].get(name)
                 if rec_stats:
                     week_stats.update({"receiver": True})
                     week_stats.update(parse_week_stats(rec_stats))
                 else:
                     week_stats.update({"receiver": False})
+
+                fum_stats = fumbles[j].get(name)
+                if fum_stats:
+                    week_stats.update(parse_week_stats(fum_stats))
+
+                def_stats = defense[j].get(name)
+                if def_stats:
+                    week_stats.update({"defender": True})
+                    week_stats.update(parse_week_stats(def_stats))
+                else:
+                    week_stats.update({"defender": False})
 
                 db.session.add(stats.WeeklyStats(
                     player_id=int(player.ID),
@@ -697,8 +713,17 @@ def add_player_week_stats(db, thread):
                     recTDs=week_stats["recTDs"] if week_stats.get("recTDs") else 0,
                     recLng=week_stats["recLng"] if week_stats.get("recLng") else 0,
                     recTGTS=week_stats["recTGTS"] if week_stats.get("recTGTS") else 0,
-                    fumLost=0,
-                    fum=0,
+                    fumLost=week_stats["fumLost"] if week_stats.get("fumLost") else 0,
+                    fum=week_stats["fum"] if week_stats.get("fum") else 0,
+                    fumRec=week_stats["fumRec"] if week_stats.get("fumRec") else 0,
+                    defender=week_stats["defender"],
+                    totalTackles=week_stats["totalTackles"] if week_stats.get("totalTackles") else 0,
+                    soloTackles=week_stats["soloTackles"] if week_stats.get("soloTackles") else 0,
+                    sacks=week_stats["sacks"] if week_stats.get("sacks") else 0,
+                    tacklesForLoss=week_stats["tacklesForLoss"] if week_stats.get("tacklesForLoss") else 0,
+                    passDefensed=week_stats["passDefensed"] if week_stats.get("passDefensed") else 0,
+                    qbHits=week_stats["qbHits"] if week_stats.get("qbHits") else 0,
+                    defTDs=week_stats["defTDs"] if week_stats.get("defTDs") else 0,
                     FPs=0,
                 ))
 
@@ -928,27 +953,27 @@ def update_rankings(db, thread):
         s.PAPGRank = PAPGRank.index(s)+1
 
 
-def build_db(db):
+def build_db(db, thread):
     db.create_all()
 
     teams = get_all_team_data()
     add_teams(db, teams)
 
-    players = get_all_player_data()
-    add_players(db, players)
-    update_player_status(db)
+    players = get_all_player_data(thread)
+    add_players(db, players, thread)
+    #update_player_status(db, thread)
 
     add_default_scoring(db)
 
     get_schedule(db)
-    update_schedule(db)
+    update_schedule(db, thread)
 
-    add_player_week_stats(db)
-    update_fantasy_points(db)
-    update_player_season_stats(db)
+    add_player_week_stats(db, thread)
+    update_fantasy_points(db, thread)
+    update_player_season_stats(db, thread)
 
-    update_team_stats(db)
-    update_rankings(db)
+    update_team_stats(db, thread)
+    update_rankings(db, thread)
 
     db.session.commit()
 

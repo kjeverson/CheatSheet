@@ -96,6 +96,49 @@ class WeeklyStats(db.Model):
     # Fumbles
     fumLost = db.Column(db.Integer, default=0)
     fum = db.Column(db.Integer, default=0)
+    fumRec = db.Column(db.Integer, default=0)
+
+    # Defense
+    defender = db.Column(db.Boolean)
+    totalTackles = db.Column(db.Integer, default=0)
+    soloTackles = db.Column(db.Integer, default=0)
+    sacks = db.Column(db.Integer, default=0)
+    tacklesForLoss = db.Column(db.Integer, default=0)
+    passDefensed = db.Column(db.Integer, default=0)
+    qbHits = db.Column(db.Integer, default=0)
+    defTDs = db.Column(db.Integer, default=0)
+    defINTs = db.Column(db.Integer, default=0)
+    defINTYDs = db.Column(db.Integer, default=0)
+
+    # Kick Returns
+    krAtts = db.Column(db.Integer, default=0)
+    krYDs = db.Column(db.Integer, default=0)
+    krAVG = db.Column(db.Integer, default=0)
+    krLng = db.Column(db.Integer, default=0)
+    krTDs = db.Column(db.Integer, default=0)
+
+    # Punt Returns
+    prAtts = db.Column(db.Integer, default=0)
+    prYDs = db.Column(db.Integer, default=0)
+    prAVG = db.Column(db.Integer, default=0)
+    prLng = db.Column(db.Integer, default=0)
+    prTDs = db.Column(db.Integer, default=0)
+
+    # Kicking
+    fgMade = db.Column(db.Integer, default=0)
+    fgAtts = db.Column(db.Integer, default=0)
+    fgPCT = db.Column(db.Integer, default=0)
+    xpMade = db.Column(db.Integer, default=0)
+    xpAtts = db.Column(db.Integer, default=0)
+    points = db.Column(db.Integer, default=0)
+
+    # Punting
+    punts = db.Column(db.Integer, default=0)
+    puntYDs = db.Column(db.Integer, default=0)
+    puntAVG = db.Column(db.Integer, default=0)
+    puntTB = db.Column(db.Integer, default=0)
+    puntIn20 = db.Column(db.Integer, default=0)
+    puntLng = db.Column(db.Integer, default=0)
 
     # Fantasy Points
     FPs = db.Column(db.Integer, default=0)

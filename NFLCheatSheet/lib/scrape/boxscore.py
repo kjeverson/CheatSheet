@@ -18,6 +18,10 @@ def parse_table(tables, headers):
         for row in rows:
             if "TEAM" in row.text:
                 continue
+            if "No" in row.text and "Fumbles" in row.text:
+                continue
+            if "No" in row.text and "Interceptions" in row.text:
+                continue
             stats = row.find_all("td")
             name = stats[0].find("span").text
             stats = [stat.text for stat in row.find_all("td")][1:]
@@ -25,7 +29,9 @@ def parse_table(tables, headers):
             stat_dict[i].update({name: {}})
             for header in range(len(headers)):
                 stat_dict[i][name].update({headers[header]: stats[header]})
-            stat_dict[i][name].pop('AVG')
+
+            if 'AVG' in headers:
+                stat_dict[i][name].pop('AVG')
 
     return stat_dict
 
@@ -72,7 +78,32 @@ def get_game_stats(game_id):
     headers = ['recs', 'recYDs', 'AVG', 'recTDs', 'recLng', 'recTGTS']
     rec_stats = parse_table(tables, headers)
 
-    return pass_stats, rush_stats, rec_stats
+    # Fumbles Scrape
+    fumbles = soup.find("div", {"id": "gamepackage-fumbles"})
+    away_fumbles = fumbles.find("div", {"class": "col column-one gamepackage-away-wrap"})
+    home_fumbles = fumbles.find("div", {"class": "col column-two gamepackage-home-wrap"})
+
+    tables = list()
+    tables.append(away_fumbles.find("table"))
+    tables.append(home_fumbles.find("table"))
+
+    headers = ["fum", "fumLost", "fumRec"]
+    fumble_stats = parse_table(tables, headers)
+
+    # Defense Scrape
+    defense = soup.find("div", {"id": "gamepackage-defensive"})
+    away_defense = defense.find("div", {"class": "col column-one gamepackage-away-wrap"})
+    home_defense = defense.find("div", {"class": "col column-two gamepackage-home-wrap"})
+
+    tables = list()
+    tables.append(away_defense.find("table"))
+    tables.append(home_defense.find("table"))
+
+    headers = ["totalTackles", "soloTackles", "sacks", "tacklesForLoss", "passDefensed",
+               "qbHits", "defTDs"]
+    defense_stats = parse_table(tables, headers)
+
+    return pass_stats, rush_stats, rec_stats, fumble_stats, defense_stats
 
 
 def is_completed(game_id):

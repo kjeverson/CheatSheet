@@ -6,6 +6,7 @@ import time
 import random
 from NFLCheatSheet.lib.classes.update_thread import UpdateThread
 from datetime import datetime
+import os
 
 
 update_threads = {}
@@ -121,6 +122,7 @@ def matchup():
             pass_stats = WeeklyStats.query.filter_by(game_id=game.ID).filter_by(passer=True).all()
             rush_stats = WeeklyStats.query.filter_by(game_id=game.ID).filter_by(rusher=True).all()
             rec_stats = WeeklyStats.query.filter_by(game_id=game.ID).filter_by(receiver=True).all()
+            def_stats = WeeklyStats.query.filter_by(game_id=game.ID).filter_by(defender=True).all()
 
             pass_stats = sorted(pass_stats, reverse=True)
             rush_stats = sorted(rush_stats, reverse=True)
@@ -150,6 +152,7 @@ def matchup():
                                    passLeader=passLeader, passLeaderStats=passLeaderStats,
                                    rushLeader=rushLeader, rushLeaderStats=rushLeaderStats,
                                    recLeader=recLeader, recLeaderStats=recLeaderStats,
+                                   def_stats=def_stats,
                                    default_headshot_path=default_headshot_path)
 
         else:
@@ -471,14 +474,21 @@ def update_database():
 
 @app.route('/rebuildDatabase')
 def rebuild_database():
-    time.sleep(5)
+    thread_id = int(request.args.get('id'))
+    global update_threads
+    thread = update_threads[thread_id]
+    thread.state = "STARTED"
+    thread.start()
+
+    thread.state = "Rebuilding Database"
+    db_utils.build_db(db, thread)
     print("Rebuilding Database")
     return jsonify("Done")
 
 
 @app.route('/deleteDatabase')
 def delete_database():
-    time.sleep(5)
+    os.remove("/Users/everson/NFLCheatSheet/database.db")
     print("Deleting Database")
     return jsonify("Done")
 

@@ -121,7 +121,7 @@
                                             <div class="row text-start">Rebuilds the database in its entirety.</div>
                                         </div>
                                         <div class="col-3 text-end align-self-center">
-                                            <button id="rebuildDatabase" class="btn btn-small btn-danger">
+                                            <button id="rebuildDatabase" data-id="{{ thread_ids[5] }}" class="btn btn-small btn-danger" data-bs-toggle="modal" data-bs-target="#progressModal">
                                                 <span id="rebuildDatabaseSpinner" class="spinner-border spinner-border-sm visually-hidden" role="status"></span>
                                                 <span id="rebuildDatabaseText"> Rebuild Database </span>
                                             </button>
@@ -306,6 +306,7 @@
           $('#rebuildDatabase').on('click', function(e) {
             e.preventDefault()
             disableButtons()
+            var thread_id = $(this).data("id");
             var button = document.getElementById("rebuildDatabase");
             var spinner = document.getElementById("rebuildDatabaseSpinner");
             var text = document.getElementById("rebuildDatabaseText");
@@ -314,12 +315,16 @@
             $.ajax({
               url: "/rebuildDatabase",
               type: "get",
+              data: { 'id': thread_id},
               success: function(player) {
                 $('#rebuildDatabaseText').html("Rebuild Database");
                 spinner.classList.add("visually-hidden");
                 enableButtons();
                 }
             });
+            var progress = setInterval( function(){
+                check_progress(thread_id);
+                }, 1000);
           });
         });
         
