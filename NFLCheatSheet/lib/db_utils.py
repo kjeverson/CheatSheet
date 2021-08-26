@@ -728,7 +728,8 @@ def add_player_week_stats(db, thread):
                     FPs=0,
                 ))
 
-        pass_leader_id, rush_leader_id, rec_leader_id = stats.get_stats_leaders(players, game.week)
+        pass_leader_id, rush_leader_id, rec_leader_id = stats.get_stats_leaders(
+            players, game.preseason, game.week)
 
         game.passingLeader_id = pass_leader_id
         game.rushingLeader_id = rush_leader_id
@@ -846,7 +847,8 @@ def update_team_stats(db, thread):
 
         team_stats = team.get_team_stats(preseason=True)
 
-        pass_leader_id, rush_leader_id, rec_leader_id = stats.get_stats_leaders(team.players)
+        pass_leader_id, rush_leader_id, rec_leader_id = stats.get_stats_leaders(
+            team.players, game.preseason)
 
         team_stats.passingLeader_id = pass_leader_id
         team_stats.rushingLeader_id = rush_leader_id
