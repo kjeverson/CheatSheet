@@ -92,62 +92,6 @@
     <div class="container mt-2 text-white">
         <div class="row">
             <!-- Left Side -->
-            <div class="col-3">
-                <!-- Game Leaders -->
-                <div class="row mt-2">
-                    <div class="card bg-dark">
-                        <div class="card-title text-center">Game Leaders</div>
-                        <div class="card-body">
-                            <!-- Passing Leader -->
-                            <div class="row mt-2">
-                                <button data-id="{{ passLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
-                                    <div class="row">
-                                        <div class="col-6 position-relative">
-                                            <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + passLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
-                                        </div>
-                                        <div class="col-6">
-                                            <div class="row mt-2 text-end"><small>{{ passLeader.fname[0] }}. {{ passLeader.lname }}</small></div>
-                                            <div class="row mt-1 text-end"><small class="text-muted">{{ passLeaderStats.passComps }}-{{ passLeaderStats.passAtts }}, {{ passLeaderStats.passYDs }} YDs, {{ passLeaderStats.passTDs }} TDs</small></div>
-                                        </div>
-                                    </div>
-                                    <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Passing Yards</span>
-                                </button>
-                            </div>
-                            <!-- Rushing Leader -->
-                            <div class="row mt-2">
-                                <button data-id="{{ rushLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + rushLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
-                                        </div>
-                                        <div class="col-6">
-                                            <div class="row mt-2 text-end"><small>{{ rushLeader.fname[0] }}. {{ rushLeader.lname }}</small></div>
-                                            <div class="row mt-1 text-end"><small class="text-muted">{{ rushLeaderStats.rushAtts }} CAR, {{ rushLeaderStats.rushYDs }} YDs, {{ rushLeaderStats.rushTDs }} TDs</small></div>
-                                        </div>
-                                    </div>
-                                    <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Rushing Yards</span>
-                                </button>
-                            </div>
-                            <!-- Receiving Leader -->
-                            <div class="row mt-2">
-                                <button data-id="{{ recLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + recLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
-                                        </div>
-                                        <div class="col-6">
-                                            <div class="row mt-2 text-end"><small>{{ recLeader.fname[0] }}. {{ recLeader.lname }}</small></div>
-                                            <div class="row mt-1 text-end"><small class="text-muted">{{ recLeaderStats.recs }} REC, {{ recLeaderStats.recYDs }} YDs, {{ recLeaderStats.recTDs }} TDs</small></div>
-                                        </div>
-                                    </div>
-                                    <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Receiving Yards</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Right Side -->
             <div class="col-9">
                 <!-- Box Score -->
                 <div class="row mt-2">
@@ -176,7 +120,7 @@
                                         </thead>
                                         <tbody>
                                             {% set pass = namespace(passComps=0, passAtts=0, passYDs=0, passTDs=0, passINTs=0, passSacks=0, passSackYDs=0) %}
-                                            {% for line in pass_stats %}
+                                            {% for line in stats|sort(attribute='passYDs', reverse=True) %}
                                             {% if line.team_id == matchup.home_team.ID and line.passer %}
                                                 {% set pass.passComps = pass.passComps + line.passComps %}
                                                 {% set pass.passAtts = pass.passAtts + line.passAtts %}
@@ -234,7 +178,7 @@
                                         </thead>
                                         <tbody>
                                             {% set pass = namespace(passComps=0, passAtts=0, passYDs=0, passTDs=0, passINTs=0, passSacks=0, passSackYDs=0) %}
-                                            {% for line in pass_stats %}
+                                            {% for line in stats|sort(attribute='passYDs', reverse=True) %}
                                             {% if line.team_id == matchup.away_team.ID and line.passer %}
                                                 {% set pass.passComps = pass.passComps + line.passComps %}
                                                 {% set pass.passAtts = pass.passAtts + line.passAtts %}
@@ -294,7 +238,7 @@
                                         </thead>
                                         <tbody>
                                         {% set rush = namespace(rushAtts=0, rushYDs=0, rushTDs=0, rushLng=0) %}
-                                        {% for line in rush_stats %}
+                                        {% for line in stats|sort(attribute='rushYDs', reverse=True) %}
                                             {% if line.team_id == matchup.home_team.ID and line.rusher %}
                                                 {% set rush.rushAtts = rush.rushAtts + line.rushAtts %}
                                                 {% set rush.rushYDs = rush.rushYDs + line.rushYDs %}
@@ -344,7 +288,7 @@
                                         </thead>
                                         <tbody>
                                         {% set rush = namespace(rushAtts=0, rushYDs=0, rushTDs=0, rushLng=0) %}
-                                        {% for line in rush_stats %}
+                                        {% for line in stats|sort(attribute='rushYDs', reverse=True) %}
                                             {% if line.team_id == matchup.away_team.ID and line.rusher %}
                                                 {% set rush.rushAtts = rush.rushAtts + line.rushAtts %}
                                                 {% set rush.rushYDs = rush.rushYDs + line.rushYDs %}
@@ -398,7 +342,7 @@
                                         </thead>
                                         <tbody>
                                         {% set rec = namespace(recs=0, recYDs=0, recTDs=0, recLng=0, recTGTS=0) %}
-                                        {% for line in rec_stats %}
+                                        {% for line in stats|sort(attribute='recYDs', reverse=True) %}
                                             {% if line.team_id == matchup.home_team.ID and line.receiver %}
                                                 {% set rec.recs = rec.recs + line.recs %}
                                                 {% set rec.recYDs = rec.recYDs + line.recYDs %}
@@ -456,7 +400,7 @@
                                         </thead>
                                         <tbody>
                                         {% set rec = namespace(recs=0, recYDs=0, recTDs=0, recLng=0, recTGTS=0) %}
-                                        {% for line in rec_stats %}
+                                        {% for line in stats|sort(attribute='recYDs', reverse=True) %}
                                             {% if line.team_id == matchup.away_team.ID and line.receiver %}
                                                 {% set rec.recs = rec.recs + line.recs %}
                                                 {% set rec.recYDs = rec.recYDs + line.recYDs %}
@@ -495,6 +439,115 @@
                                     </table>
                                 </div>
                             </div>
+                            <!-- Fumbles -->
+                            <div class="row">
+                                <!-- Home Fumbles -->
+                                <div class="col-6">
+                                    <div class="row mt-2">
+                                        <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.home_team.key+'.png') }}" class="img-fluid"></div>
+                                        <div class="col-10 align-self-center"><h6>{{ matchup.home_team.location }} Fumbles</h6></div>
+                                    </div>
+                                    <table class="sortable player-table table table-sm table-dark table-hover table-responsive">
+                                        <thead>
+                                            <tr>
+                                                <td class="text-start"></td>
+                                                <td class="text-start">FUM</td>
+                                                <td class="text-start">LOST</td>
+                                                <td class="text-start">REC</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% set fumbles = namespace(fum=0, fumLost=0, fumRec=0, count=0) %}
+                                        {% for line in stats|sort(attribute='fum', reverse=True) %}
+                                            {% if line.team_id == matchup.home_team.ID %}
+                                                {% if line.fum > 0 or line.fumRec > 0 %}
+                                                {% set fumbles.count = fumbles.count + 1 %}
+                                                {% set fumbles.fum = fumbles.fum + line.fum %}
+                                                {% set fumbles.fumLost = fumbles.fumLost + line.fumLost %}
+                                                {% set fumbles.fumRec = fumbles.fumRec + line.fumRec %}
+                                                <tr data-id="{{ line.player.ID }}">
+                                                    <td class="text-start">{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
+                                                    <td class="text-start">{{ line.fum }}</td>
+                                                    <td class="text-start">{{ line.fumLost }}</td>
+                                                    <td class="text-start">{{ line.fumRec }}</td>
+                                                </tr>
+                                        {% endif %}
+                                        {% endif %}
+                                        {% endfor %}
+                                        {% if fumbles.count == 0 %}
+                                                <tr>
+                                                    <td class="text-start">No {{ matchup.home_team.location }} Fumbles</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                </tr>
+                                        {% else %}
+                                        </tbody>
+                                        <tfoot>
+                                            <tr class="fw-bold">
+                                                    <td class="text-start">TEAM</td>
+                                                    <td class="text-start">{{ fumbles.fum }}</td>
+                                                    <td class="text-start">{{ fumbles.fumLost }}</td>
+                                                    <td class="text-start">{{ fumbles.fumRec }}</td>
+                                                </tr>
+                                        </tfoot>
+                                        {% endif %}
+                                    </table>
+                                </div>
+                                <!-- Away Fumbles -->
+                                <div class="col-6">
+                                    <div class="row mt-2">
+                                        <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.away_team.key+'.png') }}" class="img-fluid"></div>
+                                        <div class="col-10 align-self-center"><h6>{{ matchup.away_team.location }} Fumbles</h6></div>
+                                    </div>
+                                    <table class="sortable player-table table table-sm table-dark table-hover table-responsive">
+                                        <thead>
+                                            <tr>
+                                                <td class="text-start"></td>
+                                                <td class="text-start">FUM</td>
+                                                <td class="text-start">LOST</td>
+                                                <td class="text-start">REC</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% set fumbles = namespace(fum=0, fumLost=0, fumRec=0, count=0) %}
+                                        {% for line in stats|sort(attribute='fum', reverse=True) %}
+                                            {% if line.team_id == matchup.away_team.ID %}
+                                                {% if line.fum > 0 or line.fumRec > 0 %}
+                                                {% set fumbles.count = fumbles.count + 1 %}
+                                                {% set fumbles.fum = fumbles.fum + line.fum %}
+                                                {% set fumbles.fumLost = fumbles.fumLost + line.fumLost %}
+                                                {% set fumbles.fumRec = fumbles.fumRec + line.fumRec %}
+                                                <tr data-id="{{ line.player.ID }}">
+                                                    <td class="text-start">{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
+                                                    <td class="text-start">{{ line.fum }}</td>
+                                                    <td class="text-start">{{ line.fumLost }}</td>
+                                                    <td class="text-start">{{ line.fumRec }}</td>
+                                                </tr>
+                                        {% endif %}
+                                        {% endif %}
+                                        {% endfor %}
+                                        {% if fumbles.count == 0 %}
+                                                <tr>
+                                                    <td class="text-start">No {{ matchup.away_team.location }} Fumbles</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                </tr>
+                                        {% else %}
+                                        </tbody>
+                                        <tfoot>
+                                            <tr class="fw-bold">
+                                                    <td class="text-start">TEAM</td>
+                                                    <td class="text-start">{{ fumbles.fum }}</td>
+                                                    <td class="text-start">{{ fumbles.fumLost }}</td>
+                                                    <td class="text-start">{{ fumbles.fumRec }}</td>
+                                                </tr>
+                                        </tfoot>
+                                        {% endif %}
+                                    </table>
+                                </div>
+                            </div>
                             <!-- Defense -->
                             <div class="row">
                                 <!-- Home Defense -->
@@ -518,7 +571,7 @@
                                         </thead>
                                         <tbody>
                                         {% set def = namespace(totalTackles=0, soloTackles=0, sacks=0, tacklesForLoss=0, passDefensed=0, qbHits=0, defTDs=0) %}
-                                        {% for line in def_stats %}
+                                        {% for line in stats|sort(attribute='totalTackles', reverse=True) %}
                                             {% if line.team_id == matchup.home_team.ID and line.defender %}
                                                 {% set def.totalTackles = def.totalTackles + line.totalTackles %}
                                                 {% set def.soloTackles = def.soloTackles + line.soloTackles %}
@@ -575,7 +628,7 @@
                                         </thead>
                                         <tbody>
                                         {% set def = namespace(totalTackles=0, soloTackles=0, sacks=0, tacklesForLoss=0, passDefensed=0, qbHits=0, defTDs=0) %}
-                                        {% for line in def_stats %}
+                                        {% for line in stats|sort(attribute='totalTackles', reverse=True) %}
                                             {% if line.team_id == matchup.away_team.ID and line.defender %}
                                                 {% set def.totalTackles = def.totalTackles + line.totalTackles %}
                                                 {% set def.soloTackles = def.soloTackles + line.soloTackles %}
@@ -611,6 +664,65 @@
                                         </tfoot>
                                     </table>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Right Side -->
+            <div class="col-3">
+                <!-- Game Leaders -->
+                <div class="row mt-2">
+                    <div class="card bg-dark">
+                        <div class="card-title text-center">Game Leaders</div>
+                        <div class="card-body">
+                            <!-- Passing Leader -->
+                            {% set passLeaderStats = passLeader.get_weekly_stats(matchup) %}
+                            <div class="row mt-2">
+                                <button data-id="{{ passLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="row mt-2 text-start"><small>{{ passLeader.fname[0] }}. {{ passLeader.lname }}</small></div>
+                                            <div class="row mt-1 text-start"><small class="text-muted">{{ passLeaderStats.passComps }}-{{ passLeaderStats.passAtts }}, {{ passLeaderStats.passYDs }} YDs, {{ passLeaderStats.passTDs }} TDs</small></div>
+                                        </div>
+                                        <div class="col-6 position-relative">
+                                            <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + passLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
+                                        </div>
+                                    </div>
+                                    <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Passing Yards</span>
+                                </button>
+                            </div>
+                            <!-- Rushing Leader -->
+                            {% set rushLeaderStats = rushLeader.get_weekly_stats(matchup) %}
+                            <div class="row mt-2">
+                                <button data-id="{{ rushLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="row mt-2 text-start"><small>{{ rushLeader.fname[0] }}. {{ rushLeader.lname }}</small></div>
+                                            <div class="row mt-1 text-start"><small class="text-muted">{{ rushLeaderStats.rushAtts }} CAR, {{ rushLeaderStats.rushYDs }} YDs, {{ rushLeaderStats.rushTDs }} TDs</small></div>
+                                        </div>
+                                        <div class="col-6">
+                                            <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + rushLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
+                                        </div>
+                                    </div>
+                                    <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Rushing Yards</span>
+                                </button>
+                            </div>
+                            <!-- Receiving Leader -->
+                            {% set recLeaderStats = recLeader.get_weekly_stats(matchup) %}
+                            <div class="row mt-2">
+                                <button data-id="{{ recLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="row mt-2 text-start"><small>{{ recLeader.fname[0] }}. {{ recLeader.lname }}</small></div>
+                                            <div class="row mt-1 text-start"><small class="text-muted">{{ recLeaderStats.recs }} REC, {{ recLeaderStats.recYDs }} YDs, {{ recLeaderStats.recTDs }} TDs</small></div>
+                                        </div>
+                                        <div class="col-6">
+                                            <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + recLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
+                                        </div>
+                                    </div>
+                                    <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Receiving Yards</span>
+                                </button>
                             </div>
                         </div>
                     </div>

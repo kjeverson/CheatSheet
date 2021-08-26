@@ -215,7 +215,7 @@ class TeamStats(db.Model):
     rushYDsRank = db.Column(db.Integer, default=0)
 
 
-def get_stats_leaders(players, week=None):
+def get_stats_leaders(players, preseason, week=None):
 
     if not players:
         return None
@@ -233,15 +233,12 @@ def get_stats_leaders(players, week=None):
     for player in players:
 
         if week:
-            stats = WeeklyStats.query.filter_by(player_id=player.ID).filter_by(preseason=True).all()
-            stats = [stat for stat in stats if stat.game.week == week]
-            if not stats:
-                continue
-            else:
-                stats = stats[-1]
+            stats = player.get_weekly_stats_by_week(preseason, week)
         else:
-            stats = SeasonStats.query.filter_by(player_id=player.ID)\
-                .filter_by(preseason=True).first()
+            stats = player.get_season_stats(preseason)
+
+        if not stats:
+            continue
 
         if not passYDs_leader:
             passYDs_leader = player

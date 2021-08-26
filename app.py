@@ -69,24 +69,44 @@ def matchups():
                                 match.receivingLeader_id])
 
         if players:
+            games_completed = True
             players = [Player.query.get(player_id) for player_id in players]
 
-            passLeader_id, rushLeader_id, receivingLeader_id = get_stats_leaders(players, week)
+            passLeader_id, rushLeader_id, receivingLeader_id = get_stats_leaders(
+                players, preseason, week)
 
             passLeader = Player.query.get(passLeader_id)
             rushLeader = Player.query.get(rushLeader_id)
             recLeader = Player.query.get(receivingLeader_id)
-            passLeaderStats = passLeader.get_weekly_stats_by_week(preseason=preseason, week=week)
-            rushLeaderStats = rushLeader.get_weekly_stats_by_week(preseason=preseason, week=week)
-            recLeaderStats = recLeader.get_weekly_stats_by_week(preseason=preseason, week=week)
 
         else:
-            passLeader = None
-            rushLeader = None
-            recLeader = None
-            passLeaderStats = None
-            rushLeaderStats = None
-            recLeaderStats = None
+            games_completed = False
+
+            players = []
+            teams = Team.query.all()
+            for team in teams:
+                stats = team.get_team_stats(preseason=preseason)
+                if stats.passingLeader_id:
+                    players.append(stats.passingLeader_id)
+                if stats.rushingLeader_id:
+                    players.append(stats.rushingLeader_id)
+                if stats.receivingLeader_id:
+                    players.append(stats.receivingLeader_id)
+
+            if players:
+                players = [Player.query.get(player_id) for player_id in players]
+
+                passLeader_id, rushLeader_id, receivingLeader_id = get_stats_leaders(
+                    players, preseason)
+
+                passLeader = Player.query.get(passLeader_id)
+                rushLeader = Player.query.get(rushLeader_id)
+                recLeader = Player.query.get(receivingLeader_id)
+
+            else:
+                passLeader = None
+                rushLeader = None
+                recLeader = None
 
         # Render Times
         for match in m:
@@ -97,10 +117,9 @@ def matchups():
         default_headshot_path = url_for('static', filename='headshots/default.png')
 
         return render_template("matchups.html", teams=teams, week=week, week_string=week_string,
-                               matchups=m, bye_teams=bye_teams, passLeader=passLeader,
+                               matchups=m, bye_teams=bye_teams, games_completed=games_completed,
+                               passLeader=passLeader,
                                recLeader=recLeader, rushLeader=rushLeader,
-                               passLeaderStats=passLeaderStats, rushLeaderStats=rushLeaderStats,
-                               recLeaderStats=recLeaderStats,
                                default_headshot_path=default_headshot_path)
 
 
@@ -119,40 +138,24 @@ def matchup():
             away_team_line_score = game.away_team_line_score.split(" ")
             home_team_line_score = game.home_team_line_score.split(" ")
 
-            pass_stats = WeeklyStats.query.filter_by(game_id=game.ID).filter_by(passer=True).all()
-            rush_stats = WeeklyStats.query.filter_by(game_id=game.ID).filter_by(rusher=True).all()
-            rec_stats = WeeklyStats.query.filter_by(game_id=game.ID).filter_by(receiver=True).all()
-            def_stats = WeeklyStats.query.filter_by(game_id=game.ID).filter_by(defender=True).all()
-
-            pass_stats = sorted(pass_stats, reverse=True)
-            rush_stats = sorted(rush_stats, reverse=True)
-            rec_stats = sorted(rec_stats, reverse=True)
+            stats = WeeklyStats.query.filter_by(game_id=game.ID).all()
 
             players = []
-            for stats in game.stats:
-                players.append(stats.player)
+            for stat in stats:
+                players.append(stat.player)
 
             passLeader = Player.query.get(game.passingLeader_id)
             rushLeader = Player.query.get(game.rushingLeader_id)
             recLeader = Player.query.get(game.receivingLeader_id)
 
-            passLeaderStats = WeeklyStats.query.filter_by(
-                game_id=game.ID).filter_by(player_id=passLeader.ID).first()
-            rushLeaderStats = WeeklyStats.query.filter_by(
-                game_id=game.ID).filter_by(player_id=rushLeader.ID).first()
-            recLeaderStats = WeeklyStats.query.filter_by(
-                game_id=game.ID).filter_by(player_id=recLeader.ID).first()
-
             default_headshot_path = url_for('static', filename='headshots/default.png')
 
-            return render_template("boxscore.html", teams=teams, matchup=game,
-                                   pass_stats=pass_stats, rush_stats=rush_stats,
-                                   rec_stats=rec_stats, als=away_team_line_score,
+            return render_template("boxscore.html", teams=teams, matchup=game, stats=stats,
+                                   als=away_team_line_score,
                                    hls=home_team_line_score,
-                                   passLeader=passLeader, passLeaderStats=passLeaderStats,
-                                   rushLeader=rushLeader, rushLeaderStats=rushLeaderStats,
-                                   recLeader=recLeader, recLeaderStats=recLeaderStats,
-                                   def_stats=def_stats,
+                                   passLeader=passLeader,
+                                   rushLeader=rushLeader,
+                                   recLeader=recLeader,
                                    default_headshot_path=default_headshot_path)
 
         else:
