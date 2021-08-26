@@ -168,33 +168,17 @@ def matchup():
                 date = "TBD"
                 time = ""
 
-            team_stats = game.home_team.stats
-            team_stats = [stat for stat in team_stats if stat.preseason][-1]
+            team_stats = game.home_team.get_team_stats(preseason=game.preseason)
 
             homePassLeader = Player.query.get(team_stats.passingLeader_id)
             homeRushLeader = Player.query.get(team_stats.rushingLeader_id)
             homeRecLeader = Player.query.get(team_stats.receivingLeader_id)
 
-            homePassLeaderStats = WeeklyStats.query.filter_by(
-                player_id=homePassLeader.ID).filter_by(preseason=game.preseason).first()
-            homeRushLeaderStats = WeeklyStats.query.filter_by(
-                player_id=homeRushLeader.ID).filter_by(preseason=game.preseason).first()
-            homeRecLeaderStats = WeeklyStats.query.filter_by(
-                player_id=homeRecLeader.ID).filter_by(preseason=game.preseason).first()
-
-            team_stats = game.away_team.stats
-            team_stats = [stat for stat in team_stats if stat.preseason][-1]
+            team_stats = game.away_team.get_team_stats(preseason=game.preseason)
 
             awayPassLeader = Player.query.get(team_stats.passingLeader_id)
             awayRushLeader = Player.query.get(team_stats.rushingLeader_id)
             awayRecLeader = Player.query.get(team_stats.receivingLeader_id)
-
-            awayPassLeaderStats = WeeklyStats.query.filter_by(
-                player_id=awayPassLeader.ID).filter_by(preseason=game.preseason).first()
-            awayRushLeaderStats = WeeklyStats.query.filter_by(
-                player_id=awayRushLeader.ID).filter_by(preseason=game.preseason).first()
-            awayRecLeaderStats = WeeklyStats.query.filter_by(
-                player_id=awayRecLeader.ID).filter_by(preseason=game.preseason).first()
 
             default_headshot_path = url_for('static', filename='headshots/default.png')
 
@@ -210,11 +194,10 @@ def matchup():
                                    homePassLeader=homePassLeader, homeRushLeader=homeRushLeader,
                                    homeRecLeader=homeRecLeader, awayPassLeader=awayPassLeader,
                                    awayRushLeader=awayRushLeader, awayRecLeader=awayRecLeader,
-                                   away_team_stats=game.away_team.get_team_stats(preseason=game.preseason),
-                                   home_team_stats=game.home_team.get_team_stats(preseason=game.preseason),
-                                   homePassLeaderStats=homePassLeaderStats, homeRushLeaderStats=homeRushLeaderStats,
-                                   homeRecLeaderStats=homeRecLeaderStats, awayPassLeaderStats=awayPassLeaderStats,
-                                   awayRushLeaderStats=awayRushLeaderStats, awayRecLeaderStats=awayRecLeaderStats,
+                                   away_team_stats=game.away_team.get_team_stats(
+                                       preseason=game.preseason),
+                                   home_team_stats=game.home_team.get_team_stats(
+                                       preseason=game.preseason),
                                    default_headshot_path=default_headshot_path,
                                    home_team_games=home_team_games)
 
@@ -285,13 +268,6 @@ def team():
         rushLeader = Player.query.get(team_stats.rushingLeader_id)
         recLeader = Player.query.get(team_stats.receivingLeader_id)
 
-        passLeaderStats = SeasonStats.query.filter_by(
-            player_id=passLeader.ID).filter_by(preseason=preseason).first()
-        rushLeaderStats = SeasonStats.query.filter_by(
-            player_id=rushLeader.ID).filter_by(preseason=preseason).first()
-        recLeaderStats = SeasonStats.query.filter_by(
-            player_id=recLeader.ID).filter_by(preseason=preseason).first()
-
         player_stats = [player.get_season_stats(preseason=preseason) for player in players]
 
         injured = [player for player in players if player.date]
@@ -306,9 +282,9 @@ def team():
         return render_template("team.html", preseason=preseason,
                                teams=teams, players=players, team=team, stats=stats,
                                position=position, schedule=schedule, preschedule=preschedule,
-                               passLeader=passLeader, passLeaderStats=passLeaderStats,
-                               rushLeader=rushLeader, rushLeaderStats=rushLeaderStats,
-                               recLeader=recLeader, recLeaderStats=recLeaderStats,
+                               passLeader=passLeader,
+                               rushLeader=rushLeader,
+                               recLeader=recLeader,
                                player_stats=player_stats, injured=injured,
                                default_headshot_path=default_headshot_path)
 

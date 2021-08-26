@@ -58,6 +58,7 @@
         <div class="row">
             <!-- Left Side -->
             <div class="col-3">
+                {% if homePassLeader and homeRushLeader and homeRecLeader %}
                 <!-- Home Team Stat Leaders -->
                 <div class="row mt-2">
                     <div class="card bg-dark">
@@ -71,6 +72,7 @@
                                             <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + homePassLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
                                         </div>
                                         <div class="col-6">
+                                            {% set homePassLeaderStats = homePassLeader.get_season_stats(matchup.preseason) %}
                                             <div class="row mt-2 text-end"><small>{{ homePassLeader.fname[0] }}. {{ homePassLeader.lname }}</small></div>
                                             <div class="row mt-1 text-end"><small class="text-muted">{{ homePassLeaderStats.passComps }}-{{ homePassLeaderStats.passAtts }}, {{ homePassLeaderStats.passYDs }} YDs, {{ homePassLeaderStats.passTDs }} TDs</small></div>
                                         </div>
@@ -86,6 +88,7 @@
                                             <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + homeRushLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
                                         </div>
                                         <div class="col-6">
+                                            {% set homeRushLeaderStats = homeRushLeader.get_season_stats(matchup.preseason) %}
                                             <div class="row mt-2 text-end"><small>{{ homeRushLeader.fname[0] }}. {{ homeRushLeader.lname }}</small></div>
                                             <div class="row mt-1 text-end"><small class="text-muted">{{ homeRushLeaderStats.rushAtts }} CAR, {{ homeRushLeaderStats.rushYDs }} YDs, {{ homeRushLeaderStats.rushTDs }} TDs</small></div>
                                         </div>
@@ -101,6 +104,7 @@
                                             <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + homeRecLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
                                         </div>
                                         <div class="col-6">
+                                            {% set homeRecLeaderStats = homeRecLeader.get_season_stats(matchup.preseason) %}
                                             <div class="row mt-2 text-end"><small>{{ homeRecLeader.fname[0] }}. {{ homeRecLeader.lname }}</small></div>
                                             <div class="row mt-1 text-end"><small class="text-muted">{{ homeRecLeaderStats.recs }} REC, {{ homeRecLeaderStats.recYDs }} YDs, {{ homeRecLeaderStats.recTDs }} TDs</small></div>
                                         </div>
@@ -111,6 +115,7 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
                 <!-- Home Team Stats per Game -->
                 <div class="row mt-2">
                     <div class="card bg-dark">
@@ -153,7 +158,7 @@
                                   </button>
                                 </div>
                                 <div class="col text-center">
-                                  <button class="btn text-dark bgcolor{{ home_team_stats.PAPGRank }} w-100 position-relative">
+                                  <button class="btn text-dark bgcolor{{ 32 - home_team_stats.PAPGRank }} w-100 position-relative">
                                     <div class="row mt-3">
                                       <h2>{{ '%0.1f' |format(home_team_stats.PAPG) }}</h2>
                                     </div>
@@ -223,6 +228,7 @@
             </div>
             <!-- Right Side -->
             <div class="col-3">
+                {% if awayPassLeader and awayRushLeader and awayRecLeader %}
                 <!-- Away Team Stat Leaders -->
                 <div class="row mt-2">
                     <div class="card bg-dark">
@@ -233,6 +239,7 @@
                                 <button data-id="{{ awayPassLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
                                     <div class="row">
                                         <div class="col-6">
+                                            {% set awayPassLeaderStats = awayPassLeader.get_season_stats(matchup.preseason) %}
                                             <div class="row mt-2 text-start"><small>{{ awayPassLeader.fname[0] }}. {{ awayPassLeader.lname }}</small></div>
                                             <div class="row mt-1 text-start"><small class="text-muted">{{ awayPassLeaderStats.passComps }}-{{ awayPassLeaderStats.passAtts }}, {{ awayPassLeaderStats.passYDs }} YDs, {{ awayPassLeaderStats.passTDs }} TDs</small></div>
                                         </div>
@@ -248,6 +255,7 @@
                                 <button data-id="{{ awayRushLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
                                     <div class="row">
                                         <div class="col-6">
+                                            {% set awayRushLeaderStats = awayRushLeader.get_season_stats(matchup.preseason) %}
                                             <div class="row mt-2 text-start"><small>{{ awayRushLeader.fname[0] }}. {{ awayRushLeader.lname }}</small></div>
                                             <div class="row mt-1 text-start"><small class="text-muted">{{ awayRushLeaderStats.rushAtts }} CAR, {{ awayRushLeaderStats.rushYDs }} YDs, {{ awayRushLeaderStats.rushTDs }} TDs</small></div>
                                         </div>
@@ -263,6 +271,7 @@
                                 <button data-id="{{ awayRecLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
                                     <div class="row">
                                         <div class="col-6">
+                                            {% set awayRecLeaderStats = awayRecLeader.get_season_stats(matchup.preseason) %}
                                             <div class="row mt-2 text-start"><small>{{ awayRecLeader.fname[0] }}. {{ awayRecLeader.lname }}</small></div>
                                             <div class="row mt-1 text-start"><small class="text-muted">{{ awayRecLeaderStats.recs }} REC, {{ awayRecLeaderStats.recYDs }} YDs, {{ awayRecLeaderStats.recTDs }} TDs</small></div>
                                         </div>
@@ -276,6 +285,7 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
                 <!-- Away Team Stats per Game -->
                 <div class="row mt-2">
                     <div class="card bg-dark">
@@ -318,7 +328,7 @@
                                   </button>
                                 </div>
                                 <div class="col text-center">
-                                  <button class="btn text-dark bgcolor{{ away_team_stats.PAPGRank }} w-100 position-relative">
+                                  <button class="btn text-dark bgcolor{{ 32 - away_team_stats.PAPGRank }} w-100 position-relative">
                                     <div class="row mt-3">
                                       <h2>{{ '%0.1f' |format(away_team_stats.PAPG) }}</h2>
                                     </div>

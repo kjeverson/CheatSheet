@@ -198,9 +198,10 @@
                       <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + passLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
                     </div>
                     <div class="row mt-1">
-                      <small>{{ passLeader.name }}</small>
+                      <small>{{ passLeader.name }} <span class="text-muted">{{ passLeader.position }}</span></small>
                     </div>
                     <div class="row mt-1">
+                      {% set passLeaderStats = passLeader.get_season_stats(preseason) %}
                       <h3>{{ passLeaderStats.passYDs }}</h3>
                     </div>
                     <span class="position-absolute top-100 start-50 translate-middle badge rounded-pill text-dark bg-light">Passing Yards</span>
@@ -228,9 +229,10 @@
                       <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + rushLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
                     </div>
                     <div class="row mt-1">
-                      <small>{{ rushLeader.name }}</small>
+                      <small>{{ rushLeader.name }} <span class="text-muted">{{ rushLeader.position }}</span></small>
                     </div>
                     <div class="row mt-1">
+                      {% set rushLeaderStats = rushLeader.get_season_stats(preseason) %}
                       <h3>{{ rushLeaderStats.rushYDs }}</h3>
                     </div>
                     <span class="position-absolute top-100 start-50 translate-middle badge rounded-pill text-dark bg-light">Rushing Yards</span>
@@ -258,9 +260,10 @@
                       <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + recLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
                     </div>
                     <div class="row mt-1">
-                      <small>{{ recLeader.name }}</small>
+                      <small>{{ recLeader.name }} <span class="text-muted">{{ recLeader.position }}</span></small>
                     </div>
                     <div class="row mt-1">
+                      {% set recLeaderStats = recLeader.get_season_stats(preseason) %}
                       <h3>{{ recLeaderStats.recYDs }}</h3>
                     </div>
                     <span class="position-absolute top-100 start-50 translate-middle badge rounded-pill text-dark bg-light">Receiving Yards</span>
@@ -325,7 +328,7 @@
                   </button>
                 </div>
                 <div class="col text-center">
-                  <button class="btn text-dark bgcolor{{ team_stats.PAPGRank }} w-100 position-relative">
+                  <button class="btn text-dark bgcolor{{ 32 - team_stats.PAPGRank }} w-100 position-relative">
                     <div class="row mt-3">
                       <h1>{{ '%0.1f'| format(team_stats.PAPG|float) }}</h1>
                     </div>
@@ -599,8 +602,8 @@
                     <td class="text-end">{{ season_stats.rushLng }}</td>
                     <td class="text-end">{{ season_stats.rushTDs }}</td>
                     <td class="text-end">{{ '%0.1f' | format(season_stats.rushYDs/season_stats.gamesPlayed) }}</td>
-                    <td class="text-end">FUM</td>
-                    <td class="text-end">LST</td>
+                    <td class="text-end">{{ season_stats.fum }}</td>
+                    <td class="text-end">{{ season_stats.fumLost }}</td>
                   </tr>
                   {% endif %}
                   {% endfor %}
@@ -643,8 +646,8 @@
                     <td class="text-end">{{ season_stats.recTDs }}</td>
                     <td class="text-end">{{ season_stats.recLng }}</td>
                     <td class="text-end">{{ '%0.1f' | format(season_stats.recYDs/season_stats.gamesPlayed) }}</td>
-                    <td class="text-end">FUM</td>
-                    <td class="text-end">LST</td>
+                    <td class="text-end">{{ season_stats.fum }}</td>
+                    <td class="text-end">{{ season_stats.fumLost }}</td>
                   </tr>
                   {% endif %}
                   {% endfor %}
@@ -778,13 +781,16 @@
                             </div>
                             <p class="card-text mt-2">{{ player.news }}</p>
                             <p class="card-text"><button class="btn btn-small btn-secondary" data-bs-toggle="collapse" data-bs-target="#collapse{{player.ID}}" aria-expanded="false" aria-controls="collapse{{player.ID}}">Analysis</button></p>
-                            <div class="collapse" id="collapse{{player.ID}}">
-                              <div class="card card-body border-light bg-dark">
-                                {{ player.analysis }}
-                              </div>
-                            </div>
-                            <p class="card-text"><small class="text-muted">{{ player.date }}</small></p>
+
                           </div>
+                        </div>
+                        <div class="col">
+                          <div class="collapse" id="collapse{{player.ID}}">
+                            <div class="card card-body border-light bg-dark">
+                              {{ player.analysis }}
+                            </div>
+                          </div>
+                          <p class="card-text text-center"><small class="text-muted">{{ player.date }}</small></p>
                         </div>
                       </div>
                     </div>
