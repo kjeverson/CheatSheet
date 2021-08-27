@@ -847,8 +847,7 @@ def update_team_stats(db, thread):
 
         team_stats = team.get_team_stats(preseason=True)
 
-        pass_leader_id, rush_leader_id, rec_leader_id = stats.get_stats_leaders(
-            team.players, game.preseason)
+        pass_leader_id, rush_leader_id, rec_leader_id = stats.get_stats_leaders(team.players)
 
         team_stats.passingLeader_id = pass_leader_id
         team_stats.rushingLeader_id = rush_leader_id
@@ -983,18 +982,18 @@ def build_db(db, thread):
 
 def update_db(db, thread):
 
-    players = get_all_player_data()
+    players = get_all_player_data(thread)
     add_players(db, players, thread)
     update_player_status(db, thread)
 
-    update_schedule(db)
+    update_schedule(db, thread)
 
-    add_player_week_stats(db)
-    update_fantasy_points(db)
-    update_player_season_stats(db)
+    add_player_week_stats(db, thread)
+    update_fantasy_points(db, thread)
+    update_player_season_stats(db, thread)
 
-    update_team_stats(db)
+    update_team_stats(db, thread)
 
-    update_rankings(db)
+    update_rankings(db, thread)
 
     db.session.commit()

@@ -194,10 +194,6 @@ def matchup():
                                    homePassLeader=homePassLeader, homeRushLeader=homeRushLeader,
                                    homeRecLeader=homeRecLeader, awayPassLeader=awayPassLeader,
                                    awayRushLeader=awayRushLeader, awayRecLeader=awayRecLeader,
-                                   away_team_stats=game.away_team.get_team_stats(
-                                       preseason=game.preseason),
-                                   home_team_stats=game.home_team.get_team_stats(
-                                       preseason=game.preseason),
                                    default_headshot_path=default_headshot_path,
                                    home_team_games=home_team_games)
 
@@ -449,7 +445,6 @@ def update_database():
     update_threads[thread_id].state = "STARTED"
     update_threads[thread_id].start()
 
-    update_threads[thread_id].state = "Updating"
     db_utils.update_db(db, update_threads[thread_id])
     db.session.commit()
     print("Updating Database")

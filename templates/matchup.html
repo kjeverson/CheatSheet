@@ -121,6 +121,7 @@
                     <div class="card bg-dark">
                         <div class="card-title text-center">Team Stats/Game</div>
                         <div class="card-body">
+                            {% set home_team_stats = matchup.home_team.get_team_stats(preseason=matchup.preseason) %}
                             <div class="row">
                                 <div class="col-6 text-center">
                                     <button class="btn text-dark bgcolor{{ home_team_stats.passYDsPerGameRank }} w-100 position-relative">
@@ -158,7 +159,7 @@
                                   </button>
                                 </div>
                                 <div class="col text-center">
-                                  <button class="btn text-dark bgcolor{{ 32 - home_team_stats.PAPGRank }} w-100 position-relative">
+                                  <button class="btn text-dark bgcolor{{ 33 - home_team_stats.PAPGRank }} w-100 position-relative">
                                     <div class="row mt-3">
                                       <h2>{{ '%0.1f' |format(home_team_stats.PAPG) }}</h2>
                                     </div>
@@ -291,6 +292,7 @@
                     <div class="card bg-dark">
                         <div class="card-title text-center">Team Stats/Game</div>
                         <div class="card-body">
+                            {% set away_team_stats = matchup.away_team.get_team_stats(preseason=matchup.preseason) %}
                             <div class="row">
                                 <div class="col-6 text-center">
                                     <button class="btn text-dark bgcolor{{ away_team_stats.passYDsPerGameRank }} w-100 position-relative">
@@ -328,7 +330,7 @@
                                   </button>
                                 </div>
                                 <div class="col text-center">
-                                  <button class="btn text-dark bgcolor{{ 32 - away_team_stats.PAPGRank }} w-100 position-relative">
+                                  <button class="btn text-dark bgcolor{{ 33 - away_team_stats.PAPGRank }} w-100 position-relative">
                                     <div class="row mt-3">
                                       <h2>{{ '%0.1f' |format(away_team_stats.PAPG) }}</h2>
                                     </div>

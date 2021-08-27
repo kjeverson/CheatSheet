@@ -103,10 +103,15 @@
                                 <!-- Home Passing -->
                                 <div class="col-6">
                                     <div class="row ">
-                                        <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.home_team.key+'.png') }}" class="img-fluid"></div>
-                                        <div class="col-10 align-self-center"><h6>{{ matchup.home_team.location }} Passing</h6></div>
-                                    </div>
-                                    <table class="sortable player-table table table-dark table-hover table-responsive">
+                                        <button class="btn btn-dark btn-sm" data-bs-toggle="collapse" data-bs-target="#homePassingCollapse">
+                                            <div class="row">
+                                                <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.home_team.key+'.png') }}" class="img-fluid"></div>
+                                                <div class="col-8 align-self-center text-start"><h6>{{ matchup.home_team.location }} Passing</h6></div>
+                                                <div class="col-2 align-self-center"><i class="bi bi-chevron-down"></i></div>
+                                            </div>
+                                        </button>
+                                        <div class="collapse" id="homePassingCollapse">
+                                            <table class="sortable player-table table table-dark table-hover table-responsive">
                                         <thead>
                                             <tr>
                                                 <td class="text-start"></td>
@@ -157,14 +162,21 @@
                                             </tr>
                                         </tfoot>
                                     </table>
+                                        </div>
+                                    </div>
                                 </div>
                                 <!-- Away Passing -->
                                 <div class="col-6">
-                                    <div class="row text-start">
-                                        <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.away_team.key+'.png') }}" class="img-fluid"></div>
-                                        <div class="col-10 align-self-center"><h6>{{ matchup.away_team.location }} Passing</h6></div>
-                                    </div>
-                                    <table class="sortable player-table table table-dark table-hover table-responsive">
+                                    <div class="row">
+                                        <button class="btn btn-dark btn-sm" data-bs-toggle="collapse" data-bs-target="#awayPassingCollapse">
+                                            <div class="row">
+                                                <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.away_team.key+'.png') }}" class="img-fluid"></div>
+                                                <div class="col-8 align-self-center text-start"><h6>{{ matchup.away_team.location }} Passing</h6></div>
+                                                <div class="col-2 align-self-center"><i class="bi bi-chevron-down"></i></div>
+                                            </div>
+                                        </button>
+                                        <div class="collapse" id="awayPassingCollapse">
+                                            <table class="sortable player-table table table-dark table-hover table-responsive">
                                         <thead>
                                             <tr>
                                                 <td class="text-start"></td>
@@ -215,6 +227,8 @@
                                             </tr>
                                         </tfoot>
                                     </table>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <!-- Rushing -->
@@ -222,10 +236,15 @@
                                 <!-- Home Rushing -->
                                 <div class="col-6">
                                     <div class="row mt-2">
-                                        <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.home_team.key+'.png') }}" class="img-fluid"></div>
-                                        <div class="col-10 align-self-center"><h6>{{ matchup.home_team.location }} Rushing</h6></div>
-                                    </div>
-                                    <table class="sortable player-table table table-sm table-dark table-hover table-responsive">
+                                        <button class="btn btn-dark btn-small" data-bs-toggle="collapse" data-bs-target="#homeRushingCollapse">
+                                            <div class="row">
+                                                <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.home_team.key+'.png') }}" class="img-fluid"></div>
+                                                <div class="col-8 align-self-center text-start"><h6>{{ matchup.home_team.location }} Rushing</h6></div>
+                                                <div class="col-2 align-self-center"><i class="bi bi-chevron-down"></i></div>
+                                            </div>
+                                        </button>
+                                        <div class="collapse" id="homeRushingCollapse">
+                                            <table class="sortable player-table table table-sm table-dark table-hover table-responsive">
                                         <thead>
                                             <tr>
                                                 <td class="text-start"></td>
@@ -268,14 +287,21 @@
                                             </tr>
                                         </tfoot>
                                     </table>
+                                        </div>
+                                    </div>
                                 </div>
                                 <!-- Away Rushing -->
                                 <div class="col-6">
                                     <div class="row mt-2">
-                                        <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.away_team.key+'.png') }}" class="img-fluid"></div>
-                                        <div class="col-10 align-self-center"><h6>{{ matchup.away_team.location }} Rushing</h6></div>
-                                    </div>
-                                    <table class="sortable player-table table table-sm table-dark table-hover table-responsive">
+                                        <button class="btn btn-dark btn-small" data-bs-toggle="collapse" data-bs-target="#awayRushingCollapse">
+                                            <div class="row">
+                                                <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.away_team.key+'.png') }}" class="img-fluid"></div>
+                                                <div class="col-8 align-self-center text-start"><h6>{{ matchup.away_team.location }} Rushing</h6></div>
+                                                <div class="col-2 align-self-center"><i class="bi bi-chevron-down"></i></div>
+                                            </div>
+                                        </button>
+                                        <div class="collapse" id="awayRushingCollapse">
+                                            <table class="sortable player-table table table-sm table-dark table-hover table-responsive">
                                         <thead>
                                             <tr>
                                                 <td class="text-start"></td>
@@ -318,6 +344,8 @@
                                             </tr>
                                         </tfoot>
                                     </table>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <!-- Receiving -->
@@ -325,10 +353,15 @@
                                 <!-- Home Receiving -->
                                 <div class="col-6">
                                     <div class="row mt-2">
-                                        <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.home_team.key+'.png') }}" class="img-fluid"></div>
-                                        <div class="col-10 align-self-center"><h6>{{ matchup.home_team.location }} Receiving</h6></div>
-                                    </div>
-                                    <table class="sortable player-table table table-sm table-dark table-hover table-responsive">
+                                        <button class="btn btn-dark btn-small" data-bs-toggle="collapse" data-bs-target="#homeReceivingCollapse">
+                                            <div class="row">
+                                                <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.home_team.key+'.png') }}" class="img-fluid"></div>
+                                                <div class="col-8 align-self-center text-start"><h6>{{ matchup.home_team.location }} Receiving</h6></div>
+                                                <div class="col-2 align-self-center"><i class="bi bi-chevron-down"></i></div>
+                                            </div>
+                                        </button>
+                                        <div class="collapse" id="homeReceivingCollapse">
+                                            <table class="sortable player-table table table-sm table-dark table-hover table-responsive">
                                         <thead>
                                             <tr>
                                                 <td class="text-start"></td>
@@ -379,14 +412,21 @@
                                                 </tr>
                                         </tfoot>
                                     </table>
+                                        </div>
+                                    </div>
                                 </div>
                                 <!-- Away Receiving -->
                                 <div class="col-6">
                                     <div class="row mt-2">
-                                        <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.away_team.key+'.png') }}" class="img-fluid"></div>
-                                        <div class="col-10 align-self-center"><h6>{{ matchup.away_team.location }} Receiving</h6></div>
-                                    </div>
-                                    <table class="sortable player-table table table-sm table-dark table-hover table-responsive">
+                                        <button class="btn btn-dark btn-small" data-bs-toggle="collapse" data-bs-target="#awayReceivingCollapse">
+                                            <div class="row">
+                                                <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.away_team.key+'.png') }}" class="img-fluid"></div>
+                                                <div class="col-8 align-self-center text-start"><h6>{{ matchup.away_team.location }} Receiving</h6></div>
+                                                <div class="col-2 align-self-center"><i class="bi bi-chevron-down"></i></div>
+                                            </div>
+                                        </button>
+                                        <div class="collapse" id="awayReceivingCollapse">
+                                            <table class="sortable player-table table table-sm table-dark table-hover table-responsive">
                                         <thead>
                                             <tr>
                                                 <td class="text-start"></td>
@@ -437,6 +477,8 @@
                                                 </tr>
                                         </tfoot>
                                     </table>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <!-- Fumbles -->
@@ -444,10 +486,15 @@
                                 <!-- Home Fumbles -->
                                 <div class="col-6">
                                     <div class="row mt-2">
-                                        <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.home_team.key+'.png') }}" class="img-fluid"></div>
-                                        <div class="col-10 align-self-center"><h6>{{ matchup.home_team.location }} Fumbles</h6></div>
-                                    </div>
-                                    <table class="sortable player-table table table-sm table-dark table-hover table-responsive">
+                                        <button class="btn btn-dark btn-small" data-bs-toggle="collapse" data-bs-target="#homeFumbleCollapse">
+                                            <div class="row">
+                                                <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.home_team.key+'.png') }}" class="img-fluid"></div>
+                                                <div class="col-8 align-self-center text-start"><h6>{{ matchup.home_team.location }} Fumbles</h6></div>
+                                                <div class="col-2 align-self-center"><i class="bi bi-chevron-down"></i></div>
+                                            </div>
+                                        </button>
+                                        <div class="collapse" id="homeFumbleCollapse">
+                                            <table class="sortable player-table table table-sm table-dark table-hover table-responsive">
                                         <thead>
                                             <tr>
                                                 <td class="text-start"></td>
@@ -493,14 +540,21 @@
                                         </tfoot>
                                         {% endif %}
                                     </table>
+                                        </div>
+                                    </div>
                                 </div>
                                 <!-- Away Fumbles -->
                                 <div class="col-6">
                                     <div class="row mt-2">
-                                        <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.away_team.key+'.png') }}" class="img-fluid"></div>
-                                        <div class="col-10 align-self-center"><h6>{{ matchup.away_team.location }} Fumbles</h6></div>
-                                    </div>
-                                    <table class="sortable player-table table table-sm table-dark table-hover table-responsive">
+                                        <button class="btn btn-dark btn-small" data-bs-toggle="collapse" data-bs-target="#awayFumbleCollapse">
+                                            <div class="row">
+                                                <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.away_team.key+'.png') }}" class="img-fluid"></div>
+                                                <div class="col-8 align-self-center text-start"><h6>{{ matchup.away_team.location }} Fumbles</h6></div>
+                                                <div class="col-2 align-self-center"><i class="bi bi-chevron-down"></i></div>
+                                            </div>
+                                        </button>
+                                        <div class="collapse" id="awayFumbleCollapse">
+                                            <table class="sortable player-table table table-sm table-dark table-hover table-responsive">
                                         <thead>
                                             <tr>
                                                 <td class="text-start"></td>
@@ -546,6 +600,8 @@
                                         </tfoot>
                                         {% endif %}
                                     </table>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <!-- Defense -->
@@ -553,10 +609,15 @@
                                 <!-- Home Defense -->
                                 <div class="col-6">
                                     <div class="row mt-2">
-                                        <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.home_team.key+'.png') }}" class="img-fluid"></div>
-                                        <div class="col-10 align-self-center"><h6>{{ matchup.home_team.location }} Defense</h6></div>
-                                    </div>
-                                    <table class="sortable player-table table table-sm table-dark table-hover table-responsive">
+                                        <button class="btn btn-dark btn-small" data-bs-toggle="collapse" data-bs-target="#homeDefenseCollapse">
+                                            <div class="row">
+                                                <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.home_team.key+'.png') }}" class="img-fluid"></div>
+                                                <div class="col-8 align-self-center text-start"><h6>{{ matchup.home_team.location }} Defense</h6></div>
+                                                <div class="col-2 align-self-center"><i class="bi bi-chevron-down"></i></div>
+                                            </div>
+                                        </button>
+                                        <div class="collapse" id="homeDefenseCollapse">
+                                            <table class="sortable player-table table table-sm table-dark table-hover table-responsive">
                                         <thead>
                                             <tr>
                                                 <td class="text-start"></td>
@@ -606,14 +667,21 @@
                                                 </tr>
                                         </tfoot>
                                     </table>
+                                        </div>
+                                    </div>
                                 </div>
                                 <!-- Away Defense -->
                                 <div class="col-6">
                                     <div class="row mt-2">
-                                        <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.away_team.key+'.png') }}" class="img-fluid"></div>
-                                        <div class="col-10 align-self-center"><h6>{{ matchup.away_team.location }} Defense</h6></div>
-                                    </div>
-                                    <table class="sortable player-table table table-sm table-dark table-hover table-responsive">
+                                        <button class="btn btn-dark btn-small" data-bs-toggle="collapse" data-bs-target="#awayDefenseCollapse">
+                                            <div class="row">
+                                                <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.away_team.key+'.png') }}" class="img-fluid"></div>
+                                                <div class="col-8 align-self-center text-start"><h6>{{ matchup.away_team.location }} Defense</h6></div>
+                                                <div class="col-2 align-self-center"><i class="bi bi-chevron-down"></i></div>
+                                            </div>
+                                        </button>
+                                        <div class="collapse" id="awayDefenseCollapse">
+                                            <table class="sortable player-table table table-sm table-dark table-hover table-responsive">
                                         <thead>
                                             <tr>
                                                 <td class="text-start"></td>
@@ -663,6 +731,8 @@
                                                 </tr>
                                         </tfoot>
                                     </table>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
