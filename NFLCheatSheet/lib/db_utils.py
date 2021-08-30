@@ -19,7 +19,7 @@ from NFLCheatSheet.lib.fantasy.scoring import Scoring, get_score
 
 from NFLCheatSheet.lib.scrape.status import get_injured_list
 from NFLCheatSheet.lib.scrape.images import get_headshot
-from NFLCheatSheet.lib.scrape.boxscore import get_game_stats, get_scores
+from NFLCheatSheet.lib.scrape.boxscore import get_game_stats, get_scores, get_game_stats_api
 from NFLCheatSheet.lib.scrape import schedule
 
 
@@ -615,7 +615,19 @@ def add_player_week_stats(db, thread):
     for i in range(len(games)):
         game = games[i]
         thread.progress = i+1
-        passing, rushing, receiving, fumbles, defense = get_game_stats(game.ID)
+
+        game_stats = get_game_stats_api(game.ID)
+        passing = game_stats.get('passing')
+        rushing = game_stats.get('rushing')
+        receiving = game_stats.get('receiving')
+        fumbles = game_stats.get('fumble')
+        defense = game_stats.get('defensive')
+        interceptions = game_stats.get('interceptions')
+        kick_returns = game_stats.get('kickReturns')
+        punt_returns = game_stats.get('puntReturns')
+        kicking = game_stats.get('kicking')
+        punting = game_stats.get('punting')
+
         players = []
 
         for j in range(0, 2):
@@ -639,6 +651,16 @@ def add_player_week_stats(db, thread):
             for name in fumbles[j].keys():
                 player_names.add(name)
             for name in defense[j].keys():
+                player_names.add(name)
+            for name in interceptions[j].keys():
+                player_names.add(name)
+            for name in kick_returns[j].keys():
+                player_names.add(name)
+            for name in punt_returns[j].keys():
+                player_names.add(name)
+            for name in kicking[j].keys():
+                player_names.add(name)
+            for name in punting[j].keys():
                 player_names.add(name)
 
             for name in player_names:
@@ -684,6 +706,26 @@ def add_player_week_stats(db, thread):
                 else:
                     week_stats.update({"defender": False})
 
+                int_stats = interceptions[j].get(name)
+                if int_stats:
+                    week_stats.update(parse_week_stats(int_stats))
+
+                kr_stats = kick_returns[j].get(name)
+                if kr_stats:
+                    week_stats.update(parse_week_stats(kr_stats))
+                    
+                pr_stats = punt_returns[j].get(name)
+                if pr_stats:
+                    week_stats.update(parse_week_stats(pr_stats))
+                    
+                kicking_stats = kicking[j].get(name)
+                if kicking_stats:
+                    week_stats.update(parse_week_stats(kicking_stats))
+                    
+                punting_stats = punting[j].get(name)
+                if punting_stats:
+                    week_stats.update(parse_week_stats(punting_stats))
+
                 db.session.add(stats.WeeklyStats(
                     player_id=int(player.ID),
                     game_id=int(game.ID),
@@ -725,6 +767,32 @@ def add_player_week_stats(db, thread):
                     passDefensed=week_stats["passDefensed"] if week_stats.get("passDefensed") else 0,
                     qbHits=week_stats["qbHits"] if week_stats.get("qbHits") else 0,
                     defTDs=week_stats["defTDs"] if week_stats.get("defTDs") else 0,
+                    defINTs=week_stats["defINTs"] if week_stats.get("defINTs") else 0,
+                    defINTYDs=week_stats["defINTYDs"] if week_stats.get("defINTYDs") else 0,
+                    defINTTDs=week_stats["defINTTDs"] if week_stats.get("defINTTDs") else 0,
+                    krAtts=week_stats["krAtts"] if week_stats.get("krAtts") else 0,
+                    krYDs=week_stats["krYDs"] if week_stats.get("krYDs") else 0, 
+                    krAVG=week_stats["krAVG"] if week_stats.get("krAVG") else 0, 
+                    krLng=week_stats["krLng"] if week_stats.get("krLng") else 0,
+                    krTDs=week_stats["krTDs"] if week_stats.get("krTDs") else 0, 
+                    prAtts=week_stats["prAtts"] if week_stats.get("prAtts") else 0, 
+                    prYDs=week_stats["prYDs"] if week_stats.get("prYDs") else 0, 
+                    prAVG=week_stats["prAVG"] if week_stats.get("prAVG") else 0, 
+                    prLng=week_stats["prLng"] if week_stats.get("prLng") else 0, 
+                    prTDs=week_stats["prTDs"] if week_stats.get("prTDs") else 0, 
+                    fgMade=week_stats["fgMade"] if week_stats.get("fgMade") else 0, 
+                    fgAtts=week_stats["fgAtts"] if week_stats.get("fgAtts") else 0, 
+                    fgPCT=week_stats["fgPCT"] if week_stats.get("fgPCT") else 0, 
+                    fgLng=week_stats["fgLng"] if week_stats.get("fgLng") else 0, 
+                    xpMade=week_stats["xpMade"] if week_stats.get("xpMade") else 0, 
+                    xpAtts=week_stats["xpAtts"] if week_stats.get("xpAtts") else 0, 
+                    points=week_stats["points"] if week_stats.get("points") else 0, 
+                    punts=week_stats["punts"] if week_stats.get("punts") else 0,
+                    puntYDs=week_stats["puntYDs"] if week_stats.get("puntYDs") else 0,
+                    puntAVG=week_stats["puntAVG"] if week_stats.get("puntAVG") else 0,
+                    puntTB=week_stats["puntTB"] if week_stats.get("puntTB") else 0,
+                    puntIn20=week_stats["puntIn20"] if week_stats.get("puntIn20") else 0,
+                    puntLng=week_stats["puntLng"] if week_stats.get("puntLng") else 0,
                     FPs=0,
                 ))
 
@@ -792,6 +860,52 @@ def update_player_season_stats(db, thread):
                 ps.recLng = int(ws.recLng)
             ps.recTGTS = ps.recTGTS + int(ws.recTGTS) if ws.recTGTS else ps.recTGTS
 
+            ps.fumLost = ps.fumLost + int(ws.fumLost) if ws.fumLost else ps.fumLost
+            ps.fum = ps.fum + int(ws.fum) if ws.fum else ps.fum
+            ps.fumRec = ps.fumRec + int(ws.fumRec) if ws.fumRec else ps.fumRec
+
+            ps.totalTackles = ps.totalTackles + int(ws.totalTackles) if ws.totalTackles else ps.totalTackles
+            ps.soloTackles = ps.soloTackles + int(ws.soloTackles) if ws.soloTackles else ps.soloTackles
+            ps.sacks = ps.sacks + int(ws.sacks) if ws.sacks else ps.sacks
+            ps.tacklesForLoss = ps.tacklesForLoss + int(ws.tacklesForLoss) if ws.tacklesForLoss else ps.tacklesForLoss
+            ps.passDefensed = ps.passDefensed + int(ws.passDefensed) if ws.passDefensed else ps.passDefensed
+            ps.qbHits = ps.qbHits + int(ws.qbHits) if ws.qbHits else ps.qbHits
+            ps.defTDs = ps.defTDs + int(ws.defTDs) if ws.defTDs else ps.defTDs
+            ps.defINTs = ps.defINTs + int(ws.defINTs) if ws.defINTs else ps.defINTs
+            ps.defINTYDs = ps.defINTYDs + int(ws.defINTYDs) if ws.defINTYDs else ps.defINTYDs
+            ps.defINTTDs = ps.defINTTDs + int(ws.defINTTDs) if ws.defINTTDs else ps.defINTTDs
+
+            ps.krAtts = ps.krAtts + int(ws.krAtts) if ws.krAtts else ps.krAtts
+            ps.krYDs = ps.krYDs + int(ws.krYDs) if ws.krYDs else ps.krYDs
+            ps.krAVG = ps.krYDs / ps.krAtts if ps.krAtts else 0
+            if ws.krLng and int(ws.krLng) > ps.krLng:
+                ps.krLng = ws.krLng
+            ps.krTDs = ps.krTDs + int(ws.krTDs) if ws.krTDs else ps.krTDs
+
+            ps.prAtts = ps.prAtts + int(ws.prAtts) if ws.prAtts else ps.prAtts
+            ps.prYDs = ps.prYDs + int(ws.prYDs) if ws.prYDs else ps.prYDs
+            ps.prAVG = ps.prYDs / ps.prAtts if ps.prAtts else 0
+            if ws.prLng and int(ws.prLng) > ps.prLng:
+                ps.prLng = ws.prLng
+            ps.prTDs = ps.prTDs + int(ws.prTDs) if ws.prTDs else ps.prTDs
+
+            ps.fgMade = ps.fgMade + int(ws.fgMade) if ws.fgMade else ps.fgMade
+            ps.fgAtts = ps.fgAtts + int(ws.fgAtts) if ws.fgAtts else ps.fgAtts
+            ps.fgPCT = ps.fgMade / ps.fgAtts if ps.fgAtts else 0
+            if ws.fgLng and int(ws.fgLng) > ps.fgLng:
+                ps.fgLng = ws.fgLng
+            ps.xpMade = ps.xpMade + int(ws.xpMade) if ws.xpMade else ps.xpMade
+            ps.xpAtts = ps.xpAtts + int(ws.xpAtts) if ws.xpAtts else ps.xpAtts
+            ps.points = ps.points + int(ws.points) if ws.points else ps.points
+
+            ps.punts = ps.punts + int(ws.punts) if ws.punts else ps.punts
+            ps.puntYDs = ps.puntYDs + int(ws.puntYDs) if ws.puntYDs else ps.puntYDs
+            ps.puntAVG = ps.puntYDs / ps.punts if ps.punts else 0
+            ps.puntTB = ps.puntTB + int(ws.puntTB) if ws.puntTB else ps.puntTB
+            ps.puntIn20 = ps.puntIn20 + int(ws.puntIn20) if ws.puntIn20 else ps.puntIn20
+            if ws.puntLng and int(ws.puntLng) > ps.puntLng:
+                ps.puntLng = ws.puntLng
+
             ps.FPs = ws.FPs if not ps.FPs else ps.FPs + ws.FPs
 
         season_week_stats = player.get_weekly_stats_list(preseason=False)
@@ -847,7 +961,7 @@ def update_team_stats(db, thread):
 
         team_stats = team.get_team_stats(preseason=True)
 
-        pass_leader_id, rush_leader_id, rec_leader_id = stats.get_stats_leaders(team.players)
+        pass_leader_id, rush_leader_id, rec_leader_id = stats.get_stats_leaders(team.players, preseason=True)
 
         team_stats.passingLeader_id = pass_leader_id
         team_stats.rushingLeader_id = rush_leader_id

@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import re
+import json
 
 
 def parse_table(tables, headers):
@@ -140,3 +141,109 @@ def get_scores(game_id):
             score_dict.update({data[0]: data[1:]})
 
     return score_dict
+
+
+def get_headers(section):
+    
+    if section == 'passing':
+        return ['passComps/passAtts', 'passYDs', 'AVG', 'passTDs', 'passINTs',
+                'passSacks/passSackYDs', 'passRTG']
+    elif section == 'rushing':
+        return ['rushAtts', 'rushYDs', 'AVG', 'rushTDs', 'rushLng']
+
+    elif section == 'receiving':
+        return ['recs', 'recYDs', 'AVG', 'recTDs', 'recLng', 'recTGTS']
+
+    elif section == 'fumble':
+        return ["fum", "fumLost", "fumRec"]
+
+    elif section == 'defensive':
+        return ["totalTackles", "soloTackles", "sacks", "tacklesForLoss", "passDefensed", "qbHits",
+                "defTDs"]
+
+    elif section == 'interceptions':
+        return ["defINTs", "defINTYDs", "defINTTDs"]
+
+    elif section == 'kickReturns':
+        return ["krAtts", "krYDs", "krAVG", "krLng", "krTDs"]
+
+    elif section == 'puntReturns':
+        return ["prAtts", "prYDs", "prAVG", "prLng", "prTDs"]
+
+    elif section == 'kicking':
+        return ["fgMade/fgAtts", "fgPCT", "fgLng", "xpMade/xpAtts", "points"]
+
+    elif section == 'punting':
+        return ["punts", "puntYDs", "puntAVG", "puntTB", "puntIn20", "puntLng"]
+
+    else:
+        return []
+
+
+def get_game_stats_api(game_id):
+    url = "http://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event={}".format(
+        game_id)
+
+    data = requests.get(url)
+    data = data.json()
+    data = data['boxscore']['players']
+
+    stats_dict = {
+        'passing': {
+            0: {},
+            1: {}
+        },
+        'rushing': {
+            0: {},
+            1: {}
+        },
+        'receiving': {
+            0: {},
+            1: {}
+        },
+        'fumble': {
+            0: {},
+            1: {}
+        },
+        'defensive': {
+            0: {},
+            1: {}
+        },
+        'interceptions': {
+            0: {},
+            1: {}
+        },
+        'kickReturns': {
+            0: {},
+            1: {}
+        },
+        'puntReturns': {
+            0: {},
+            1: {}
+        },
+        'kicking': {
+            0: {},
+            1: {}
+        },
+        'punting': {
+            0: {},
+            1: {}
+        },
+    }
+
+    for i in range(0, 2):
+        stats = data[i]['statistics']
+        for section in stats:
+            section_name = section['name']
+            players = section['athletes']
+            headers = get_headers(section_name)
+            if not headers:
+                continue
+            for player in players:
+                name = player['athlete']['displayName']
+                player_stats = player['stats']
+                stats_dict[section_name][i].update({name: {}})
+                for j in range(len(headers)):
+                    stats_dict[section_name][i][name].update({headers[j]: player_stats[j]})
+
+    return stats_dict
