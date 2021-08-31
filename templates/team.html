@@ -86,7 +86,7 @@
           <a class="nav-link" href="" id="statsSelection">Stats</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="">Schedule</a>
+          <a class="nav-link" href="" id="scheduleSelection">Schedule</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="" id="rosterSelection">Roster</a>
@@ -659,6 +659,170 @@
       </div>
     </div>
   </div>
+  <!-- Schedule Page Content -->
+  <div id="schedulePage" class="container text-white visually-hidden">
+    <div class="row justify-content-center">
+      <!-- MAIN CONTENT -->
+      <div class="col-12">
+        <!-- Preseason Schedule -->
+        <div class="row mt-2">
+            <div class="card bg-dark">
+                <div class="card-title text-center">Preseason Schedule</div>
+                <div class="card-body">
+                    <div class="row mt-2">
+                      <table class="table table-dark table-sm table-hover">
+                        <thead>
+                        <tr>
+                          <th>WK</th>
+                          <th>DATE</th>
+                          <th>OPPONENT</th>
+                          <th>RESULT</th>
+                          <th>W-L</th>
+                          <th>HI PASS</th>
+                          <th>HI RUSH</th>
+                          <th>HI REC</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% set record = namespace(wins=0, losses=0, ties=0) %}
+                        {% for game in preschedule|sort(attribute='week') %}
+                        <tr>
+                          <td>{{ game.week }}</td>
+                          <td>{{ game.date }}</td>
+                          {% if game.home_team.key == team.key %}
+                          <td class="align-self-center">vs. {{ game.away_team.name }}</td>
+                            {% if game.home_team_score > game.away_team_score %}
+                            {% set record.wins = record.wins + 1 %}
+                            <td><span class="fw-bold text-success">W </span> {{ game.home_team_score }}-{{ game.away_team_score }}</td>
+                            {% elif game.home_team_score < game.away_team_score %}
+                            {% set record.losses = record.losses + 1 %}
+                            <td><span class="fw-bold text-danger">L </span> {{ game.home_team_score }}-{{ game.away_team_score }}</td>
+                            {% else %}
+                            {% set record.ties = record.ties + 1 %}
+                            <td><span class="fw-bold">T </span> {{ game.home_team_score }}-{{ game.away_team_score }}</td>
+                            {% endif %}
+                          {% else %}
+                          <td class="align-self-center">@ {{ game.home_team.name }}</td>
+                          {% if game.away_team_score > game.home_team_score %}
+                            {% set record.wins = record.wins + 1 %}
+                          <td><span class="fw-bold text-success">W </span> {{ game.home_team_score }}-{{ game.away_team_score }}</td>
+                            {% elif game.away_team_score < game.home_team_score %}
+                            {% set record.losses = record.losses + 1 %}
+                            <td><span class="fw-bold text-danger">L </span> {{ game.home_team_score }}-{{ game.away_team_score }}</td>
+                            {% else %}
+                            {% set record.ties = record.ties + 1 %}
+                            <td><span class="fw-bold">T </span> {{ game.away_team_score }}-{{ game.home_team_score }}</td>
+                            {% endif %}
+                          {% endif %}
+                          {% if record.ties > 0 %}
+                          <td>{{ record.wins }}-{{ record.losses }}-{{ record.ties }}</td>
+                          {% else %}
+                          <td>{{ record.wins }}-{{ record.losses }}</td>
+                          {% endif %}
+                          {% if team.key == game.home_team.key %}
+                          {% set player = Player.query.get(game.homePassingLeader_id) %}
+                          <td data-id='{{ player.ID }}' class="player-btn">{{ player.fname[0] }}. {{ player.lname }} <span class="text-muted">{{ player.get_weekly_stats_by_week(game.preseason, game.week).passYDs }}</span></td>
+                          {% set player = Player.query.get(game.homeRushingLeader_id) %}
+                          <td data-id='{{ player.ID }}' class="player-btn">{{ player.fname[0] }}. {{ player.lname }} <span class="text-muted">{{ player.get_weekly_stats_by_week(game.preseason, game.week).rushYDs }}</span></td>
+                          {% set player = Player.query.get(game.homeReceivingLeader_id) %}
+                          <td data-id='{{ player.ID }}' class="player-btn">{{ player.fname[0] }}. {{ player.lname }} <span class="text-muted">{{ player.get_weekly_stats_by_week(game.preseason, game.week).recYDs }}</span></td>
+                          {% else %}
+                          {% set player = Player.query.get(game.awayPassingLeader_id) %}
+                          <td data-id='{{ player.ID }}' class="player-btn">{{ player.fname[0] }}. {{ player.lname }} <span class="text-muted">{{ player.get_weekly_stats_by_week(game.preseason, game.week).passYDs }}</span></td>
+                          {% set player = Player.query.get(game.awayRushingLeader_id) %}
+                          <td data-id='{{ player.ID }}' class="player-btn">{{ player.fname[0] }}. {{ player.lname }} <span class="text-muted">{{ player.get_weekly_stats_by_week(game.preseason, game.week).rushYDs }}</span></td>
+                          {% set player = Player.query.get(game.awayReceivingLeader_id) %}
+                          <td data-id='{{ player.ID }}' class="player-btn">{{ player.fname[0] }}. {{ player.lname }} <span class="text-muted">{{ player.get_weekly_stats_by_week(game.preseason, game.week).recYDs }}</span></td>
+                          {% endif %}
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Regular Season Schedule -->
+        <div class="row mt-2">
+            <div class="card bg-dark">
+                <div class="card-title text-center">Regular Season Schedule</div>
+                <div class="card-body">
+                    <div class="row mt-2">
+                      <table class="table table-dark table-sm table-hover">
+                        <thead>
+                        <tr>
+                          <th>WK</th>
+                          <th>DATE</th>
+                          <th>OPPONENT</th>
+                          <th>RESULT</th>
+                          <th>W-L</th>
+                          <th>HI PASS</th>
+                          <th>HI RUSH</th>
+                          <th>HI REC</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% set record = namespace(wins=0, losses=0, ties=0) %}
+                        {% for game in schedule|sort(attribute='week') %}
+                        <tr>
+                          <td>{{ game.week }}</td>
+                          <td>{{ game.date }}</td>
+                          {% if game.home_team.key == team.key %}
+                          <td class="align-self-center">vs. {{ game.away_team.name }}</td>
+                            {% if game.completed and game.home_team_score > game.away_team_score %}
+                            {% set record.wins = record.wins + 1 %}
+                            <td><span class="fw-bold text-success">W </span> {{ game.home_team_score }}-{{ game.away_team_score }}</td>
+                            {% elif game.completed and game.home_team_score < game.away_team_score %}
+                            {% set record.losses = record.losses + 1 %}
+                            <td><span class="fw-bold text-danger">L </span> {{ game.home_team_score }}-{{ game.away_team_score }}</td>
+                            {% elif game.completed %}
+                            {% set record.ties = record.ties + 1 %}
+                            <td><span class="fw-bold">T </span> {{ game.home_team_score }}-{{ game.away_team_score }}</td>
+                            {% else %}
+                            <td>-</td>
+                            {% endif %}
+                          {% else %}
+                          <td class="align-self-center">@ {{ game.home_team.name }}</td>
+                          {% if game.completed and game.away_team_score > game.home_team_score %}
+                            {% set record.wins = record.wins + 1 %}
+                          <td><span class="fw-bold text-success">W </span> {{ game.home_team_score }}-{{ game.away_team_score }}</td>
+                            {% elif game.completed and game.away_team_score < game.home_team_score %}
+                            {% set record.losses = record.losses + 1 %}
+                            <td><span class="fw-bold text-danger">L </span> {{ game.home_team_score }}-{{ game.away_team_score }}</td>
+                            {% elif game.completed %}
+                            {% set record.ties = record.ties + 1 %}
+                            <td><span class="fw-bold">T </span> {{ game.away_team_score }}-{{ game.home_team_score }}</td>
+                            {% else %}
+                            <td>-</td>
+                            {% endif %}
+                          {% endif %}
+                          {% if game.completed and record.ties > 0 %}
+                          <td>{{ record.wins }}-{{ record.losses }}-{{ record.ties }}</td>
+                          {% elif game.completed %}
+                          <td>{{ record.wins }}-{{ record.losses }}</td>
+                          {% else %}
+                          <td>-</td>
+                          {% endif %}
+                          {% if game.completed %}
+                          <td>HI PASS <span class="text-muted">65</span></td>
+                          <td>HI RUSH <span class="text-muted">65</span></td>
+                          <td>HI REC <span class="text-muted">65</span></td>
+                          {% else %}
+                          <td>-</td>
+                          <td>-</td>
+                          <td>-</td>
+                          {% endif %}
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
   <!-- Roster Page Content -->
   <div id="rosterPage" class="container text-white visually-hidden">
     <div class="row">
@@ -905,6 +1069,17 @@
         });
 
   $(function() {
+          $('#scheduleSelection').on('click', function(e) {
+            e.preventDefault()
+            hideContainers();
+            document.getElementById("mainContainer").classList.remove("visually-hidden");
+            document.getElementById("teamNav").classList.remove("visually-hidden");
+            document.getElementById("schedulePage").classList.remove("visually-hidden");
+            document.getElementById("playerCardContainer").classList.remove("visually-hidden");
+          });
+        });
+
+  $(function() {
           $('#rosterSelection').on('click', function(e) {
             e.preventDefault()
             hideContainers();
@@ -927,7 +1102,6 @@
         });
 
   function hideContainers() {
-        console.log("HELLO");
         var containers = document.getElementsByClassName('container');
         for (let i = 0; i < containers.length; i++) {
         let container = containers[i];

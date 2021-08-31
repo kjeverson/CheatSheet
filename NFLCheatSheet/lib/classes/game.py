@@ -33,6 +33,14 @@ class Game(db.Model):
     rushingLeader_id = db.Column(db.Integer, db.ForeignKey('player.ID'))
     receivingLeader_id = db.Column(db.Integer, db.ForeignKey('player.ID'))
 
+    awayPassingLeader_id = db.Column(db.Integer, db.ForeignKey('player.ID'))
+    awayRushingLeader_id = db.Column(db.Integer, db.ForeignKey('player.ID'))
+    awayReceivingLeader_id = db.Column(db.Integer, db.ForeignKey('player.ID'))
+
+    homePassingLeader_id = db.Column(db.Integer, db.ForeignKey('player.ID'))
+    homeRushingLeader_id = db.Column(db.Integer, db.ForeignKey('player.ID'))
+    homeReceivingLeader_id = db.Column(db.Integer, db.ForeignKey('player.ID'))
+
     def __repr__(self):
 
         return "Game(Week {}: {} vs. {})".format(self.week,

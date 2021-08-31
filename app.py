@@ -278,6 +278,7 @@ def team():
         return render_template("team.html", preseason=preseason,
                                teams=teams, players=players, team=team, stats=stats,
                                position=position, schedule=schedule, preschedule=preschedule,
+                               Player=Player,
                                passLeader=passLeader,
                                rushLeader=rushLeader,
                                recLeader=recLeader,

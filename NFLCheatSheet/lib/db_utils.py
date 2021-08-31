@@ -183,13 +183,13 @@ def get_all_player_data(thread, position: str = "ALL") -> List[Dict]:
     time.sleep(5)
 
     # API CAll for all Player data
-    #response = requests.get("https://api.sportsdata.io/v3/nfl/scores/json/Players?"
-    #                        "key=2810c12201be4499bff03931c186f9f5")
-    #player_data = response.json()
+    response = requests.get("https://api.sportsdata.io/v3/nfl/scores/json/Players?"
+                            "key=2810c12201be4499bff03931c186f9f5")
+    player_data = response.json()
 
     player_file_path = Path("/Users/everson/NFLCheatSheet/data/players.json")
-    #with player_file_path.open("w") as player_file:
-    #    json.dump(player_data, player_file)
+    with player_file_path.open("w") as player_file:
+        json.dump(player_data, player_file)
 
     with player_file_path.open("r") as player_file:
         player_data = json.load(player_file)
@@ -629,6 +629,8 @@ def add_player_week_stats(db, thread):
         punting = game_stats.get('punting')
 
         players = []
+        away_players = []
+        home_players = []
 
         for j in range(0, 2):
 
@@ -671,6 +673,11 @@ def add_player_week_stats(db, thread):
                     continue
 
                 players.append(player)
+
+                if j ==0:
+                    away_players.append(player)
+                else:
+                    home_players.append(player)
 
                 week_stats = {"preseason": game.preseason}
 
@@ -802,6 +809,20 @@ def add_player_week_stats(db, thread):
         game.passingLeader_id = pass_leader_id
         game.rushingLeader_id = rush_leader_id
         game.receivingLeader_id = rec_leader_id
+
+        pass_leader_id, rush_leader_id, rec_leader_id = stats.get_stats_leaders(
+            away_players, game.preseason, game.week)
+
+        game.awayPassingLeader_id = pass_leader_id
+        game.awayRushingLeader_id = rush_leader_id
+        game.awayReceivingLeader_id = rec_leader_id
+
+        pass_leader_id, rush_leader_id, rec_leader_id = stats.get_stats_leaders(
+            home_players, game.preseason, game.week)
+
+        game.homePassingLeader_id = pass_leader_id
+        game.homeRushingLeader_id = rush_leader_id
+        game.homeReceivingLeader_id = rec_leader_id
 
         game.scraped_stats = True
 
