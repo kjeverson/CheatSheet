@@ -77,130 +77,124 @@
                                 <!-- Home Passing -->
                                 <div class="col-6">
                                     <div class="row ">
-                                        <button class="btn btn-dark btn-sm" data-bs-toggle="collapse" data-bs-target="#homePassingCollapse">
-                                            <div class="row">
-                                                <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.home_team.key+'.png') }}" class="img-fluid"></div>
-                                                <div class="col-8 align-self-center text-start"><h6>{{ matchup.home_team.location }} Passing</h6></div>
-                                                <div class="col-2 align-self-center"><i class="bi bi-chevron-down"></i></div>
-                                            </div>
-                                        </button>
-                                        <div class="collapse" id="homePassingCollapse">
+                                        <div class="row">
+                                            <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.home_team.key+'.png') }}" class="img-fluid"></div>
+                                            <div class="col-10 align-self-center text-start"><h6>{{ matchup.home_team.location }} Passing</h6></div>
+                                        </div>
+                                        <div class="row">
                                             <table class="sortable player-table table table-dark table-hover table-responsive">
-                                        <thead>
-                                            <tr>
-                                                <td class="text-start"></td>
-                                                <td class="text-start sorttable_nosort">C/ATT</td>
-                                                <td class="text-start">YDS</td>
-                                                <td class="text-start">AVG</td>
-                                                <td class="text-start">TD</td>
-                                                <td class="text-start">INT</td>
-                                                <td class="text-start">SACKS</td>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% set pass = namespace(passComps=0, passAtts=0, passYDs=0, passTDs=0, passINTs=0, passSacks=0, passSackYDs=0) %}
-                                            {% for line in stats|sort(attribute='passYDs', reverse=True) %}
-                                            {% if line.team_id == matchup.home_team.ID and line.passer %}
-                                                {% set pass.passComps = pass.passComps + line.passComps %}
-                                                {% set pass.passAtts = pass.passAtts + line.passAtts %}
-                                                {% set pass.passYDs = pass.passYDs + line.passYDs %}
-                                                {% set pass.passTDs = pass.passTDs + line.passTDs %}
-                                                {% set pass.passINTs = pass.passINTs + line.passINTs %}
-                                                {% set pass.passSacks = pass.passSacks + line.passSacks %}
-                                                {% set pass.passSackYDs = pass.passSackYDs + line.passSackYDs %}
-                                                <tr data-id="{{ line.player.ID }}">
-                                                    <td class="text-start">{{line.player.fname[0] }}. {{ line.player.lname }}</td>
-                                                    <td class="text-start">{{ line.passComps }}/{{ line.passAtts }}</td>
-                                                    <td class="text-start">{{ line.passYDs }}</td>
-                                                    {% if line.passComps %}
-                                                    <td class="text-start">{{'%0.1f'| format(line.passYDs/line.passComps|float)}}</td>
-                                                    {% else %}
-                                                    <td class="text-start">0.0</td>
+                                                <thead>
+                                                    <tr>
+                                                        <td class="text-start"></td>
+                                                        <td class="text-start sorttable_nosort">C/ATT</td>
+                                                        <td class="text-start">YDS</td>
+                                                        <td class="text-start">AVG</td>
+                                                        <td class="text-start">TD</td>
+                                                        <td class="text-start">INT</td>
+                                                        <td class="text-start">SACKS</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% set pass = namespace(passComps=0, passAtts=0, passYDs=0, passTDs=0, passINTs=0, passSacks=0, passSackYDs=0) %}
+                                                    {% for line in stats|sort(attribute='passYDs', reverse=True) %}
+                                                    {% if line.team_id == matchup.home_team.ID and line.passer %}
+                                                        {% set pass.passComps = pass.passComps + line.passComps %}
+                                                        {% set pass.passAtts = pass.passAtts + line.passAtts %}
+                                                        {% set pass.passYDs = pass.passYDs + line.passYDs %}
+                                                        {% set pass.passTDs = pass.passTDs + line.passTDs %}
+                                                        {% set pass.passINTs = pass.passINTs + line.passINTs %}
+                                                        {% set pass.passSacks = pass.passSacks + line.passSacks %}
+                                                        {% set pass.passSackYDs = pass.passSackYDs + line.passSackYDs %}
+                                                        <tr data-id="{{ line.player.ID }}">
+                                                            <td class="text-start">{{line.player.fname[0] }}. {{ line.player.lname }}</td>
+                                                            <td class="text-start">{{ line.passComps }}/{{ line.passAtts }}</td>
+                                                            <td class="text-start">{{ line.passYDs }}</td>
+                                                            {% if line.passComps %}
+                                                            <td class="text-start">{{'%0.1f'| format(line.passYDs/line.passComps|float)}}</td>
+                                                            {% else %}
+                                                            <td class="text-start">0.0</td>
+                                                            {% endif %}
+                                                            <td class="text-start">{{ line.passTDs }}</td>
+                                                            <td class="text-start">{{ line.passINTs }}</td>
+                                                            <td class="text-start">{{ line.passSacks }}-{{ line.passSackYDs }}</td>
+                                                        </tr>
                                                     {% endif %}
-                                                    <td class="text-start">{{ line.passTDs }}</td>
-                                                    <td class="text-start">{{ line.passINTs }}</td>
-                                                    <td class="text-start">{{ line.passSacks }}-{{ line.passSackYDs }}</td>
-                                                </tr>
-                                            {% endif %}
-                                            {% endfor %}
-                                        </tbody>
-                                        <tfoot>
-                                            <tr class="fw-bold">
-                                                <td class="text-start">TEAM</td>
-                                                <td class="text-start">{{ pass.passComps }}/{{ pass.passAtts }}</td>
-                                                <td class="text-start">{{ pass.passYDs }}</td>
-                                                <td class="text-start">{{'%0.1f'| format(pass.passYDs/pass.passComps)}}</td>
-                                                <td class="text-start">{{ pass.passTDs }}</td>
-                                                <td class="text-start">{{ pass.passINTs }}</td>
-                                                <td class="text-start">{{ pass.passSacks }}-{{ pass.passSackYDs }}</td>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
+                                                    {% endfor %}
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr class="fw-bold">
+                                                        <td class="text-start">TEAM</td>
+                                                        <td class="text-start">{{ pass.passComps }}/{{ pass.passAtts }}</td>
+                                                        <td class="text-start">{{ pass.passYDs }}</td>
+                                                        <td class="text-start">{{'%0.1f'| format(pass.passYDs/pass.passComps)}}</td>
+                                                        <td class="text-start">{{ pass.passTDs }}</td>
+                                                        <td class="text-start">{{ pass.passINTs }}</td>
+                                                        <td class="text-start">{{ pass.passSacks }}-{{ pass.passSackYDs }}</td>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
                                 <!-- Away Passing -->
                                 <div class="col-6">
                                     <div class="row">
-                                        <button class="btn btn-dark btn-sm" data-bs-toggle="collapse" data-bs-target="#awayPassingCollapse">
-                                            <div class="row">
-                                                <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.away_team.key+'.png') }}" class="img-fluid"></div>
-                                                <div class="col-8 align-self-center text-start"><h6>{{ matchup.away_team.location }} Passing</h6></div>
-                                                <div class="col-2 align-self-center"><i class="bi bi-chevron-down"></i></div>
-                                            </div>
-                                        </button>
-                                        <div class="collapse" id="awayPassingCollapse">
+                                        <div class="row">
+                                            <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.away_team.key+'.png') }}" class="img-fluid"></div>
+                                            <div class="col-10 align-self-center text-start"><h6>{{ matchup.away_team.location }} Passing</h6></div>
+                                        </div>
+                                        <div class="row">
                                             <table class="sortable player-table table table-dark table-hover table-responsive">
-                                        <thead>
-                                            <tr>
-                                                <td class="text-start"></td>
-                                                <td class="text-start sorttable_nosort">C/ATT</td>
-                                                <td class="text-start">YDS</td>
-                                                <td class="text-start">AVG</td>
-                                                <td class="text-start">TD</td>
-                                                <td class="text-start">INT</td>
-                                                <td class="text-start">SACKS</td>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% set pass = namespace(passComps=0, passAtts=0, passYDs=0, passTDs=0, passINTs=0, passSacks=0, passSackYDs=0) %}
-                                            {% for line in stats|sort(attribute='passYDs', reverse=True) %}
-                                            {% if line.team_id == matchup.away_team.ID and line.passer %}
-                                                {% set pass.passComps = pass.passComps + line.passComps %}
-                                                {% set pass.passAtts = pass.passAtts + line.passAtts %}
-                                                {% set pass.passYDs = pass.passYDs + line.passYDs %}
-                                                {% set pass.passTDs = pass.passTDs + line.passTDs %}
-                                                {% set pass.passINTs = pass.passINTs + line.passINTs %}
-                                                {% set pass.passSacks = pass.passSacks + line.passSacks %}
-                                                {% set pass.passSackYDs = pass.passSackYDs + line.passSackYDs %}
-                                                <tr data-id="{{ line.player.ID }}">
-                                                    <td class="text-start">{{line.player.fname[0] }}. {{ line.player.lname }}</td>
-                                                    <td class="text-start">{{ line.passComps }}/{{ line.passAtts }}</td>
-                                                    <td class="text-start">{{ line.passYDs }}</td>
-                                                    {% if line.passComps %}
-                                                    <td class="text-start">{{'%0.1f'| format(line.passYDs/line.passComps|float)}}</td>
-                                                    {% else %}
-                                                    <td class="text-start">0.0</td>
+                                                <thead>
+                                                    <tr>
+                                                        <td class="text-start"></td>
+                                                        <td class="text-start sorttable_nosort">C/ATT</td>
+                                                        <td class="text-start">YDS</td>
+                                                        <td class="text-start">AVG</td>
+                                                        <td class="text-start">TD</td>
+                                                        <td class="text-start">INT</td>
+                                                        <td class="text-start">SACKS</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% set pass = namespace(passComps=0, passAtts=0, passYDs=0, passTDs=0, passINTs=0, passSacks=0, passSackYDs=0) %}
+                                                    {% for line in stats|sort(attribute='passYDs', reverse=True) %}
+                                                    {% if line.team_id == matchup.away_team.ID and line.passer %}
+                                                        {% set pass.passComps = pass.passComps + line.passComps %}
+                                                        {% set pass.passAtts = pass.passAtts + line.passAtts %}
+                                                        {% set pass.passYDs = pass.passYDs + line.passYDs %}
+                                                        {% set pass.passTDs = pass.passTDs + line.passTDs %}
+                                                        {% set pass.passINTs = pass.passINTs + line.passINTs %}
+                                                        {% set pass.passSacks = pass.passSacks + line.passSacks %}
+                                                        {% set pass.passSackYDs = pass.passSackYDs + line.passSackYDs %}
+                                                        <tr data-id="{{ line.player.ID }}">
+                                                            <td class="text-start">{{line.player.fname[0] }}. {{ line.player.lname }}</td>
+                                                            <td class="text-start">{{ line.passComps }}/{{ line.passAtts }}</td>
+                                                            <td class="text-start">{{ line.passYDs }}</td>
+                                                            {% if line.passComps %}
+                                                            <td class="text-start">{{'%0.1f'| format(line.passYDs/line.passComps|float)}}</td>
+                                                            {% else %}
+                                                            <td class="text-start">0.0</td>
+                                                            {% endif %}
+                                                            <td class="text-start">{{ line.passTDs }}</td>
+                                                            <td class="text-start">{{ line.passINTs }}</td>
+                                                            <td class="text-start">{{ line.passSacks }}-{{ line.passSackYDs }}</td>
+                                                        </tr>
                                                     {% endif %}
-                                                    <td class="text-start">{{ line.passTDs }}</td>
-                                                    <td class="text-start">{{ line.passINTs }}</td>
-                                                    <td class="text-start">{{ line.passSacks }}-{{ line.passSackYDs }}</td>
-                                                </tr>
-                                            {% endif %}
-                                            {% endfor %}
-                                        </tbody>
-                                        <tfoot>
-                                            <tr class="fw-bold">
-                                                <td class="text-start">TEAM</td>
-                                                <td class="text-start">{{ pass.passComps }}/{{ pass.passAtts }}</td>
-                                                <td class="text-start">{{ pass.passYDs }}</td>
-                                                <td class="text-start">{{'%0.1f'| format(pass.passYDs/pass.passComps)}}</td>
-                                                <td class="text-start">{{ pass.passTDs }}</td>
-                                                <td class="text-start">{{ pass.passINTs }}</td>
-                                                <td class="text-start">{{ pass.passSacks }}-{{ pass.passSackYDs }}</td>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
+                                                    {% endfor %}
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr class="fw-bold">
+                                                        <td class="text-start">TEAM</td>
+                                                        <td class="text-start">{{ pass.passComps }}/{{ pass.passAtts }}</td>
+                                                        <td class="text-start">{{ pass.passYDs }}</td>
+                                                        <td class="text-start">{{'%0.1f'| format(pass.passYDs/pass.passComps)}}</td>
+                                                        <td class="text-start">{{ pass.passTDs }}</td>
+                                                        <td class="text-start">{{ pass.passINTs }}</td>
+                                                        <td class="text-start">{{ pass.passSacks }}-{{ pass.passSackYDs }}</td>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
@@ -210,114 +204,108 @@
                                 <!-- Home Rushing -->
                                 <div class="col-6">
                                     <div class="row mt-2">
-                                        <button class="btn btn-dark btn-small" data-bs-toggle="collapse" data-bs-target="#homeRushingCollapse">
-                                            <div class="row">
-                                                <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.home_team.key+'.png') }}" class="img-fluid"></div>
-                                                <div class="col-8 align-self-center text-start"><h6>{{ matchup.home_team.location }} Rushing</h6></div>
-                                                <div class="col-2 align-self-center"><i class="bi bi-chevron-down"></i></div>
-                                            </div>
-                                        </button>
-                                        <div class="collapse" id="homeRushingCollapse">
+                                        <div class="row">
+                                            <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.home_team.key+'.png') }}" class="img-fluid"></div>
+                                            <div class="col-10 align-self-center text-start"><h6>{{ matchup.home_team.location }} Rushing</h6></div>
+                                        </div>
+                                        <div class="row">
                                             <table class="sortable player-table table table-sm table-dark table-hover table-responsive">
-                                        <thead>
-                                            <tr>
-                                                <td class="text-start"></td>
-                                                <td class="text-start">CAR</td>
-                                                <td class="text-start">YDS</td>
-                                                <td class="text-start">AVG</td>
-                                                <td class="text-start">TD</td>
-                                                <td class="text-start">LONG</td>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        {% set rush = namespace(rushAtts=0, rushYDs=0, rushTDs=0, rushLng=0) %}
-                                        {% for line in stats|sort(attribute='rushYDs', reverse=True) %}
-                                            {% if line.team_id == matchup.home_team.ID and line.rusher %}
-                                                {% set rush.rushAtts = rush.rushAtts + line.rushAtts %}
-                                                {% set rush.rushYDs = rush.rushYDs + line.rushYDs %}
-                                                {% set rush.rushTDs = rush.rushTDs + line.rushTDs %}
-                                                {% if line.rushLng > rush.rushLng %}
-                                                    {% set rush.rushLng = line.rushLng %}
-                                                {% endif %}
-                                                <tr data-id="{{ line.player.ID }}">
-                                                    <td class="text-start">{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
-                                                    <td class="text-start">{{ line.rushAtts }}</td>
-                                                    <td class="text-start">{{ line.rushYDs }}</td>
-                                                    <td class="text-start">{{'%0.1f'| format(line.rushYDs/line.rushAtts|float)}}</td>
-                                                    <td class="text-start">{{ line.rushTDs }}</td>
-                                                    <td class="text-start">{{ line.rushLng }}</td>
-                                                </tr>
-                                            {% endif %}
-                                        {% endfor %}
-                                        </tbody>
-                                        <tfoot>
-                                            <tr class="fw-bold">
-                                                <td class="text-start">TEAM</td>
-                                                <td class="text-start">{{ rush.rushAtts }}</td>
-                                                <td class="text-start">{{ rush.rushYDs }}</td>
-                                                <td class="text-start">{{'%0.1f'| format(rush.rushYDs/rush.rushAtts)}}</td>
-                                                <td class="text-start">{{ rush.rushTDs }}</td>
-                                                <td class="text-start">{{ rush.rushLng }}</td>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
+                                                <thead>
+                                                    <tr>
+                                                        <td class="text-start"></td>
+                                                        <td class="text-start">CAR</td>
+                                                        <td class="text-start">YDS</td>
+                                                        <td class="text-start">AVG</td>
+                                                        <td class="text-start">TD</td>
+                                                        <td class="text-start">LONG</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% set rush = namespace(rushAtts=0, rushYDs=0, rushTDs=0, rushLng=0) %}
+                                                {% for line in stats|sort(attribute='rushYDs', reverse=True) %}
+                                                    {% if line.team_id == matchup.home_team.ID and line.rusher %}
+                                                        {% set rush.rushAtts = rush.rushAtts + line.rushAtts %}
+                                                        {% set rush.rushYDs = rush.rushYDs + line.rushYDs %}
+                                                        {% set rush.rushTDs = rush.rushTDs + line.rushTDs %}
+                                                        {% if line.rushLng > rush.rushLng %}
+                                                            {% set rush.rushLng = line.rushLng %}
+                                                        {% endif %}
+                                                        <tr data-id="{{ line.player.ID }}">
+                                                            <td class="text-start">{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
+                                                            <td class="text-start">{{ line.rushAtts }}</td>
+                                                            <td class="text-start">{{ line.rushYDs }}</td>
+                                                            <td class="text-start">{{'%0.1f'| format(line.rushYDs/line.rushAtts|float)}}</td>
+                                                            <td class="text-start">{{ line.rushTDs }}</td>
+                                                            <td class="text-start">{{ line.rushLng }}</td>
+                                                        </tr>
+                                                    {% endif %}
+                                                {% endfor %}
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr class="fw-bold">
+                                                        <td class="text-start">TEAM</td>
+                                                        <td class="text-start">{{ rush.rushAtts }}</td>
+                                                        <td class="text-start">{{ rush.rushYDs }}</td>
+                                                        <td class="text-start">{{'%0.1f'| format(rush.rushYDs/rush.rushAtts)}}</td>
+                                                        <td class="text-start">{{ rush.rushTDs }}</td>
+                                                        <td class="text-start">{{ rush.rushLng }}</td>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
                                 <!-- Away Rushing -->
                                 <div class="col-6">
                                     <div class="row mt-2">
-                                        <button class="btn btn-dark btn-small" data-bs-toggle="collapse" data-bs-target="#awayRushingCollapse">
-                                            <div class="row">
-                                                <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.away_team.key+'.png') }}" class="img-fluid"></div>
-                                                <div class="col-8 align-self-center text-start"><h6>{{ matchup.away_team.location }} Rushing</h6></div>
-                                                <div class="col-2 align-self-center"><i class="bi bi-chevron-down"></i></div>
-                                            </div>
-                                        </button>
-                                        <div class="collapse" id="awayRushingCollapse">
+                                        <div class="row">
+                                            <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.away_team.key+'.png') }}" class="img-fluid"></div>
+                                            <div class="col-8 align-self-center text-start"><h6>{{ matchup.away_team.location }} Rushing</h6></div>
+                                        </div>
+                                        <div class="row">
                                             <table class="sortable player-table table table-sm table-dark table-hover table-responsive">
-                                        <thead>
-                                            <tr>
-                                                <td class="text-start"></td>
-                                                <td class="text-start">CAR</td>
-                                                <td class="text-start">YDS</td>
-                                                <td class="text-start">AVG</td>
-                                                <td class="text-start">TD</td>
-                                                <td class="text-start">LONG</td>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        {% set rush = namespace(rushAtts=0, rushYDs=0, rushTDs=0, rushLng=0) %}
-                                        {% for line in stats|sort(attribute='rushYDs', reverse=True) %}
-                                            {% if line.team_id == matchup.away_team.ID and line.rusher %}
-                                                {% set rush.rushAtts = rush.rushAtts + line.rushAtts %}
-                                                {% set rush.rushYDs = rush.rushYDs + line.rushYDs %}
-                                                {% set rush.rushTDs = rush.rushTDs + line.rushTDs %}
-                                                {% if line.rushLng > rush.rushLng %}
-                                                    {% set rush.rushLng = line.rushLng %}
+                                                <thead>
+                                                    <tr>
+                                                        <td class="text-start"></td>
+                                                        <td class="text-start">CAR</td>
+                                                        <td class="text-start">YDS</td>
+                                                        <td class="text-start">AVG</td>
+                                                        <td class="text-start">TD</td>
+                                                        <td class="text-start">LONG</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% set rush = namespace(rushAtts=0, rushYDs=0, rushTDs=0, rushLng=0) %}
+                                                {% for line in stats|sort(attribute='rushYDs', reverse=True) %}
+                                                    {% if line.team_id == matchup.away_team.ID and line.rusher %}
+                                                        {% set rush.rushAtts = rush.rushAtts + line.rushAtts %}
+                                                        {% set rush.rushYDs = rush.rushYDs + line.rushYDs %}
+                                                        {% set rush.rushTDs = rush.rushTDs + line.rushTDs %}
+                                                        {% if line.rushLng > rush.rushLng %}
+                                                            {% set rush.rushLng = line.rushLng %}
+                                                        {% endif %}
+                                                        <tr data-id="{{ line.player.ID }}">
+                                                            <td class="text-start">{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
+                                                            <td class="text-start">{{ line.rushAtts }}</td>
+                                                            <td class="text-start">{{ line.rushYDs }}</td>
+                                                            <td class="text-start">{{'%0.1f'| format(line.rushYDs/line.rushAtts|float)}}</td>
+                                                            <td class="text-start">{{ line.rushTDs }}</td>
+                                                            <td class="text-start">{{ line.rushLng }}</td>
+                                                        </tr>
                                                 {% endif %}
-                                                <tr data-id="{{ line.player.ID }}">
-                                                    <td class="text-start">{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
-                                                    <td class="text-start">{{ line.rushAtts }}</td>
-                                                    <td class="text-start">{{ line.rushYDs }}</td>
-                                                    <td class="text-start">{{'%0.1f'| format(line.rushYDs/line.rushAtts|float)}}</td>
-                                                    <td class="text-start">{{ line.rushTDs }}</td>
-                                                    <td class="text-start">{{ line.rushLng }}</td>
-                                                </tr>
-                                        {% endif %}
-                                        {% endfor %}
-                                        </tbody>
-                                        <tfoot>
-                                            <tr class="fw-bold">
-                                                <td class="text-start">TEAM</td>
-                                                <td class="text-start">{{ rush.rushAtts }}</td>
-                                                <td class="text-start">{{ rush.rushYDs }}</td>
-                                                <td class="text-start">{{'%0.1f'| format(rush.rushYDs/rush.rushAtts)}}</td>
-                                                <td class="text-start">{{ rush.rushTDs }}</td>
-                                                <td class="text-start">{{ rush.rushLng }}</td>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
+                                                {% endfor %}
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr class="fw-bold">
+                                                        <td class="text-start">TEAM</td>
+                                                        <td class="text-start">{{ rush.rushAtts }}</td>
+                                                        <td class="text-start">{{ rush.rushYDs }}</td>
+                                                        <td class="text-start">{{'%0.1f'| format(rush.rushYDs/rush.rushAtts)}}</td>
+                                                        <td class="text-start">{{ rush.rushTDs }}</td>
+                                                        <td class="text-start">{{ rush.rushLng }}</td>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
@@ -327,130 +315,124 @@
                                 <!-- Home Receiving -->
                                 <div class="col-6">
                                     <div class="row mt-2">
-                                        <button class="btn btn-dark btn-small" data-bs-toggle="collapse" data-bs-target="#homeReceivingCollapse">
-                                            <div class="row">
-                                                <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.home_team.key+'.png') }}" class="img-fluid"></div>
-                                                <div class="col-8 align-self-center text-start"><h6>{{ matchup.home_team.location }} Receiving</h6></div>
-                                                <div class="col-2 align-self-center"><i class="bi bi-chevron-down"></i></div>
-                                            </div>
-                                        </button>
-                                        <div class="collapse" id="homeReceivingCollapse">
+                                        <div class="row">
+                                            <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.home_team.key+'.png') }}" class="img-fluid"></div>
+                                            <div class="col-10 align-self-center text-start"><h6>{{ matchup.home_team.location }} Receiving</h6></div>
+                                        </div>
+                                        <div class="row">
                                             <table class="sortable player-table table table-sm table-dark table-hover table-responsive">
-                                        <thead>
-                                            <tr>
-                                                <td class="text-start"></td>
-                                                <td class="text-start">REC</td>
-                                                <td class="text-start">YDS</td>
-                                                <td class="text-start">AVG</td>
-                                                <td class="text-start">TD</td>
-                                                <td class="text-start">LONG</td>
-                                                <td class="text-start">TGTS</td>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        {% set rec = namespace(recs=0, recYDs=0, recTDs=0, recLng=0, recTGTS=0) %}
-                                        {% for line in stats|sort(attribute='recYDs', reverse=True) %}
-                                            {% if line.team_id == matchup.home_team.ID and line.receiver %}
-                                                {% set rec.recs = rec.recs + line.recs %}
-                                                {% set rec.recYDs = rec.recYDs + line.recYDs %}
-                                                {% set rec.recTDs = rec.recTDs + line.recTDs %}
-                                                {% set rec.recTGTS = rec.recTGTS + line.recTGTS %}
-                                                {% if line.recLng > rec.recLng %}
-                                                    {% set rec.recLng = line.recLng %}
-                                                {% endif %}
-                                                <tr data-id="{{ line.player.ID }}">
-                                                    <td class="text-start">{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
-                                                    <td class="text-start">{{ line.recs }}</td>
-                                                    <td class="text-start">{{ line.recYDs }}</td>
-                                                    {% if line.recs > 0 %}
-                                                    <td class="text-start">{{'%0.1f'| format(line.recYDs/line.recs|float)}}</td>
-                                                    {% else %}
-                                                    <td class="text-start">0.0</td>
+                                                <thead>
+                                                    <tr>
+                                                        <td class="text-start"></td>
+                                                        <td class="text-start">REC</td>
+                                                        <td class="text-start">YDS</td>
+                                                        <td class="text-start">AVG</td>
+                                                        <td class="text-start">TD</td>
+                                                        <td class="text-start">LONG</td>
+                                                        <td class="text-start">TGTS</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% set rec = namespace(recs=0, recYDs=0, recTDs=0, recLng=0, recTGTS=0) %}
+                                                {% for line in stats|sort(attribute='recYDs', reverse=True) %}
+                                                    {% if line.team_id == matchup.home_team.ID and line.receiver %}
+                                                        {% set rec.recs = rec.recs + line.recs %}
+                                                        {% set rec.recYDs = rec.recYDs + line.recYDs %}
+                                                        {% set rec.recTDs = rec.recTDs + line.recTDs %}
+                                                        {% set rec.recTGTS = rec.recTGTS + line.recTGTS %}
+                                                        {% if line.recLng > rec.recLng %}
+                                                            {% set rec.recLng = line.recLng %}
+                                                        {% endif %}
+                                                        <tr data-id="{{ line.player.ID }}">
+                                                            <td class="text-start">{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
+                                                            <td class="text-start">{{ line.recs }}</td>
+                                                            <td class="text-start">{{ line.recYDs }}</td>
+                                                            {% if line.recs > 0 %}
+                                                            <td class="text-start">{{'%0.1f'| format(line.recYDs/line.recs|float)}}</td>
+                                                            {% else %}
+                                                            <td class="text-start">0.0</td>
+                                                            {% endif %}
+                                                            <td class="text-start">{{ line.recTDs }}</td>
+                                                            <td class="text-start">{{ line.recLng }}</td>
+                                                            <td class="text-start">{{ line.recTGTS }}</td>
+                                                        </tr>
                                                     {% endif %}
-                                                    <td class="text-start">{{ line.recTDs }}</td>
-                                                    <td class="text-start">{{ line.recLng }}</td>
-                                                    <td class="text-start">{{ line.recTGTS }}</td>
-                                                </tr>
-                                            {% endif %}
-                                        {% endfor %}
-                                        </tbody>
-                                        <tfoot>
-                                            <tr class="fw-bold">
-                                                    <td class="text-start">TEAM</td>
-                                                    <td class="text-start">{{ rec.recs }}</td>
-                                                    <td class="text-start">{{ rec.recYDs }}</td>
-                                                    <td class="text-start">{{'%0.1f'| format(rec.recYDs/rec.recs|float) }}</td>
-                                                    <td class="text-start">{{ rec.recTDs }}</td>
-                                                    <td class="text-start">{{ rec.recLng }}</td>
-                                                    <td class="text-start">{{ rec.recTGTS }}</td>
-                                                </tr>
-                                        </tfoot>
-                                    </table>
+                                                {% endfor %}
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr class="fw-bold">
+                                                            <td class="text-start">TEAM</td>
+                                                            <td class="text-start">{{ rec.recs }}</td>
+                                                            <td class="text-start">{{ rec.recYDs }}</td>
+                                                            <td class="text-start">{{'%0.1f'| format(rec.recYDs/rec.recs|float) }}</td>
+                                                            <td class="text-start">{{ rec.recTDs }}</td>
+                                                            <td class="text-start">{{ rec.recLng }}</td>
+                                                            <td class="text-start">{{ rec.recTGTS }}</td>
+                                                        </tr>
+                                                </tfoot>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
                                 <!-- Away Receiving -->
                                 <div class="col-6">
                                     <div class="row mt-2">
-                                        <button class="btn btn-dark btn-small" data-bs-toggle="collapse" data-bs-target="#awayReceivingCollapse">
-                                            <div class="row">
-                                                <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.away_team.key+'.png') }}" class="img-fluid"></div>
-                                                <div class="col-8 align-self-center text-start"><h6>{{ matchup.away_team.location }} Receiving</h6></div>
-                                                <div class="col-2 align-self-center"><i class="bi bi-chevron-down"></i></div>
-                                            </div>
-                                        </button>
-                                        <div class="collapse" id="awayReceivingCollapse">
+                                        <div class="row">
+                                            <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.away_team.key+'.png') }}" class="img-fluid"></div>
+                                            <div class="col-10 align-self-center text-start"><h6>{{ matchup.away_team.location }} Receiving</h6></div>
+                                        </div>
+                                        <div class="row">
                                             <table class="sortable player-table table table-sm table-dark table-hover table-responsive">
-                                        <thead>
-                                            <tr>
-                                                <td class="text-start"></td>
-                                                <td class="text-start">REC</td>
-                                                <td class="text-start">YDS</td>
-                                                <td class="text-start">AVG</td>
-                                                <td class="text-start">TD</td>
-                                                <td class="text-start">LONG</td>
-                                                <td class="text-start">TGTS</td>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        {% set rec = namespace(recs=0, recYDs=0, recTDs=0, recLng=0, recTGTS=0) %}
-                                        {% for line in stats|sort(attribute='recYDs', reverse=True) %}
-                                            {% if line.team_id == matchup.away_team.ID and line.receiver %}
-                                                {% set rec.recs = rec.recs + line.recs %}
-                                                {% set rec.recYDs = rec.recYDs + line.recYDs %}
-                                                {% set rec.recTDs = rec.recTDs + line.recTDs %}
-                                                {% set rec.recTGTS = rec.recTGTS + line.recTGTS %}
-                                                {% if line.recLng > rec.recLng %}
-                                                    {% set rec.recLng = line.recLng %}
-                                                {% endif %}
-                                                <tr data-id="{{ line.player.ID }}">
-                                                    <td class="text-start">{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
-                                                    <td class="text-start">{{ line.recs }}</td>
-                                                    <td class="text-start">{{ line.recYDs }}</td>
-                                                    {% if line.recs > 0 %}
-                                                    <td class="text-start">{{'%0.1f'| format(line.recYDs/line.recs|float)}}</td>
-                                                    {% else %}
-                                                    <td class="text-start">0.0</td>
+                                                <thead>
+                                                    <tr>
+                                                        <td class="text-start"></td>
+                                                        <td class="text-start">REC</td>
+                                                        <td class="text-start">YDS</td>
+                                                        <td class="text-start">AVG</td>
+                                                        <td class="text-start">TD</td>
+                                                        <td class="text-start">LONG</td>
+                                                        <td class="text-start">TGTS</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% set rec = namespace(recs=0, recYDs=0, recTDs=0, recLng=0, recTGTS=0) %}
+                                                {% for line in stats|sort(attribute='recYDs', reverse=True) %}
+                                                    {% if line.team_id == matchup.away_team.ID and line.receiver %}
+                                                        {% set rec.recs = rec.recs + line.recs %}
+                                                        {% set rec.recYDs = rec.recYDs + line.recYDs %}
+                                                        {% set rec.recTDs = rec.recTDs + line.recTDs %}
+                                                        {% set rec.recTGTS = rec.recTGTS + line.recTGTS %}
+                                                        {% if line.recLng > rec.recLng %}
+                                                            {% set rec.recLng = line.recLng %}
+                                                        {% endif %}
+                                                        <tr data-id="{{ line.player.ID }}">
+                                                            <td class="text-start">{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
+                                                            <td class="text-start">{{ line.recs }}</td>
+                                                            <td class="text-start">{{ line.recYDs }}</td>
+                                                            {% if line.recs > 0 %}
+                                                            <td class="text-start">{{'%0.1f'| format(line.recYDs/line.recs|float)}}</td>
+                                                            {% else %}
+                                                            <td class="text-start">0.0</td>
+                                                            {% endif %}
+                                                            <td class="text-start">{{ line.recTDs }}</td>
+                                                            <td class="text-start">{{ line.recLng }}</td>
+                                                            <td class="text-start">{{ line.recTGTS }}</td>
+                                                        </tr>
                                                     {% endif %}
-                                                    <td class="text-start">{{ line.recTDs }}</td>
-                                                    <td class="text-start">{{ line.recLng }}</td>
-                                                    <td class="text-start">{{ line.recTGTS }}</td>
-                                                </tr>
-                                            {% endif %}
-                                        {% endfor %}
-                                        </tbody>
-                                        <tfoot>
-                                            <tr class="fw-bold">
-                                                    <td class="text-start">TEAM</td>
-                                                    <td class="text-start">{{ rec.recs }}</td>
-                                                    <td class="text-start">{{ rec.recYDs }}</td>
-                                                    <td class="text-start">{{'%0.1f'| format(rec.recYDs/rec.recs|float) }}</td>
-                                                    <td class="text-start">{{ rec.recTDs }}</td>
-                                                    <td class="text-start">{{ rec.recLng }}</td>
-                                                    <td class="text-start">{{ rec.recTGTS }}</td>
-                                                </tr>
-                                        </tfoot>
-                                    </table>
+                                                {% endfor %}
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr class="fw-bold">
+                                                            <td class="text-start">TEAM</td>
+                                                            <td class="text-start">{{ rec.recs }}</td>
+                                                            <td class="text-start">{{ rec.recYDs }}</td>
+                                                            <td class="text-start">{{'%0.1f'| format(rec.recYDs/rec.recs|float) }}</td>
+                                                            <td class="text-start">{{ rec.recTDs }}</td>
+                                                            <td class="text-start">{{ rec.recLng }}</td>
+                                                            <td class="text-start">{{ rec.recTGTS }}</td>
+                                                        </tr>
+                                                </tfoot>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
@@ -460,120 +442,114 @@
                                 <!-- Home Fumbles -->
                                 <div class="col-6">
                                     <div class="row mt-2">
-                                        <button class="btn btn-dark btn-small" data-bs-toggle="collapse" data-bs-target="#homeFumbleCollapse">
-                                            <div class="row">
-                                                <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.home_team.key+'.png') }}" class="img-fluid"></div>
-                                                <div class="col-8 align-self-center text-start"><h6>{{ matchup.home_team.location }} Fumbles</h6></div>
-                                                <div class="col-2 align-self-center"><i class="bi bi-chevron-down"></i></div>
-                                            </div>
-                                        </button>
-                                        <div class="collapse" id="homeFumbleCollapse">
+                                        <div class="row">
+                                            <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.home_team.key+'.png') }}" class="img-fluid"></div>
+                                            <div class="col-10 align-self-center text-start"><h6>{{ matchup.home_team.location }} Fumbles</h6></div>
+                                        </div>
+                                        <div class="row">
                                             <table class="sortable player-table table table-sm table-dark table-hover table-responsive">
-                                        <thead>
-                                            <tr>
-                                                <td class="text-start"></td>
-                                                <td class="text-start">FUM</td>
-                                                <td class="text-start">LOST</td>
-                                                <td class="text-start">REC</td>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        {% set fumbles = namespace(fum=0, fumLost=0, fumRec=0, count=0) %}
-                                        {% for line in stats|sort(attribute='fum', reverse=True) %}
-                                            {% if line.team_id == matchup.home_team.ID %}
-                                                {% if line.fum > 0 or line.fumRec > 0 %}
-                                                {% set fumbles.count = fumbles.count + 1 %}
-                                                {% set fumbles.fum = fumbles.fum + line.fum %}
-                                                {% set fumbles.fumLost = fumbles.fumLost + line.fumLost %}
-                                                {% set fumbles.fumRec = fumbles.fumRec + line.fumRec %}
-                                                <tr data-id="{{ line.player.ID }}">
-                                                    <td class="text-start">{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
-                                                    <td class="text-start">{{ line.fum }}</td>
-                                                    <td class="text-start">{{ line.fumLost }}</td>
-                                                    <td class="text-start">{{ line.fumRec }}</td>
-                                                </tr>
-                                        {% endif %}
-                                        {% endif %}
-                                        {% endfor %}
-                                        {% if fumbles.count == 0 %}
-                                                <tr>
-                                                    <td class="text-start">No {{ matchup.home_team.location }} Fumbles</td>
-                                                    <td>-</td>
-                                                    <td>-</td>
-                                                    <td>-</td>
-                                                </tr>
-                                        {% else %}
-                                        </tbody>
-                                        <tfoot>
-                                            <tr class="fw-bold">
-                                                    <td class="text-start">TEAM</td>
-                                                    <td class="text-start">{{ fumbles.fum }}</td>
-                                                    <td class="text-start">{{ fumbles.fumLost }}</td>
-                                                    <td class="text-start">{{ fumbles.fumRec }}</td>
-                                                </tr>
-                                        </tfoot>
-                                        {% endif %}
-                                    </table>
+                                                <thead>
+                                                    <tr>
+                                                        <td class="text-start"></td>
+                                                        <td class="text-start">FUM</td>
+                                                        <td class="text-start">LOST</td>
+                                                        <td class="text-start">REC</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% set fumbles = namespace(fum=0, fumLost=0, fumRec=0, count=0) %}
+                                                {% for line in stats|sort(attribute='fum', reverse=True) %}
+                                                    {% if line.team_id == matchup.home_team.ID %}
+                                                        {% if line.fum > 0 or line.fumRec > 0 %}
+                                                        {% set fumbles.count = fumbles.count + 1 %}
+                                                        {% set fumbles.fum = fumbles.fum + line.fum %}
+                                                        {% set fumbles.fumLost = fumbles.fumLost + line.fumLost %}
+                                                        {% set fumbles.fumRec = fumbles.fumRec + line.fumRec %}
+                                                        <tr data-id="{{ line.player.ID }}">
+                                                            <td class="text-start">{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
+                                                            <td class="text-start">{{ line.fum }}</td>
+                                                            <td class="text-start">{{ line.fumLost }}</td>
+                                                            <td class="text-start">{{ line.fumRec }}</td>
+                                                        </tr>
+                                                {% endif %}
+                                                {% endif %}
+                                                {% endfor %}
+                                                {% if fumbles.count == 0 %}
+                                                        <tr>
+                                                            <td class="text-start">No {{ matchup.home_team.location }} Fumbles</td>
+                                                            <td>-</td>
+                                                            <td>-</td>
+                                                            <td>-</td>
+                                                        </tr>
+                                                {% else %}
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr class="fw-bold">
+                                                            <td class="text-start">TEAM</td>
+                                                            <td class="text-start">{{ fumbles.fum }}</td>
+                                                            <td class="text-start">{{ fumbles.fumLost }}</td>
+                                                            <td class="text-start">{{ fumbles.fumRec }}</td>
+                                                        </tr>
+                                                </tfoot>
+                                                {% endif %}
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
                                 <!-- Away Fumbles -->
                                 <div class="col-6">
                                     <div class="row mt-2">
-                                        <button class="btn btn-dark btn-small" data-bs-toggle="collapse" data-bs-target="#awayFumbleCollapse">
                                             <div class="row">
                                                 <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.away_team.key+'.png') }}" class="img-fluid"></div>
-                                                <div class="col-8 align-self-center text-start"><h6>{{ matchup.away_team.location }} Fumbles</h6></div>
-                                                <div class="col-2 align-self-center"><i class="bi bi-chevron-down"></i></div>
+                                                <div class="col-10 align-self-center text-start"><h6>{{ matchup.away_team.location }} Fumbles</h6></div>
                                             </div>
-                                        </button>
-                                        <div class="collapse" id="awayFumbleCollapse">
+                                        <div class="row">
                                             <table class="sortable player-table table table-sm table-dark table-hover table-responsive">
-                                        <thead>
-                                            <tr>
-                                                <td class="text-start"></td>
-                                                <td class="text-start">FUM</td>
-                                                <td class="text-start">LOST</td>
-                                                <td class="text-start">REC</td>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        {% set fumbles = namespace(fum=0, fumLost=0, fumRec=0, count=0) %}
-                                        {% for line in stats|sort(attribute='fum', reverse=True) %}
-                                            {% if line.team_id == matchup.away_team.ID %}
-                                                {% if line.fum > 0 or line.fumRec > 0 %}
-                                                {% set fumbles.count = fumbles.count + 1 %}
-                                                {% set fumbles.fum = fumbles.fum + line.fum %}
-                                                {% set fumbles.fumLost = fumbles.fumLost + line.fumLost %}
-                                                {% set fumbles.fumRec = fumbles.fumRec + line.fumRec %}
-                                                <tr data-id="{{ line.player.ID }}">
-                                                    <td class="text-start">{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
-                                                    <td class="text-start">{{ line.fum }}</td>
-                                                    <td class="text-start">{{ line.fumLost }}</td>
-                                                    <td class="text-start">{{ line.fumRec }}</td>
-                                                </tr>
-                                        {% endif %}
-                                        {% endif %}
-                                        {% endfor %}
-                                        {% if fumbles.count == 0 %}
-                                                <tr>
-                                                    <td class="text-start">No {{ matchup.away_team.location }} Fumbles</td>
-                                                    <td>-</td>
-                                                    <td>-</td>
-                                                    <td>-</td>
-                                                </tr>
-                                        {% else %}
-                                        </tbody>
-                                        <tfoot>
-                                            <tr class="fw-bold">
-                                                    <td class="text-start">TEAM</td>
-                                                    <td class="text-start">{{ fumbles.fum }}</td>
-                                                    <td class="text-start">{{ fumbles.fumLost }}</td>
-                                                    <td class="text-start">{{ fumbles.fumRec }}</td>
-                                                </tr>
-                                        </tfoot>
-                                        {% endif %}
-                                    </table>
+                                                <thead>
+                                                    <tr>
+                                                        <td class="text-start"></td>
+                                                        <td class="text-start">FUM</td>
+                                                        <td class="text-start">LOST</td>
+                                                        <td class="text-start">REC</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% set fumbles = namespace(fum=0, fumLost=0, fumRec=0, count=0) %}
+                                                {% for line in stats|sort(attribute='fum', reverse=True) %}
+                                                    {% if line.team_id == matchup.away_team.ID %}
+                                                        {% if line.fum > 0 or line.fumRec > 0 %}
+                                                        {% set fumbles.count = fumbles.count + 1 %}
+                                                        {% set fumbles.fum = fumbles.fum + line.fum %}
+                                                        {% set fumbles.fumLost = fumbles.fumLost + line.fumLost %}
+                                                        {% set fumbles.fumRec = fumbles.fumRec + line.fumRec %}
+                                                        <tr data-id="{{ line.player.ID }}">
+                                                            <td class="text-start">{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
+                                                            <td class="text-start">{{ line.fum }}</td>
+                                                            <td class="text-start">{{ line.fumLost }}</td>
+                                                            <td class="text-start">{{ line.fumRec }}</td>
+                                                        </tr>
+                                                {% endif %}
+                                                {% endif %}
+                                                {% endfor %}
+                                                {% if fumbles.count == 0 %}
+                                                        <tr>
+                                                            <td class="text-start">No {{ matchup.away_team.location }} Fumbles</td>
+                                                            <td>-</td>
+                                                            <td>-</td>
+                                                            <td>-</td>
+                                                        </tr>
+                                                {% else %}
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr class="fw-bold">
+                                                            <td class="text-start">TEAM</td>
+                                                            <td class="text-start">{{ fumbles.fum }}</td>
+                                                            <td class="text-start">{{ fumbles.fumLost }}</td>
+                                                            <td class="text-start">{{ fumbles.fumRec }}</td>
+                                                        </tr>
+                                                </tfoot>
+                                                {% endif %}
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
@@ -583,128 +559,821 @@
                                 <!-- Home Defense -->
                                 <div class="col-6">
                                     <div class="row mt-2">
-                                        <button class="btn btn-dark btn-small" data-bs-toggle="collapse" data-bs-target="#homeDefenseCollapse">
                                             <div class="row">
                                                 <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.home_team.key+'.png') }}" class="img-fluid"></div>
-                                                <div class="col-8 align-self-center text-start"><h6>{{ matchup.home_team.location }} Defense</h6></div>
-                                                <div class="col-2 align-self-center"><i class="bi bi-chevron-down"></i></div>
+                                                <div class="col-10 align-self-center text-start"><h6>{{ matchup.home_team.location }} Defense</h6></div>
                                             </div>
-                                        </button>
-                                        <div class="collapse" id="homeDefenseCollapse">
+                                        <div class="row">
                                             <table class="sortable player-table table table-sm table-dark table-hover table-responsive">
-                                        <thead>
-                                            <tr>
-                                                <td class="text-start"></td>
-                                                <td class="text-start">TOT</td>
-                                                <td class="text-start">SOLO</td>
-                                                <td class="text-start">SCK</td>
-                                                <td class="text-start">TFL</td>
-                                                <td class="text-start">PD</td>
-                                                <td class="text-start">QBH</td>
-                                                <td class="text-start">TD</td>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        {% set def = namespace(totalTackles=0, soloTackles=0, sacks=0, tacklesForLoss=0, passDefensed=0, qbHits=0, defTDs=0) %}
-                                        {% for line in stats|sort(attribute='totalTackles', reverse=True) %}
-                                            {% if line.team_id == matchup.home_team.ID and line.defender %}
-                                                {% set def.totalTackles = def.totalTackles + line.totalTackles %}
-                                                {% set def.soloTackles = def.soloTackles + line.soloTackles %}
-                                                {% set def.sacks = def.sacks + line.sacks %}
-                                                {% set def.tacklesForLoss = def.tacklesForLoss + line.tacklesForLoss %}
-                                                {% set def.passDefensed = def.passDefensed + line.passDefensed %}
-                                                {% set def.qbHits = def.qbHits + line.qbHits %}
-                                                {% set def.defTDs = def.defTDs + line.defTDs %}
-                                                <tr data-id="{{ line.player.ID }}">
-                                                    <td class="text-start">{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
-                                                    <td class="text-start">{{ line.totalTackles }}</td>
-                                                    <td class="text-start">{{ line.soloTackles }}</td>
-                                                    <td class="text-start">{{ line.sacks }}</td>
-                                                    <td class="text-start">{{ line.tacklesForLoss }}</td>
-                                                    <td class="text-start">{{ line.passDefensed }}</td>
-                                                    <td class="text-start">{{ line.qbHits }}</td>
-                                                    <td class="text-start">{{ line.defTDs }}</td>
-                                                </tr>
-                                        {% endif %}
-                                        {% endfor %}
-                                        </tbody>
-                                        <tfoot>
-                                            <tr class="fw-bold">
-                                                    <td class="text-start">TEAM</td>
-                                                    <td class="text-start">{{ def.totalTackles }}</td>
-                                                    <td class="text-start">{{ def.soloTackles }}</td>
-                                                    <td class="text-start">{{ def.sacks }}</td>
-                                                    <td class="text-start">{{ def.tacklesForLoss }}</td>
-                                                    <td class="text-start">{{ def.passDefensed }}</td>
-                                                    <td class="text-start">{{ def.qbHits }}</td>
-                                                    <td class="text-start">{{ def.defTDs }}</td>
-                                                </tr>
-                                        </tfoot>
-                                    </table>
+                                                <thead>
+                                                    <tr>
+                                                        <td class="text-start"></td>
+                                                        <td class="text-start">TOT</td>
+                                                        <td class="text-start">SOLO</td>
+                                                        <td class="text-start">SCK</td>
+                                                        <td class="text-start">TFL</td>
+                                                        <td class="text-start">PD</td>
+                                                        <td class="text-start">QBH</td>
+                                                        <td class="text-start">TD</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% set def = namespace(totalTackles=0, soloTackles=0, sacks=0, tacklesForLoss=0, passDefensed=0, qbHits=0, defTDs=0) %}
+                                                {% for line in stats|sort(attribute='totalTackles', reverse=True) %}
+                                                    {% if line.team_id == matchup.home_team.ID and line.defender %}
+                                                        {% set def.totalTackles = def.totalTackles + line.totalTackles %}
+                                                        {% set def.soloTackles = def.soloTackles + line.soloTackles %}
+                                                        {% set def.sacks = def.sacks + line.sacks %}
+                                                        {% set def.tacklesForLoss = def.tacklesForLoss + line.tacklesForLoss %}
+                                                        {% set def.passDefensed = def.passDefensed + line.passDefensed %}
+                                                        {% set def.qbHits = def.qbHits + line.qbHits %}
+                                                        {% set def.defTDs = def.defTDs + line.defTDs %}
+                                                        <tr data-id="{{ line.player.ID }}">
+                                                            <td class="text-start">{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
+                                                            <td class="text-start">{{ line.totalTackles }}</td>
+                                                            <td class="text-start">{{ line.soloTackles }}</td>
+                                                            <td class="text-start">{{ line.sacks }}</td>
+                                                            <td class="text-start">{{ line.tacklesForLoss }}</td>
+                                                            <td class="text-start">{{ line.passDefensed }}</td>
+                                                            <td class="text-start">{{ line.qbHits }}</td>
+                                                            <td class="text-start">{{ line.defTDs }}</td>
+                                                        </tr>
+                                                {% endif %}
+                                                {% endfor %}
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr class="fw-bold">
+                                                            <td class="text-start">TEAM</td>
+                                                            <td class="text-start">{{ def.totalTackles }}</td>
+                                                            <td class="text-start">{{ def.soloTackles }}</td>
+                                                            <td class="text-start">{{ def.sacks }}</td>
+                                                            <td class="text-start">{{ def.tacklesForLoss }}</td>
+                                                            <td class="text-start">{{ def.passDefensed }}</td>
+                                                            <td class="text-start">{{ def.qbHits }}</td>
+                                                            <td class="text-start">{{ def.defTDs }}</td>
+                                                        </tr>
+                                                </tfoot>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
                                 <!-- Away Defense -->
                                 <div class="col-6">
                                     <div class="row mt-2">
-                                        <button class="btn btn-dark btn-small" data-bs-toggle="collapse" data-bs-target="#awayDefenseCollapse">
-                                            <div class="row">
-                                                <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.away_team.key+'.png') }}" class="img-fluid"></div>
-                                                <div class="col-8 align-self-center text-start"><h6>{{ matchup.away_team.location }} Defense</h6></div>
-                                                <div class="col-2 align-self-center"><i class="bi bi-chevron-down"></i></div>
-                                            </div>
-                                        </button>
-                                        <div class="collapse" id="awayDefenseCollapse">
+                                        <div class="row">
+                                            <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.away_team.key+'.png') }}" class="img-fluid"></div>
+                                            <div class="col-10 align-self-center text-start"><h6>{{ matchup.away_team.location }} Defense</h6></div>
+                                        </div>
+                                        <div class="row">
                                             <table class="sortable player-table table table-sm table-dark table-hover table-responsive">
-                                        <thead>
-                                            <tr>
-                                                <td class="text-start"></td>
-                                                <td class="text-start">TOT</td>
-                                                <td class="text-start">SOLO</td>
-                                                <td class="text-start">SCK</td>
-                                                <td class="text-start">TFL</td>
-                                                <td class="text-start">PD</td>
-                                                <td class="text-start">QBH</td>
-                                                <td class="text-start">TD</td>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        {% set def = namespace(totalTackles=0, soloTackles=0, sacks=0, tacklesForLoss=0, passDefensed=0, qbHits=0, defTDs=0) %}
-                                        {% for line in stats|sort(attribute='totalTackles', reverse=True) %}
-                                            {% if line.team_id == matchup.away_team.ID and line.defender %}
-                                                {% set def.totalTackles = def.totalTackles + line.totalTackles %}
-                                                {% set def.soloTackles = def.soloTackles + line.soloTackles %}
-                                                {% set def.sacks = def.sacks + line.sacks %}
-                                                {% set def.tacklesForLoss = def.tacklesForLoss + line.tacklesForLoss %}
-                                                {% set def.passDefensed = def.passDefensed + line.passDefensed %}
-                                                {% set def.qbHits = def.qbHits + line.qbHits %}
-                                                {% set def.defTDs = def.defTDs + line.defTDs %}
-                                                <tr data-id="{{ line.player.ID }}">
-                                                    <td class="text-start">{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
-                                                    <td class="text-start">{{ line.totalTackles }}</td>
-                                                    <td class="text-start">{{ line.soloTackles }}</td>
-                                                    <td class="text-start">{{ line.sacks }}</td>
-                                                    <td class="text-start">{{ line.tacklesForLoss }}</td>
-                                                    <td class="text-start">{{ line.passDefensed }}</td>
-                                                    <td class="text-start">{{ line.qbHits }}</td>
-                                                    <td class="text-start">{{ line.defTDs }}</td>
+                                                <thead>
+                                                    <tr>
+                                                        <td class="text-start"></td>
+                                                        <td class="text-start">TOT</td>
+                                                        <td class="text-start">SOLO</td>
+                                                        <td class="text-start">SCK</td>
+                                                        <td class="text-start">TFL</td>
+                                                        <td class="text-start">PD</td>
+                                                        <td class="text-start">QBH</td>
+                                                        <td class="text-start">TD</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% set def = namespace(totalTackles=0, soloTackles=0, sacks=0, tacklesForLoss=0, passDefensed=0, qbHits=0, defTDs=0) %}
+                                                {% for line in stats|sort(attribute='totalTackles', reverse=True) %}
+                                                    {% if line.team_id == matchup.away_team.ID and line.defender %}
+                                                        {% set def.totalTackles = def.totalTackles + line.totalTackles %}
+                                                        {% set def.soloTackles = def.soloTackles + line.soloTackles %}
+                                                        {% set def.sacks = def.sacks + line.sacks %}
+                                                        {% set def.tacklesForLoss = def.tacklesForLoss + line.tacklesForLoss %}
+                                                        {% set def.passDefensed = def.passDefensed + line.passDefensed %}
+                                                        {% set def.qbHits = def.qbHits + line.qbHits %}
+                                                        {% set def.defTDs = def.defTDs + line.defTDs %}
+                                                        <tr data-id="{{ line.player.ID }}">
+                                                            <td class="text-start">{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
+                                                            <td class="text-start">{{ line.totalTackles }}</td>
+                                                            <td class="text-start">{{ line.soloTackles }}</td>
+                                                            <td class="text-start">{{ line.sacks }}</td>
+                                                            <td class="text-start">{{ line.tacklesForLoss }}</td>
+                                                            <td class="text-start">{{ line.passDefensed }}</td>
+                                                            <td class="text-start">{{ line.qbHits }}</td>
+                                                            <td class="text-start">{{ line.defTDs }}</td>
+                                                        </tr>
+                                                {% endif %}
+                                                {% endfor %}
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr class="fw-bold">
+                                                            <td class="text-start">TEAM</td>
+                                                            <td class="text-start">{{ def.totalTackles }}</td>
+                                                            <td class="text-start">{{ def.soloTackles }}</td>
+                                                            <td class="text-start">{{ def.sacks }}</td>
+                                                            <td class="text-start">{{ def.tacklesForLoss }}</td>
+                                                            <td class="text-start">{{ def.passDefensed }}</td>
+                                                            <td class="text-start">{{ def.qbHits }}</td>
+                                                            <td class="text-start">{{ def.defTDs }}</td>
+                                                        </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Interceptions -->
+                            <div class="row">
+                                <!-- Home Interceptions -->
+                                <div class="col-6">
+                                    <div class="row mt-2">
+                                        <div class="row">
+                                            <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.home_team.key+'.png') }}" class="img-fluid"></div>
+                                            <div class="col-10 align-self-center text-start"><h6>{{ matchup.home_team.location }} Interceptions</h6></div>
+                                        </div>
+                                        <div class="row">
+                                            <table class="sortable player-table table table-sm table-dark table-hover table-responsive">
+                                                <thead>
+                                                    <tr>
+                                                        <td class="text-start"></td>
+                                                        <td class="text-start">INT</td>
+                                                        <td class="text-start">YDS</td>
+                                                        <td class="text-start">TD</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% set interceptions = namespace(defINTs=0, defINTYDs=0, defINTTDs=0, count=0) %}
+                                                {% for line in stats|sort(attribute='defINTYDs', reverse=True) %}
+                                                    {% if line.team_id == matchup.home_team.ID %}
+                                                        {% if line.defINTs > 0 %}
+                                                        {% set interceptions.count = interceptions.count + 1 %}
+                                                        {% set interceptions.defINTs = interceptions.defINTs + line.defINTs %}
+                                                        {% set interceptions.defINTYDs = interceptions.defINTYDs + line.defINTYDs %}
+                                                        {% set interceptions.defINTTDs = interceptions.defINTTDs + line.defINTTDs %}
+                                                        <tr data-id="{{ line.player.ID }}">
+                                                            <td class="text-start">{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
+                                                            <td class="text-start">{{ line.defINTs }}</td>
+                                                            <td class="text-start">{{ line.defINTYDs }}</td>
+                                                            <td class="text-start">{{ line.defINTTDs }}</td>
+                                                        </tr>
+                                                {% endif %}
+                                                {% endif %}
+                                                {% endfor %}
+                                                {% if interceptions.count == 0 %}
+                                                        <tr>
+                                                            <td class="text-start">No {{ matchup.home_team.location }} Interceptions</td>
+                                                            <td>-</td>
+                                                            <td>-</td>
+                                                            <td>-</td>
+                                                        </tr>
+                                                {% else %}
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr class="fw-bold">
+                                                            <td class="text-start">TEAM</td>
+                                                            <td class="text-start">{{ interceptions.defINTs }}</td>
+                                                            <td class="text-start">{{ interceptions.defINTYDs }}</td>
+                                                            <td class="text-start">{{ interceptions.defINTTDs }}</td>
+                                                        </tr>
+                                                </tfoot>
+                                                {% endif %}
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Away Interceptions -->
+                                <div class="col-6">
+                                    <div class="row mt-2">
+                                        <div class="row">
+                                            <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.away_team.key+'.png') }}" class="img-fluid"></div>
+                                            <div class="col-10 align-self-center text-start"><h6>{{ matchup.away_team.location }} Interceptions</h6></div>
+                                        </div>
+                                        <div class="row">
+                                            <table class="sortable player-table table table-sm table-dark table-hover table-responsive">
+                                                <thead>
+                                                    <tr>
+                                                        <td class="text-start"></td>
+                                                        <td class="text-start">INT</td>
+                                                        <td class="text-start">YDS</td>
+                                                        <td class="text-start">TD</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% set interceptions = namespace(defINTs=0, defINTYDs=0, defINTTDs=0, count=0) %}
+                                                {% for line in stats|sort(attribute='defINTYDs', reverse=True) %}
+                                                    {% if line.team_id == matchup.away_team.ID %}
+                                                        {% if line.defINTs > 0 %}
+                                                        {% set interceptions.count = interceptions.count + 1 %}
+                                                        {% set interceptions.defINTs = interceptions.defINTs + line.defINTs %}
+                                                        {% set interceptions.defINTYDs = interceptions.defINTYDs + line.defINTYDs %}
+                                                        {% set interceptions.defINTTDs = interceptions.defINTTDs + line.defINTTDs %}
+                                                        <tr data-id="{{ line.player.ID }}">
+                                                            <td class="text-start">{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
+                                                            <td class="text-start">{{ line.defINTs }}</td>
+                                                            <td class="text-start">{{ line.defINTYDs }}</td>
+                                                            <td class="text-start">{{ line.defINTTDs }}</td>
+                                                        </tr>
+                                                {% endif %}
+                                                {% endif %}
+                                                {% endfor %}
+                                                {% if interceptions.count == 0 %}
+                                                        <tr>
+                                                            <td class="text-start">No {{ matchup.away_team.location }} Interceptions</td>
+                                                            <td>-</td>
+                                                            <td>-</td>
+                                                            <td>-</td>
+                                                        </tr>
+                                                {% else %}
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr class="fw-bold">
+                                                            <td class="text-start">TEAM</td>
+                                                            <td class="text-start">{{ interceptions.defINTs }}</td>
+                                                            <td class="text-start">{{ interceptions.defINTYDs }}</td>
+                                                            <td class="text-start">{{ interceptions.defINTTDs }}</td>
+                                                        </tr>
+                                                </tfoot>
+                                                {% endif %}
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Kick Returns -->
+                            <div class="row">
+                                <!-- Home Kick Returns -->
+                                <div class="col-6">
+                                    <div class="row mt-2">
+                                        <div class="row">
+                                            <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.home_team.key+'.png') }}" class="img-fluid"></div>
+                                            <div class="col-10 align-self-center text-start"><h6>{{ matchup.home_team.location }} Kick Returns</h6></div>
+                                        </div>
+                                        <div class="row">
+                                            <table class="sortable player-table table table-sm table-dark table-hover table-responsive">
+                                                <thead>
+                                                <tr>
+                                                    <td></td>
+                                                    <td>NO</td>
+                                                    <td>YDS</td>
+                                                    <td>AVG</td>
+                                                    <td>LNG</td>
+                                                    <td>TD</td>
                                                 </tr>
-                                        {% endif %}
-                                        {% endfor %}
-                                        </tbody>
-                                        <tfoot>
-                                            <tr class="fw-bold">
-                                                    <td class="text-start">TEAM</td>
-                                                    <td class="text-start">{{ def.totalTackles }}</td>
-                                                    <td class="text-start">{{ def.soloTackles }}</td>
-                                                    <td class="text-start">{{ def.sacks }}</td>
-                                                    <td class="text-start">{{ def.tacklesForLoss }}</td>
-                                                    <td class="text-start">{{ def.passDefensed }}</td>
-                                                    <td class="text-start">{{ def.qbHits }}</td>
-                                                    <td class="text-start">{{ def.defTDs }}</td>
+                                                </thead>
+                                                <tbody>
+                                                {% set kr = namespace(krAtts=0, krYDs=0, krLng=0, krTDs=0, count=0) %}
+                                                {% for line in stats|sort(attribute='krYDs', reverse=True) %}
+                                                    {% if line.team_id == matchup.home_team.ID and line.krAtts > 0 %}
+                                                    {% set kr.krAtts = kr.krAtts + line.krAtts %}
+                                                    {% set kr.krYDs = kr.krYDs + line.krYDs %}
+                                                    {% set kr.krTDs = kr.krTDs + line.krTDs %}
+                                                    {% set kr.count = kr.count + 1 %}
+                                                    {% if line.krLng > kr.krLng %}
+                                                        {% set kr.krLng = line.krLng %}
+                                                    {% endif %}
+                                                    <tr data-id="{{ line.player.ID }}">
+                                                        <td>{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
+                                                        <td>{{ line.krAtts }}</td>
+                                                        <td>{{ line.krYDs }}</td>
+                                                        <td>{{ line.krAVG }}</td>
+                                                        <td>{{ line.krLng }}</td>
+                                                        <td>{{ line.krTDs }}</td>
+                                                    </tr>
+                                                    {% endif %}
+                                                {% endfor %}
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr class="fw-bold">
+                                                        <td class="text-start">TEAM</td>
+                                                        <td class="text-start">{{ kr.krAtts }}</td>
+                                                        <td class="text-start">{{ kr.krYDs }}</td>
+                                                        <td class="text-start">{{'%0.1f'| format(kr.krYDs / kr.krAtts) }}</td>
+                                                        <td class="text-start">{{ kr.krLng }}</td>
+                                                        <td class="text-start">{{ kr.krTDs }}</td>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Away Kick Returns -->
+                                <div class="col-6">
+                                    <div class="row mt-2">
+                                        <div class="row">
+                                            <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.away_team.key+'.png') }}" class="img-fluid"></div>
+                                            <div class="col-10 align-self-center text-start"><h6>{{ matchup.away_team.location }} Kick Returns</h6></div>
+                                        </div>
+                                        <div class="row">
+                                            <table class="sortable player-table table table-sm table-dark table-hover table-responsive">
+                                                <thead>
+                                                <tr>
+                                                    <td></td>
+                                                    <td>NO</td>
+                                                    <td>YDS</td>
+                                                    <td>AVG</td>
+                                                    <td>LNG</td>
+                                                    <td>TD</td>
                                                 </tr>
-                                        </tfoot>
-                                    </table>
+                                                </thead>
+                                                <tbody>
+                                                {% set kr = namespace(krAtts=0, krYDs=0, krLng=0, krTDs=0, count=0) %}
+                                                {% for line in stats|sort(attribute='krYDs', reverse=True) %}
+                                                    {% if line.team_id == matchup.away_team.ID and line.krAtts > 0 %}
+                                                    {% set kr.count = kr.count + 1 %}
+                                                    {% set kr.krAtts = kr.krAtts + line.krAtts %}
+                                                    {% set kr.krYDs = kr.krYDs + line.krYDs %}
+                                                    {% set kr.krTDs = kr.krTDs + line.krTDs %}
+                                                    {% if line.krLng > kr.krLng %}
+                                                        {% set kr.krLng = line.krLng %}
+                                                    {% endif %}
+                                                    <tr data-id="{{ line.player.ID }}">
+                                                        <td>{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
+                                                        <td>{{ line.krAtts }}</td>
+                                                        <td>{{ line.krYDs }}</td>
+                                                        <td>{{ line.krAVG }}</td>
+                                                        <td>{{ line.krLng }}</td>
+                                                        <td>{{ line.krTDs }}</td>
+                                                    </tr>
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {% if kr.count > 0 %}
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr class="fw-bold">
+                                                        <td class="text-start">TEAM</td>
+                                                        <td class="text-start">{{ kr.krAtts }}</td>
+                                                        <td class="text-start">{{ kr.krYDs }}</td>
+                                                        <td class="text-start">{{'%0.1f'| format(kr.krYDs / kr.krAtts) }}</td>
+                                                        <td class="text-start">{{ kr.krLng }}</td>
+                                                        <td class="text-start">{{ kr.krTDs }}</td>
+                                                    </tr>
+                                                </tfoot>
+                                                {% else %}
+                                                <tr>
+                                                    <td>No {{ matchup.away_team.location }} Kick Returns</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                </tr>
+                                                </tbody>
+                                                {% endif %}
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Punt Returns -->
+                            <div class="row">
+                                <!-- Home Punt Returns -->
+                                <div class="col-6">
+                                    <div class="row mt-2">
+                                        <div class="row">
+                                            <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.home_team.key+'.png') }}" class="img-fluid"></div>
+                                            <div class="col-10 align-self-center text-start"><h6>{{ matchup.home_team.location }} Punt Returns</h6></div>
+                                        </div>
+                                        <div class="row">
+                                            <table class="sortable player-table table table-sm table-dark table-hover table-responsive">
+                                                <thead>
+                                                <tr>
+                                                    <td></td>
+                                                    <td>NO</td>
+                                                    <td>YDS</td>
+                                                    <td>AVG</td>
+                                                    <td>LNG</td>
+                                                    <td>TD</td>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% set pr = namespace(prAtts=0, prYDs=0, prLng=0, prTDs=0, count=0) %}
+                                                {% for line in stats|sort(attribute='prYDs', reverse=True) %}
+                                                    {% if line.team_id == matchup.home_team.ID and line.prAtts > 0 %}
+                                                    {% set pr.count = pr.count + 1 %}
+                                                    {% set pr.prAtts = pr.prAtts + line.prAtts %}
+                                                    {% set pr.prYDs = pr.prYDs + line.prYDs %}
+                                                    {% set pr.prTDs = pr.prTDs + line.prTDs %}
+                                                    {% if line.prLng > pr.prLng %}
+                                                        {% set pr.prLng = line.prLng %}
+                                                    {% endif %}
+                                                    <tr data-id="{{ line.player.ID }}">
+                                                        <td>{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
+                                                        <td>{{ line.prAtts }}</td>
+                                                        <td>{{ line.prYDs }}</td>
+                                                        <td>{{ line.prAVG }}</td>
+                                                        <td>{{ line.prLng }}</td>
+                                                        <td>{{ line.prTDs }}</td>
+                                                    </tr>
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {% if pr.count > 0 %}
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr class="fw-bold">
+                                                        <td class="text-start">TEAM</td>
+                                                        <td class="text-start">{{ pr.prAtts }}</td>
+                                                        <td class="text-start">{{ pr.prYDs }}</td>
+                                                        <td class="text-start">{{'%0.1f'| format(pr.prYDs / pr.prAtts) }}</td>
+                                                        <td class="text-start">{{ pr.prLng }}</td>
+                                                        <td class="text-start">{{ pr.prTDs }}</td>
+                                                    </tr>
+                                                </tfoot>
+                                                {% else %}
+                                                <tr>
+                                                    <td>No {{ matchup.home_team.location }} Punt Returns</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                </tr>
+                                                </tbody>
+                                                {% endif %}
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Away Punt Returns -->
+                                <div class="col-6">
+                                    <div class="row mt-2">
+                                        <div class="row">
+                                            <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.away_team.key+'.png') }}" class="img-fluid"></div>
+                                            <div class="col-10 align-self-center text-start"><h6>{{ matchup.away_team.location }} Punt Returns</h6></div>
+                                        </div>
+                                        <div class="row">
+                                            <table class="sortable player-table table table-sm table-dark table-hover table-responsive">
+                                                <thead>
+                                                <tr>
+                                                    <td></td>
+                                                    <td>NO</td>
+                                                    <td>YDS</td>
+                                                    <td>AVG</td>
+                                                    <td>LNG</td>
+                                                    <td>TD</td>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% set pr = namespace(prAtts=0, prYDs=0, prLng=0, prTDs=0, count=0) %}
+                                                {% for line in stats|sort(attribute='prYDs', reverse=True) %}
+                                                    {% if line.team_id == matchup.away_team.ID and line.prAtts > 0 %}
+                                                    {% set pr.count = pr.count + 1 %}
+                                                    {% set pr.prAtts = pr.prAtts + line.prAtts %}
+                                                    {% set pr.prYDs = pr.prYDs + line.prYDs %}
+                                                    {% set pr.prTDs = pr.prTDs + line.prTDs %}
+                                                    {% if line.prLng > pr.prLng %}
+                                                        {% set pr.prLng = line.prLng %}
+                                                    {% endif %}
+                                                    <tr data-id="{{ line.player.ID }}">
+                                                        <td>{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
+                                                        <td>{{ line.prAtts }}</td>
+                                                        <td>{{ line.prYDs }}</td>
+                                                        <td>{{ line.prAVG }}</td>
+                                                        <td>{{ line.prLng }}</td>
+                                                        <td>{{ line.prTDs }}</td>
+                                                    </tr>
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {% if pr.count > 0 %}
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr class="fw-bold">
+                                                        <td class="text-start">TEAM</td>
+                                                        <td class="text-start">{{ pr.prAtts }}</td>
+                                                        <td class="text-start">{{ pr.prYDs }}</td>
+                                                        <td class="text-start">{{'%0.1f'| format(pr.prYDs / pr.prAtts) }}</td>
+                                                        <td class="text-start">{{ pr.prLng }}</td>
+                                                        <td class="text-start">{{ pr.prTDs }}</td>
+                                                    </tr>
+                                                </tfoot>
+                                                {% else %}
+                                                <tr>
+                                                    <td>No {{ matchup.away_team.location }} Punt Returns</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                </tr>
+                                                </tbody>
+                                                {% endif %}
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Kicking -->
+                            <div class="row">
+                                <!-- Home Kicking -->
+                                <div class="col-6">
+                                    <div class="row mt-2">
+                                        <div class="row">
+                                            <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.home_team.key+'.png') }}" class="img-fluid"></div>
+                                            <div class="col-10 align-self-center text-start"><h6>{{ matchup.home_team.location }} Kicking</h6></div>
+                                        </div>
+                                        <div class="row">
+                                            <table class="sortable player-table table table-sm table-dark table-hover table-responsive">
+                                                <thead>
+                                                <tr>
+                                                    <td></td>
+                                                    <td>FG</td>
+                                                    <td>PCT</td>
+                                                    <td>LONG</td>
+                                                    <td>XP</td>
+                                                    <td>PTS</td>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% set kicking = namespace(fgMade=0, fgAtts=0, fgLng=0, xpMade=0, xpAtts=0, points=0, count=0) %}
+                                                {% for line in stats|sort(attribute='points', reverse=True) %}
+                                                    {% if line.team_id == matchup.home_team.ID and line.fgAtts > 0 %}
+                                                    {% set kicking.count = kicking.count + 1 %}
+                                                    {% set kicking.fgMade = kicking.fgMade + line.fgMade %}
+                                                    {% set kicking.fgAtts = kicking.fgAtts + line.fgAtts %}
+                                                    {% set kicking.xpMade = kicking.xpMade + line.xpMade %}
+                                                    {% set kicking.xpAtts = kicking.xpAtts + line.xpAtts %}
+                                                    {% set kicking.points = kicking.points + line.points %}
+                                                    {% if line.fgLng > kicking.fgLng %}
+                                                        {% set kicking.fgLng = line.fgLng %}
+                                                    {% endif %}
+                                                    <tr data-id="{{ line.player.ID }}">
+                                                        <td>{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
+                                                        <td>{{ line.fgMade }}/{{ line.fgAtts }}</td>
+                                                        <td>{{ line.fgPCT }}</td>
+                                                        <td>{{ line.fgLng }}</td>
+                                                        <td>{{ line.xpMade }}/{{ line.xpAtts }}</td>
+                                                        <td>{{ line.points }}</td>
+                                                    </tr>
+                                                    {% elif line.team_id == matchup.home_team.ID and line.xpAtts > 0 %}
+                                                    {% set kicking.count = kicking.count + 1 %}
+                                                    {% set kicking.fgMade = kicking.fgMade + line.fgMade %}
+                                                    {% set kicking.fgAtts = kicking.fgAtts + line.fgAtts %}
+                                                    {% set kicking.xpMade = kicking.xpMade + line.xpMade %}
+                                                    {% set kicking.xpAtts = kicking.xpAtts + line.xpAtts %}
+                                                    {% set kicking.points = kicking.points + line.points %}
+                                                    {% if line.fgLng > kicking.fgLng %}
+                                                        {% set kicking.fgLng = line.fgLng %}
+                                                    {% endif %}
+                                                    <tr data-id="{{ line.player.ID }}">
+                                                        <td>{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
+                                                        <td>{{ line.fgMade }}/{{ line.fgAtts }}</td>
+                                                        <td>{{ line.fgPCT }}</td>
+                                                        <td>{{ line.fgLng }}</td>
+                                                        <td>{{ line.xpMade }}/{{ line.xpAtts }}</td>
+                                                        <td>{{ line.points }}</td>
+                                                    </tr>
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {% if kicking.count > 0 %}
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr class="fw-bold">
+                                                        <td class="text-start">TEAM</td>
+                                                        <td class="text-start">{{ kicking.fgMade }}/{{ kicking.fgAtts }}</td>
+                                                        <td class="text-start">{{ kicking.fgLng }}</td>
+                                                        <td class="text-start">{{ kicking.xpMade }}/{{ kicking.xpAtts }}</td>
+                                                        <td class="text-start">{{ kicking.points }}</td>
+                                                    </tr>
+                                                </tfoot>
+                                                {% else %}
+                                                <tr>
+                                                    <td>No {{ matchup.home_team.location }} Kicking</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                </tr>
+                                                </tbody>
+                                                {% endif %}
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Away Kicking -->
+                                <div class="col-6">
+                                    <div class="row mt-2">
+                                        <div class="row">
+                                            <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.away_team.key+'.png') }}" class="img-fluid"></div>
+                                            <div class="col-10 align-self-center text-start"><h6>{{ matchup.away_team.location }} Kicking</h6></div>
+                                        </div>
+                                        <div class="row">
+                                            <table class="sortable player-table table table-sm table-dark table-hover table-responsive">
+                                                <thead>
+                                                <tr>
+                                                    <td></td>
+                                                    <td>FG</td>
+                                                    <td>PCT</td>
+                                                    <td>LONG</td>
+                                                    <td>XP</td>
+                                                    <td>PTS</td>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% set kicking = namespace(fgMade=0, fgAtts=0, fgLng=0, xpMade=0, xpAtts=0, points=0, count=0) %}
+                                                {% for line in stats|sort(attribute='points', reverse=True) %}
+                                                    {% if line.team_id == matchup.away_team.ID and line.fgAtts > 0 %}
+                                                    {% set kicking.count = kicking.count + 1 %}
+                                                    {% set kicking.fgMade = kicking.fgMade + line.fgMade %}
+                                                    {% set kicking.fgAtts = kicking.fgAtts + line.fgAtts %}
+                                                    {% set kicking.xpMade = kicking.xpMade + line.xpMade %}
+                                                    {% set kicking.xpAtts = kicking.xpAtts + line.xpAtts %}
+                                                    {% set kicking.points = kicking.points + line.points %}
+                                                    {% if line.fgLng > kicking.fgLng %}
+                                                        {% set kicking.fgLng = line.fgLng %}
+                                                    {% endif %}
+                                                    <tr data-id="{{ line.player.ID }}">
+                                                        <td>{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
+                                                        <td>{{ line.fgMade }}/{{ line.fgAtts }}</td>
+                                                        <td>{{ line.fgPCT }}</td>
+                                                        <td>{{ line.fgLng }}</td>
+                                                        <td>{{ line.xpMade }}/{{ line.xpAtts }}</td>
+                                                        <td>{{ line.points }}</td>
+                                                    </tr>
+                                                    {% elif line.team_id == matchup.away_team.ID and line.xpAtts > 0 %}
+                                                    {% set kicking.count = kicking.count + 1 %}
+                                                    {% set kicking.fgMade = kicking.fgMade + line.fgMade %}
+                                                    {% set kicking.fgAtts = kicking.fgAtts + line.fgAtts %}
+                                                    {% set kicking.xpMade = kicking.xpMade + line.xpMade %}
+                                                    {% set kicking.xpAtts = kicking.xpAtts + line.xpAtts %}
+                                                    {% set kicking.points = kicking.points + line.points %}
+                                                    {% if line.fgLng > kicking.fgLng %}
+                                                        {% set kicking.fgLng = line.fgLng %}
+                                                    {% endif %}
+                                                    <tr data-id="{{ line.player.ID }}">
+                                                        <td>{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
+                                                        <td>{{ line.fgMade }}/{{ line.fgAtts }}</td>
+                                                        <td>{{ line.fgPCT }}</td>
+                                                        <td>{{ line.fgLng }}</td>
+                                                        <td>{{ line.xpMade }}/{{ line.xpAtts }}</td>
+                                                        <td>{{ line.points }}</td>
+                                                    </tr>
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {% if kicking.count > 0 %}
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr class="fw-bold">
+                                                        <td class="text-start">TEAM</td>
+                                                        <td class="text-start">{{ kicking.fgMade }}/{{ kicking.fgAtts }}</td>
+                                                        <td class="text-start">{{ kicking.fgLng }}</td>
+                                                        <td class="text-start">{{ kicking.xpMade }}/{{ kicking.xpAtts }}</td>
+                                                        <td class="text-start">{{ kicking.points }}</td>
+                                                    </tr>
+                                                </tfoot>
+                                                {% else %}
+                                                <tr>
+                                                    <td>No {{ matchup.away_team.location }} Kicking</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                </tr>
+                                                </tbody>
+                                                {% endif %}
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Punting -->
+                            <div class="row">
+                                <!-- Home Punting -->
+                                <div class="col-6">
+                                    <div class="row mt-2">
+                                        <div class="row">
+                                            <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.home_team.key+'.png') }}" class="img-fluid"></div>
+                                            <div class="col-10 align-self-center text-start"><h6>{{ matchup.home_team.location }} Punting</h6></div>
+                                        </div>
+                                        <div class="row">
+                                            <table class="sortable player-table table table-sm table-dark table-hover table-responsive">
+                                                <thead>
+                                                <tr>
+                                                    <td></td>
+                                                    <td>NO</td>
+                                                    <td>YDS</td>
+                                                    <td>AVG</td>
+                                                    <td>TB</td>
+                                                    <td>IN 20</td>
+                                                    <td>LONG</td>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% set punting = namespace(punts=0, puntYDs=0, puntTB=0, puntIn20=0, puntLng=0, count=0) %}
+                                                {% for line in stats|sort(attribute='punts', reverse=True) %}
+                                                    {% if line.team_id == matchup.home_team.ID and line.punts > 0 %}
+                                                    {% set punting.count = punting.count + 1 %}
+                                                    {% set punting.punts = punting.punts + line.punts %}
+                                                    {% set punting.puntYDs = punting.puntYDs + line.puntYDs %}
+                                                    {% set punting.puntTB = punting.puntTB + line.puntTB %}
+                                                    {% set punting.puntIn20 = punting.puntIn20 + line.puntIn20 %}
+                                                    {% if line.puntLng > punting.puntLng %}
+                                                        {% set punting.puntLng = line.puntLng %}
+                                                    {% endif %}
+                                                    <tr data-id="{{ line.player.ID }}">
+                                                        <td>{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
+                                                        <td>{{ line.punts }}</td>
+                                                        <td>{{ line.puntYDs }}</td>
+                                                        <td>{{ line.puntAVG }}</td>
+                                                        <td>{{ line.puntTB }}</td>
+                                                        <td>{{ line.puntIn20 }}</td>
+                                                        <td>{{ line.puntLng }}</td>
+                                                    </tr>
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {% if punting.count > 0 %}
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr class="fw-bold">
+                                                        <td class="text-start">TEAM</td>
+                                                        <td class="text-start">{{ punting.punts }}</td>
+                                                        <td class="text-start">{{ punting.puntYDs }}</td>
+                                                        <td class="text-start">{{ '%0.1f'| format(punting.puntYDs / punting.punts) }}</td>
+                                                        <td class="text-start">{{ punting.puntTB }}</td>
+                                                        <td class="text-start">{{ punting.puntIn20 }}</td>
+                                                        <td class="text-start">{{ punting.puntLng }}</td>
+                                                    </tr>
+                                                </tfoot>
+                                                {% else %}
+                                                <tr>
+                                                    <td>No {{ matchup.home_team.location }} Punting</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                </tr>
+                                                </tbody>
+                                                {% endif %}
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Away Punting -->
+                                <div class="col-6">
+                                    <div class="row mt-2">
+                                        <div class="row">
+                                            <div class="col-2 align-self-center"><img src="{{ url_for('static', filename='logos/'+matchup.away_team.key+'.png') }}" class="img-fluid"></div>
+                                            <div class="col-10 align-self-center text-start"><h6>{{ matchup.away_team.location }} Punting</h6></div>
+                                        </div>
+                                        <div class="row">
+                                            <table class="sortable player-table table table-sm table-dark table-hover table-responsive">
+                                                <thead>
+                                                <tr>
+                                                    <td></td>
+                                                    <td>NO</td>
+                                                    <td>YDS</td>
+                                                    <td>AVG</td>
+                                                    <td>TB</td>
+                                                    <td>IN 20</td>
+                                                    <td>LONG</td>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% set punting = namespace(punts=0, puntYDs=0, puntTB=0, puntIn20=0, puntLng=0, count=0) %}
+                                                {% for line in stats|sort(attribute='punts', reverse=True) %}
+                                                    {% if line.team_id == matchup.away_team.ID and line.punts > 0 %}
+                                                    {% set punting.count = punting.count + 1 %}
+                                                    {% set punting.punts = punting.punts + line.punts %}
+                                                    {% set punting.puntYDs = punting.puntYDs + line.puntYDs %}
+                                                    {% set punting.puntTB = punting.puntTB + line.puntTB %}
+                                                    {% set punting.puntIn20 = punting.puntIn20 + line.puntIn20 %}
+                                                    {% if line.puntLng > punting.puntLng %}
+                                                        {% set punting.puntLng = line.puntLng %}
+                                                    {% endif %}
+                                                    <tr data-id="{{ line.player.ID }}">
+                                                        <td>{{ line.player.fname[0] }}. {{ line.player.lname }}</td>
+                                                        <td>{{ line.punts }}</td>
+                                                        <td>{{ line.puntYDs }}</td>
+                                                        <td>{{ line.puntAVG }}</td>
+                                                        <td>{{ line.puntTB }}</td>
+                                                        <td>{{ line.puntIn20 }}</td>
+                                                        <td>{{ line.puntLng }}</td>
+                                                    </tr>
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {% if punting.count > 0 %}
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr class="fw-bold">
+                                                        <td class="text-start">TEAM</td>
+                                                        <td class="text-start">{{ punting.punts }}</td>
+                                                        <td class="text-start">{{ punting.puntYDs }}</td>
+                                                        <td class="text-start">{{ '%0.1f'| format(punting.puntYDs / punting.punts) }}</td>
+                                                        <td class="text-start">{{ punting.puntTB }}</td>
+                                                        <td class="text-start">{{ punting.puntIn20 }}</td>
+                                                        <td class="text-start">{{ punting.puntLng }}</td>
+                                                    </tr>
+                                                </tfoot>
+                                                {% else %}
+                                                <tr>
+                                                    <td>No {{ matchup.away_team.location }} Punting</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                </tr>
+                                                </tbody>
+                                                {% endif %}
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
