@@ -11,7 +11,7 @@ import requests
 import time
 
 from NFLCheatSheet.lib.classes.team import Team
-from NFLCheatSheet.lib.classes.player import Player
+from NFLCheatSheet.lib.classes.player import Player, add_player, get_player, player_url
 from NFLCheatSheet.lib.classes import stats
 from NFLCheatSheet.lib.classes.game import Game
 
@@ -30,12 +30,21 @@ def get_all_team_data() -> List[Dict]:
     # 'https://fly.sportsdata.io/v3/nfl/scores/json/Teams?key=2810c12201be4499bff03931c186f9f5')
     #team_data = response.json()
 
-    team_file_path = Path("/Users/everson/NFLCheatSheet/data/teams.json")
+    #team_file_path = Path("/Users/everson/NFLCheatSheet/data/teams.json")
     #with team_file_path.open("w") as teams_file:
     #    json.dump(team_data, teams_file)
 
-    with team_file_path.open("r") as teams_file:
-        teams_data = json.load(teams_file)
+    #with team_file_path.open("r") as teams_file:
+    #    teams_data = json.load(teams_file)
+
+    response = requests.get("https://sports.core.api.espn.com/v2/sports/"
+                            "football/leagues/nfl/seasons/2021/teams/?limit=32")
+    team_data = response.json()
+    team_data = team_data['items']
+
+    teams_data = []
+    for team in team_data:
+        teams_data.append(requests.get(team['$ref']).json())
 
     print("Getting Team Data...\x1b[32mCOMPLETE!\x1b[0m")
     return teams_data
@@ -50,25 +59,22 @@ def add_teams(database, teams: List[Dict]) -> None:
               end="")
         team = teams[i]
 
+        try:
+            name = team['name']
+        except KeyError:
+            name = team['nickname']
+
         database.session.add(Team(
-            ID=team['TeamID'],
-            key=team['Key'],
-            location=team['City'],
-            name=team['Name'],
-            fullname=team['FullName'],
-            conference=team['Conference'],
-            division=team['Division'],
-            bye=team['ByeWeek'],
-            hc=team['HeadCoach'],
-            dc=team['DefensiveCoordinator'],
-            oc=team['OffensiveCoordinator'],
-            primary=team['PrimaryColor'],
-            secondary=team['SecondaryColor'],
-            tertiary=team['TertiaryColor'],
-            wordmark=team["WikipediaWordMarkUrl"],
-            stadium=team["StadiumDetails"]["Name"],
-            stadium_city=team["StadiumDetails"]["City"],
-            stadium_state=team["StadiumDetails"]["State"],
+            ID=team['id'],
+            key=team['abbreviation'],
+            location=team['location'],
+            name=name,
+            fullname=team['displayName'],
+            primary=team['color'],
+            secondary=team['alternateColor'],
+            stadium=team["venue"]["fullName"],
+            stadium_city=team["venue"]["address"]["city"],
+            stadium_state=team["venue"]["address"]["state"],
             wins=0,
             loses=0,
             ties=0,
@@ -80,12 +86,12 @@ def add_teams(database, teams: List[Dict]) -> None:
         ))
 
         database.session.add(stats.TeamStats(
-            team_id=team['TeamID'],
+            team_id=team['id'],
             preseason=True
         ))
 
         database.session.add(stats.TeamStats(
-            team_id=team['TeamID'],
+            team_id=team['id'],
             preseason=False
         ))
 
@@ -169,7 +175,7 @@ def filter_by_position(player_data: List[Dict], position: str = 'ALL') -> List[D
     return players
 
 
-def get_all_player_data(thread, position: str = "ALL") -> List[Dict]:
+def get_all_player_data(thread, position: str = "ALL") -> List:
     """
     Get all player data from json file.
     :param position: Position to get, supports 'ALL', 'OFF', 'DEF', 'SKILL', 'REC'. Default = 'ALL'
@@ -180,21 +186,31 @@ def get_all_player_data(thread, position: str = "ALL") -> List[Dict]:
     thread.total = 1
     print("Getting Player Data...\r", end="")
 
-    time.sleep(5)
+    #time.sleep(5)
 
     # API CAll for all Player data
-    response = requests.get("https://api.sportsdata.io/v3/nfl/scores/json/Players?"
-                            "key=2810c12201be4499bff03931c186f9f5")
-    player_data = response.json()
+    #response = requests.get("https://api.sportsdata.io/v3/nfl/scores/json/Players?"
+    #                        "key=2810c12201be4499bff03931c186f9f5")
+    #player_data = response.json()
 
-    player_file_path = Path("/Users/everson/NFLCheatSheet/data/players.json")
-    with player_file_path.open("w") as player_file:
-        json.dump(player_data, player_file)
+    #player_file_path = Path("/Users/everson/NFLCheatSheet/data/players.json")
+    #with player_file_path.open("w") as player_file:
+    #    json.dump(player_data, player_file)
 
-    with player_file_path.open("r") as player_file:
-        player_data = json.load(player_file)
+    #with player_file_path.open("r") as player_file:
+    #    player_data = json.load(player_file)
 
-    players = filter_by_position(player_data, position)
+    #players = filter_by_position(player_data, position)
+
+    url = "http://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/2021/teams/{}/athletes?limit=70"
+
+    players = []
+    teams = Team.query.all()
+    for team in teams:
+        data = requests.get(url.format(team.ID))
+        data = data.json()
+        for player in data['items']:
+            players.append(player['$ref'])
 
     print("Getting Player Data...\x1b[32mCOMPLETE!\x1b[0m")
     thread.progress = 1
@@ -220,7 +236,7 @@ def get_headshots(db, thread):
     print("")
 
 
-def add_players(database, players: List[Dict], thread) -> None:
+def add_players(database, players: List, thread) -> None:
     """
     Add players to the database
     :param players: Player data list
@@ -237,106 +253,15 @@ def add_players(database, players: List[Dict], thread) -> None:
         thread.progress = i+1
 
         player = players[i]
-        player_obj = Player.query.get(player['PlayerID'])
+        player_data = requests.get(player).json()
 
-        # Player doesn't exist in the database.
+        player_obj = get_player(player_data['id'])
+
         if not player_obj:
+            add_player(database, player_data)
 
-            database.session.add(Player(
-                ID=player['PlayerID'],
-                rotowireID=player['RotoWirePlayerID'],
-                yahooPlayerID=player['YahooPlayerID'],
-                name=player['Name'],
-                fname=player['FirstName'],
-                lname=player['LastName'],
-                height=player['Height'],
-                weight=player['Weight'],
-                age=player['Age'],
-                experience=player['Experience'],
-                experience_string=player['ExperienceString'],
-                number=player['Number'],
-                position=player['Position'],
-                position_group=player['PositionCategory'],
-                team=player['Team'],
-                team_id=player['TeamID'] if player['TeamID'] else 100,
-                bye=player['ByeWeek'],
-                college=player['College'],
-                status="Active",
-                designation="",
-                injury="",
-                ret="",
-            ))
-
-            database.session.add(stats.SeasonStats(
-                player_id=player['PlayerID'],
-                preseason=False,
-                passComps=0,
-                passAtts=0,
-                passYDs=0,
-                passTDs=0,
-                passINTs=0,
-                passSacks=0,
-                passSackYDs=0,
-                passRTG=0,
-                rushAtts=0,
-                rushYDs=0,
-                rushTDs=0,
-                rushLng=0,
-                recs=0,
-                recYDs=0,
-                recTDs=0,
-                recLng=0,
-                recTGTS=0
-            ))
-
-            database.session.add(stats.SeasonStats(
-                player_id=player['PlayerID'],
-                preseason=True,
-                passComps=0,
-                passAtts=0,
-                passYDs=0,
-                passTDs=0,
-                passINTs=0,
-                passSacks=0,
-                passSackYDs=0,
-                passRTG=0,
-                rushAtts=0,
-                rushYDs=0,
-                rushTDs=0,
-                rushLng=0,
-                recs=0,
-                recYDs=0,
-                recTDs=0,
-                recLng=0,
-                recTGTS=0
-            ))
-
-        # Player exists in the database.
         else:
-
-            player_obj.rotowireID = player['RotoWirePlayerID']
-            player_obj.yahooPlayerID = player['YahooPlayerID']
-            player_obj.name = player['Name']
-            player_obj.fname = player['FirstName']
-            player_obj.lname = player['LastName']
-            player_obj.height = player['Height']
-            player_obj.weight = player['Weight']
-            player_obj.age = player['Age']
-            player_obj.experience = player['Experience']
-            player_obj.experience_string = player['ExperienceString']
-            player_obj.number = player['Number']
-            player_obj.position = player['Position']
-            player_obj.position_group = player['PositionCategory']
-            player_obj.team = player['Team']
-            player_obj.team_id = player['TeamID'] if player['TeamID'] else 100
-            player_obj.bye = player['ByeWeek']
-            player_obj.college = player['College']
-            player_obj.status = "Active"
-            player_obj.designation = ""
-            player_obj.injury = ""
-            player_obj.ret = ""
-            player_obj.recent_stats = ""
-            player_obj.career_stats = ""
+            player_obj.update_info(player_data)
 
     print("Adding Players to Database...\x1b[32mCOMPLETE!\x1b[0m\033[K")
 
@@ -386,19 +311,26 @@ def update_player_status(database, thread):
 
     print("Updating Player Statuses...\r", end="")
 
-    injured = get_injured_list()
-
     players = Player.query.all()
-    thread.total = len(players)
-    for i in range(len(players)):
-        print("Updating Player Statuses...{}/{} - {:0.2f}%\r"
-              .format(i+1, len(players), ((i+1)/len(players))*100), end="")
-        thread.progress = i+1
-        player = players[i]
-        if player.current_team.ID == 100:
-            continue
-        if player.name in injured:
-            player.update_status()
+    players = [player for player in players if player.current_team.ID != 100]
+
+    for player in players:
+        player.update_status()
+
+    #injured = get_injured_list()
+
+    #players = Player.query.all()
+    #thread.total = len(players)
+    #for i in range(len(players)):
+    #    print("Updating Player Statuses...{}/{} - {:0.2f}%\r"
+    #          .format(i+1, len(players), ((i+1)/len(players))*100), end="")
+    #    thread.progress = i+1
+    #    player = players[i]
+    #    if player.current_team.ID == 100:
+    #        continue
+    #    if player.name in injured:
+    #        player.update_status()
+
 
     print("Updating Player Statuses...\x1b[32mCOMPLETE!\x1b[0m\033[K")
 
@@ -532,58 +464,6 @@ def update_schedule(db, thread):
     print("Updating Games...\x1b[32mCOMPLETE!\x1b[0m\033[K")
 
 
-def get_player_from_list(players, name):
-
-    for player in players:
-        if player.name == name:
-            return player
-
-    return None
-
-
-def get_player(game, players, name):
-
-    player = get_player_from_list(players, name)
-    if player:
-        return player
-    else:
-        player = Player.query.filter_by(name=name).all()
-        if len(player) == 1:
-            return player[-1]
-        else:
-            fname, lname = name.split(" ", 1)
-
-            player = Player.query.filter(
-                (Player.lname.contains(lname)) & (Player.team_id == game.home_team.ID) |
-                (Player.lname.contains(lname)) & (Player.team_id == game.away_team.ID)).all()
-
-            if len(player) == 1:
-                return player[-1]
-
-            elif len(player) > 1:
-
-                player = Player.query.filter(
-                    (Player.fname.like(fname)) & (Player.lname.contains(lname)) & (Player.team_id == game.home_team.ID) |
-                    (Player.fname.like(fname)) & (Player.lname.contains(lname)) & (Player.team_id == game.away_team.ID)).all()
-
-                if player:
-                    return player[-1]
-                else:
-                    return None
-
-            else:
-                player = Player.query.filter(
-                    (Player.fname == fname) & (Player.team_id == game.home_team.ID) |
-                    (Player.fname == fname) & (Player.team_id == game.away_team.ID)).all()
-
-                if len(player) == 1:
-                    return player[-1]
-
-                else:
-                    print(name, player)
-                    return None
-
-
 def parse_week_stats(stats):
     week_stats = {}
 
@@ -640,7 +520,6 @@ def add_player_week_stats(db, thread):
                 team_id = game.home_team.ID
 
             team = Team.query.get(team_id)
-            team_stats = team.get_team_stats(preseason=game.preseason)
 
             player_names = set()
 
@@ -666,15 +545,18 @@ def add_player_week_stats(db, thread):
                 player_names.add(name)
 
             for name in player_names:
-                player = get_player(game, players, name)
+                player = Player.query.get(name)
 
                 if not player:
-                    print(name)
-                    continue
+
+                    url = player_url.format(name)
+                    player_data = requests.get(url).json()
+                    add_player(db, player_data)
+                    player = get_player(player_data['id'])
 
                 players.append(player)
 
-                if j ==0:
+                if j == 0:
                     away_players.append(player)
                 else:
                     home_players.append(player)
@@ -980,6 +862,9 @@ def update_team_stats(db, thread):
 
         team = teams[i]
 
+        if team.ID == 100:
+            continue
+
         team_stats = team.get_team_stats(preseason=True)
 
         pass_leader_id, rush_leader_id, rec_leader_id = stats.get_stats_leaders(team.players, preseason=True)
@@ -1098,7 +983,7 @@ def build_db(db, thread):
 
     players = get_all_player_data(thread)
     add_players(db, players, thread)
-    #update_player_status(db, thread)
+    update_player_status(db, thread)
 
     add_default_scoring(db)
 
@@ -1117,9 +1002,9 @@ def build_db(db, thread):
 
 def update_db(db, thread):
 
-    players = get_all_player_data(thread)
-    add_players(db, players, thread)
-    update_player_status(db, thread)
+    #players = get_all_player_data(thread)
+    #add_players(db, players, thread)
+    #update_player_status(db, thread)
 
     update_schedule(db, thread)
 

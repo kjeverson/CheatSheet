@@ -838,6 +838,7 @@
                                                     </tr>
                                                     {% endif %}
                                                 {% endfor %}
+                                                {% if kr.count > 0 %}
                                                 </tbody>
                                                 <tfoot>
                                                     <tr class="fw-bold">
@@ -849,6 +850,17 @@
                                                         <td class="text-start">{{ kr.krTDs }}</td>
                                                     </tr>
                                                 </tfoot>
+                                                {% else %}
+                                                <tr>
+                                                    <td>No {{ matchup.home_team.location }} Kick Returns</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                </tr>
+                                                </tbody>
+                                                {% endif %}
                                             </table>
                                         </div>
                                     </div>

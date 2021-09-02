@@ -267,8 +267,11 @@ def team():
         player_stats = [player.get_season_stats(preseason=preseason) for player in players]
 
         injured = [player for player in players if player.date]
+        injured = [player for player in injured if len(player.news) > 2]
 
         for player in injured:
+            dt = zulu.parse(player.date, '%Y-%m-%dT%H:%MZ')
+            player.date = dt.format('%B %d, %Y', 'local')
             player.date = datetime.strptime(player.date, '%B %d, %Y')
 
         injured.sort(key=lambda x: x.date, reverse=True)
@@ -305,13 +308,12 @@ def player():
     team_logo = url_for('static', filename='logos/{}.png'.format(player.current_team.key))
 
     status = player.designation
-    if status:
-        if status in ['Questionable', 'Doubtful']:
-            status_string = '<span class="badge rounded-pill bg-warning">{} - {}</span>'\
-                .format(player.designation, player.injury)
-        else:
-            status_string = '<span class="badge rounded-pill bg-danger">{} - {}</span>'\
-                .format(player.designation, player.injury)
+    if status in ['Questionable', 'Doubtful']:
+        status_string = '<span class="badge rounded-pill bg-warning">{} - {}</span>'\
+            .format(player.designation, player.injury)
+    elif status in ['Injured Reserve', 'Out']:
+        status_string = '<span class="badge rounded-pill bg-danger">{} - {}</span>'\
+            .format(player.designation, player.injury)
     else:
         status_string = '<span class="badge rounded-pill bg-success">Active</span>'
 

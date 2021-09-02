@@ -355,7 +355,6 @@
                   <tr>
                     <th>Pos</th>
                     <th>Name</th>
-                    <th>Injury</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -363,12 +362,10 @@
                     <tr data-id="{{ player.ID }}">
                         {% if player.designation == 'Questionable' or player.designation == 'Doubtful' %}
                         <td>{{ player.position }}</td>
-                        <td>{{ player.fname[0] }}. {{  player.lname  }} <div class="badge rounded-pill p-1 bg-warning"><span class="visually-hidden">N</span></div></td>
-                        <td>{{ player.injury}} </td>
+                        <td>{{ player.shortname  }} <div class="badge rounded-pill p-1 bg-warning"><span class="visually-hidden">N</span></div></td>
                         {% elif player.designation == 'Out' %}
                         <td>{{ player.position }}</td>
-                        <td>{{ player.name }} <div class="badge rounded-pill p-1 bg-danger"><span class="visually-hidden">N</span></div></td>
-                        <td>{{ player.injury}} </td>
+                        <td>{{ player.shortname }} <div class="badge rounded-pill p-1 bg-danger"><span class="visually-hidden">N</span></div></td>
                         {% endif %}
                     </tr>
                   {% endfor %}
@@ -387,16 +384,14 @@
                   <tr>
                     <th>Pos</th>
                     <th>Name</th>
-                    <th>Injury</th>
                   </tr>
                 </thead>
                 <tbody>
                   {% for player in players %}
                     <tr data-id="{{ player.ID }}">
-                        {% if player.status == 'Out' and player.designation != 'Out' %}
+                        {% if player.designation == 'Injured Reserve' %}
                         <td>{{ player.position }}</td>
-                        <td>{{ player.fname[0] }}. {{  player.lname  }} <div class="badge rounded-pill p-1 bg-danger"><span class="visually-hidden">N</span></div></td>
-                        <td>{{ player.injury}}</td>
+                        <td>{{ player.shortname  }} <div class="badge rounded-pill p-1 bg-danger"><span class="visually-hidden">N</span></div></td>
                         {% endif %}
                     </tr>
                   {% endfor %}
@@ -424,7 +419,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    {% for t in teams|sort(attribute='preseason_wins', reverse=True) | sort(attribute='preseason_loses') %}
+                    {% for t in teams |sort(attribute='preseason_wins', reverse=True) %}
                     {% if t.conference == team.conference and t.division == team.division %}
                     {% if t.key == team.key %}
                     <tr>
@@ -432,7 +427,7 @@
                       <td><strong>{{ t.preseason_wins }}</strong></td>
                       <td><strong>{{ t.preseason_loses }}</strong></td>
                       <td><strong>{{ t.preseason_ties }}</strong></td>
-                      <td><strong>{{ '%0.3f' |format(t.preseason_wins/t.preseason_games_played) }}</strong></td>
+                      <td><strong></strong></td>
                       <td><strong>{{ t.get_team_stats(preseason=true).pointsFor }}</strong></td>
                       <td><strong>{{ t.get_team_stats(preseason=true).pointsAgainst }}</strong></td>
                     </tr>
@@ -442,7 +437,7 @@
                       <td>{{ t.preseason_wins }}</td>
                       <td>{{ t.preseason_loses }}</td>
                       <td>{{ t.preseason_ties }}</td>
-                      <td>{{ '%0.3f' |format(t.preseason_wins/t.preseason_games_played) }}</td>
+                      <td></td>
                       <td>{{ t.get_team_stats(preseason=true).pointsFor }}</td>
                       <td>{{ t.get_team_stats(preseason=true).pointsAgainst }}</td>
                     </tr>
@@ -828,10 +823,10 @@
     <div class="row">
       <!-- MAIN CONTENT -->
       <div class="col-8">
-        <!-- Team Roster -->
+        <!-- Active Roster -->
         <div class="row mt-2">
           <div class="card bg-dark">
-            <div class="card-title text-center">Roster</div>
+            <div class="card-title text-center">Active Roster</div>
             <div class="card-body">
               <div class="row text-white">
                 <table class="sortable player-table table table-dark table-hover">
@@ -848,13 +843,20 @@
                     </tr>
                   </thead>
                   {% for player in players | sort(attribute='experience', reverse=True) %}
+                  {% if not player.practice_squad %}
                   <tr data-id="{{ player.ID }}">
                     {% if player.number %}
                     <td>{{ player.number }}</td>
                     {% else %}
                     <td>-</td>
                     {% endif %}
+                    {% if player.designation == "Questionable" or player.designation == "Doubtful" %}
+                    <td>{{ player.name }} <div class="badge rounded-pill p-1 bg-warning"><span class="visually-hidden">N</span></div></td>
+                    {% elif player.designation == "Out" or player.designation == "Injured Reserve" %}
+                    <td>{{ player.name }} <div class="badge rounded-pill p-1 bg-danger"><span class="visually-hidden">N</span></div></td>
+                    {% else %}
                     <td>{{ player.name }}</td>
+                    {% endif %}
                     <td>{{ player.position }}</td>
                     <td>{{ player.age }}</td>
                     <td>{{ player.height }}</td>
@@ -866,6 +868,59 @@
                     {% endif %}
                     <td>{{ player.college }}</td>
                   </tr>
+                  {% endif %}
+                  {% endfor %}
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Practice Squad -->
+        <div class="row mt-2">
+          <div class="card bg-dark">
+            <div class="card-title text-center">Practice Squad</div>
+            <div class="card-body">
+              <div class="row text-white">
+                <table class="sortable player-table table table-dark table-hover">
+                  <thead>
+                    <tr>
+                      <td>#</td>
+                      <td>Name</td>
+                      <td>Pos</td>
+                      <td>Age</td>
+                      <td>Ht</td>
+                      <td>Wt</td>
+                      <td>Exp</td>
+                      <td>College</td>
+                    </tr>
+                  </thead>
+                  {% for player in players | sort(attribute='experience', reverse=True) %}
+                  {% if player.practice_squad %}
+                  <tr data-id="{{ player.ID }}">
+                    {% if player.number %}
+                    <td>{{ player.number }}</td>
+                    {% else %}
+                    <td>-</td>
+                    {% endif %}
+                    {% if player.designation == "Questionable" or player.designation == "Doubtful" %}
+                    <td>{{ player.name }} <div class="badge rounded-pill p-1 bg-warning"><span class="visually-hidden">N</span></div></td>
+                    {% elif player.designation == "Out" or player.designation == "Injured Reserve" %}
+                    <td>{{ player.name }} <div class="badge rounded-pill p-1 bg-danger"><span class="visually-hidden">N</span></div></td>
+                    {% else %}
+                    <td>{{ player.name }}</td>
+                    {% endif %}
+                    <td>{{ player.position }}</td>
+                    <td>{{ player.age }}</td>
+                    <td>{{ player.height }}</td>
+                    <td>{{ player.weight }}</td>
+                    {% if player.experience == 0 %}
+                    <td>R</td>
+                    {% else %}
+                    <td>{{ player.experience }}</td>
+                    {% endif %}
+                    <td>{{ player.college }}</td>
+                  </tr>
+                  {% endif %}
                   {% endfor %}
                 </table>
               </div>
@@ -878,21 +933,25 @@
         <!-- Rookie Class -->
         <div class="row mt-2">
           <div class="card bg-dark">
-            <div class="card-title text-center">2021 Rookie Class</div>
+            <div class="card-title text-center">2021 Draft Class</div>
             <div class="card-body">
               <table class="player-table table table-sm table-dark table-hover">
                 <thead>
                   <tr>
+                    <th>RD</th>
+                    <th>PCK</th>
                     <th>Name</th>
                     <th>Pos</th>
                     <th>College</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {% for player in players %}
+                  {% for player in players | sort(attribute="draft_round") | sort(attribute="draft_pick") %}
                     <tr data-id="{{ player.ID }}">
-                        {% if player.experience == 0 %}
-                        <td>{{ player.fname[0] }}. {{  player.lname  }}</td>
+                        {% if player.experience == 0 and not player.undrafted and player.draft_team_id == team.ID %}
+                        <td>{{ player.draft_round }}</td>
+                        <td>{{ player.draft_pick }}</td>
+                        <td>{{ player.shortname  }}</td>
                         <td>{{ player.position }} </td>
                         <td>{{ player.college }}</td>
                         {% endif %}
@@ -985,11 +1044,11 @@
                     <tr data-id="{{ player.ID }}">
                         {% if player.designation == 'Questionable' or player.designation == 'Doubtful' %}
                         <td>{{ player.position }}</td>
-                        <td>{{ player.fname[0] }}. {{  player.lname  }} <div class="badge rounded-pill p-1 bg-warning"><span class="visually-hidden">N</span></div></td>
+                        <td>{{ player.shortname  }} <div class="badge rounded-pill p-1 bg-warning"><span class="visually-hidden">N</span></div></td>
                         <td>{{ player.injury}} </td>
                         {% elif player.designation == 'Out' %}
                         <td>{{ player.position }}</td>
-                        <td>{{ player.name }} <div class="badge rounded-pill p-1 bg-danger"><span class="visually-hidden">N</span></div></td>
+                        <td>{{ player.shortname }} <div class="badge rounded-pill p-1 bg-danger"><span class="visually-hidden">N</span></div></td>
                         <td>{{ player.injury}} </td>
                         {% endif %}
                     </tr>
@@ -1015,9 +1074,9 @@
                 <tbody>
                   {% for player in players %}
                     <tr data-id="{{ player.ID }}">
-                        {% if player.status == 'Out' and player.designation != 'Out' %}
+                        {% if player.designation == 'Injured Reserve' %}
                         <td>{{ player.position }}</td>
-                        <td>{{ player.fname[0] }}. {{  player.lname  }} <div class="badge rounded-pill p-1 bg-danger"><span class="visually-hidden">N</span></div></td>
+                        <td>{{ player.shortname }} <div class="badge rounded-pill p-1 bg-danger"><span class="visually-hidden">N</span></div></td>
                         <td>{{ player.injury}}</td>
                         {% endif %}
                     </tr>

@@ -137,7 +137,7 @@ def get_scores(game_id):
             if not data:
                 continue
 
-            data[0] = "WAS" if data[0] == "WSH" else data[0]
+            data[0] = data[0]
             score_dict.update({data[0]: data[1:]})
 
     return score_dict
@@ -240,7 +240,7 @@ def get_game_stats_api(game_id):
             if not headers:
                 continue
             for player in players:
-                name = player['athlete']['displayName']
+                name = player['athlete']['id']
                 player_stats = player['stats']
                 stats_dict[section_name][i].update({name: {}})
                 for j in range(len(headers)):

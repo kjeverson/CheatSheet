@@ -41,8 +41,8 @@ def get_schedule():
                     
                     home_team_key = d[1][-3:].split(" ")[-1]
                     away_team_key = d[0][-3:].split(" ")[-1]
-                    home_team_key = "WAS" if home_team_key == "WSH" else home_team_key
-                    away_team_key = "WAS" if away_team_key == "WSH" else away_team_key
+                    #home_team_key = "WAS" if home_team_key == "WSH" else home_team_key
+                    #away_team_key = "WAS" if away_team_key == "WSH" else away_team_key
 
                     matchups.append([game_id, i, date, home_team_key, away_team_key])
 
@@ -78,8 +78,8 @@ def get_schedule():
 
                     home_team_key = d[1][-3:].split(" ")[-1]
                     away_team_key = d[0][-3:].split(" ")[-1]
-                    home_team_key = "WAS" if home_team_key == "WSH" else home_team_key
-                    away_team_key = "WAS" if away_team_key == "WSH" else away_team_key
+                    #home_team_key = "WAS" if home_team_key == "WSH" else home_team_key
+                    #away_team_key = "WAS" if away_team_key == "WSH" else away_team_key
 
                     matchups.append([game_id, i, date, home_team_key, away_team_key])
 

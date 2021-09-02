@@ -15,18 +15,10 @@ class Team(db.Model):
     conference = db.Column(db.String(3))
     division = db.Column(db.String(5))
 
-    bye = db.Column(db.Integer)
-
-    hc = db.Column(db.String(30))
-    dc = db.Column(db.String(30))
-    oc = db.Column(db.String(30))
+    bye = db.Column(db.Integer, default=0)
 
     primary = db.Column(db.String(6))
     secondary = db.Column(db.String(6))
-    tertiary = db.Column(db.String(6))
-
-    logo = db.Column(db.String(100))
-    wordmark = db.Column(db.String(100))
 
     stadium = db.Column(db.String(30))
     stadium_city = db.Column(db.String(30))
