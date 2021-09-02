@@ -314,23 +314,13 @@ def update_player_status(database, thread):
     players = Player.query.all()
     players = [player for player in players if player.current_team.ID != 100]
 
-    for player in players:
+    thread.total = len(players)
+    for i in range(len(players)):
+        print("Updating Player Statuses...{}/{} - {:0.2f}%\r"
+              .format(i+1, len(players), ((i+1)/len(players))*100), end="")
+        thread.progress = i+1
+        player = players[i]
         player.update_status()
-
-    #injured = get_injured_list()
-
-    #players = Player.query.all()
-    #thread.total = len(players)
-    #for i in range(len(players)):
-    #    print("Updating Player Statuses...{}/{} - {:0.2f}%\r"
-    #          .format(i+1, len(players), ((i+1)/len(players))*100), end="")
-    #    thread.progress = i+1
-    #    player = players[i]
-    #    if player.current_team.ID == 100:
-    #        continue
-    #    if player.name in injured:
-    #        player.update_status()
-
 
     print("Updating Player Statuses...\x1b[32mCOMPLETE!\x1b[0m\033[K")
 

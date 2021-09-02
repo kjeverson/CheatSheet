@@ -74,3 +74,10 @@ class Team(db.Model):
             games = [game for game in games if game.completed]
 
         return games
+
+    def get_bye(self):
+
+        games = self.get_games(completed=False, home=True, away=True)
+        weeks = [game.week for game in games]
+        bye = [week for week in range(1, 19) if week not in weeks]
+        return bye[-1]
