@@ -92,6 +92,9 @@
           <a class="nav-link" href="" id="rosterSelection">Roster</a>
         </li>
         <li class="nav-item">
+          <a class="nav-link" href="" id="depthChartSelection">Depth Chart</a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link" href="" id="injurySelection">Injuries</a>
         </li>
       </ul>
@@ -102,7 +105,7 @@
   <div id="homePage" class="container text-white">
     <div class="row">
       <!-- LEFT COLUMN -->
-      <div class="col-2">
+      <div class="col-lg-2">
         <!-- PRESEASON SCHEDULE -->
         <div class="row mt-2">
           <div class="card bg-dark">
@@ -183,7 +186,7 @@
         </div>
       </div>
       <!-- MAIN CONTENT -->
-      <div class="col-7">
+      <div class="col-lg-7">
         <!-- Team Leaders -->
         <div class="row mt-2">
           <div class="card bg-dark">
@@ -344,7 +347,7 @@
         </div>
       </div>
       <!-- RIGHT COLUMN -->
-      <div class="col-3">
+      <div class="col-lg-3">
         <!-- Injury Report -->
         <div class="row mt-2">
           <div class="card bg-dark">
@@ -999,6 +1002,1113 @@
       </div>
     </div>
   </div>
+  <!-- Depth Chart -->
+  <div id="depthChartPage" class="container text-white visually-hidden">
+    <!-- Defense -->
+    <div class="row mt-4">
+      <div class="card bg-dark">
+        <div class="card-title text-center">Defense</div>
+        <div class="card-body">
+          <div class="row justify-content-center">
+            <!-- Strong Safety -->
+            <div class="col-2">
+      <div class="btn-group-vertical position-relative">
+      {% for player in team.depth_chart.SSs.split(" ") %}
+      {% set p = Player.query.get(player|int) %}
+      {% if loop.index == 1 %}
+        <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">
+          <div class="row"><img src="{{ url_for('static', filename='headshots/' + player + '.png') }}"></div>
+          {% if p.status != 'Active' %}
+            {% if p.status == 'D' or p.status == 'Q' %}
+            <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></div>
+            {% else %}
+            <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></div>
+            {% endif %}
+          {% else %}
+          <div class="row"><span class="text-center">{{ p.name }}</span></div>
+          {% endif %}
+        </button>
+      {% else %}
+        {% if p.status != 'Active' %}
+          {% if p.status == 'D' or p.status == 'Q' %}
+          <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></button>
+          {% else %}
+          <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></button>
+          {% endif %}
+        {% else %}
+        <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }}</button>
+        {% endif %}
+      {% endif %}
+      {% endfor %}
+      <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Strong Safety</span>
+      </div>
+    </div>
+            <!-- Strongside Linebacker -->
+            <div class="col-2">
+      <div class="btn-group-vertical mt-4 position-relative">
+      {% for player in team.depth_chart.SLBs.split(" ") %}
+      {% set p = Player.query.get(player|int) %}
+      {% if loop.index == 1 %}
+        <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">
+          <div class="row"><img src="{{ url_for('static', filename='headshots/' + player + '.png') }}"></div>
+          {% if p.status != 'Active' %}
+            {% if p.status == 'D' or p.status == 'Q' %}
+            <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></div>
+            {% else %}
+            <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></div>
+            {% endif %}
+          {% else %}
+          <div class="row"><span class="text-center">{{ p.name }}</span></div>
+          {% endif %}
+        </button>
+      {% else %}
+        {% if p.status != 'Active' %}
+          {% if p.status == 'D' or p.status == 'Q' %}
+          <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></button>
+          {% else %}
+          <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></button>
+          {% endif %}
+        {% else %}
+        <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }}</button>
+        {% endif %}
+      {% endif %}
+      {% endfor %}
+      <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Strongside Linebacker</span>
+      </div>
+    </div>
+            {% if team.depth_chart.MLBs %}
+            <!-- Middle Linebacker -->
+            <div class="col-2">
+      <div class="btn-group-vertical mt-4 position-relative">
+      {% for player in team.depth_chart.MLBs.split(" ") %}
+      {% set p = Player.query.get(player|int) %}
+      {% if loop.index == 1 %}
+        <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">
+          <div class="row"><img src="{{ url_for('static', filename='headshots/' + player + '.png') }}"></div>
+          {% if p.status != 'Active' %}
+            {% if p.status == 'D' or p.status == 'Q' %}
+            <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></div>
+            {% else %}
+            <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></div>
+            {% endif %}
+          {% else %}
+          <div class="row"><span class="text-center">{{ p.name }}</span></div>
+          {% endif %}
+        </button>
+      {% else %}
+        {% if p.status != 'Active' %}
+          {% if p.status == 'D' or p.status == 'Q' %}
+          <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></button>
+          {% else %}
+          <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></button>
+          {% endif %}
+        {% else %}
+        <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }}</button>
+        {% endif %}
+      {% endif %}
+      {% endfor %}
+      <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Middle Linebacker</span>
+      </div>
+    </div>
+            {% endif %}
+            <!-- Weakside Linebacker -->
+            <div class="col-2">
+      <div class="btn-group-vertical mt-4 position-relative">
+      {% for player in team.depth_chart.WLBs.split(" ") %}
+      {% set p = Player.query.get(player|int) %}
+      {% if loop.index == 1 %}
+        <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">
+          <div class="row"><img src="{{ url_for('static', filename='headshots/' + player + '.png') }}"></div>
+          {% if p.status != 'Active' %}
+            {% if p.status == 'D' or p.status == 'Q' %}
+            <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></div>
+            {% else %}
+            <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></div>
+            {% endif %}
+          {% else %}
+          <div class="row"><span class="text-center">{{ p.name }}</span></div>
+          {% endif %}
+        </button>
+      {% else %}
+        {% if p.status != 'Active' %}
+          {% if p.status == 'D' or p.status == 'Q' %}
+          <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></button>
+          {% else %}
+          <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></button>
+          {% endif %}
+        {% else %}
+        <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }}</button>
+        {% endif %}
+      {% endif %}
+      {% endfor %}
+      <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Weakside Linebacker</span>
+      </div>
+    </div>
+            {% if team.depth_chart.LILBs %}
+            <!-- Left Inside Linebacker -->
+            <div class="col-2">
+      <div class="btn-group-vertical mt-4 position-relative">
+      {% for player in team.depth_chart.LILBs.split(" ") %}
+      {% set p = Player.query.get(player|int) %}
+      {% if loop.index == 1 %}
+        <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">
+          <div class="row"><img src="{{ url_for('static', filename='headshots/' + player + '.png') }}"></div>
+          {% if p.status != 'Active' %}
+            {% if p.status == 'D' or p.status == 'Q' %}
+            <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></div>
+            {% else %}
+            <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></div>
+            {% endif %}
+          {% else %}
+          <div class="row"><span class="text-center">{{ p.name }}</span></div>
+          {% endif %}
+        </button>
+      {% else %}
+        {% if p.status != 'Active' %}
+          {% if p.status == 'D' or p.status == 'Q' %}
+          <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></button>
+          {% else %}
+          <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></button>
+          {% endif %}
+        {% else %}
+        <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }}</button>
+        {% endif %}
+      {% endif %}
+      {% endfor %}
+      <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Left Inside Linebacker</span>
+      </div>
+    </div>
+            {% endif %}
+            {% if team.depth_chart.RILBs %}
+            <!-- Right Inside Linebacker -->
+            <div class="col-2">
+      <div class="btn-group-vertical mt-4 position-relative">
+      {% for player in team.depth_chart.RILBs.split(" ") %}
+      {% set p = Player.query.get(player|int) %}
+      {% if loop.index == 1 %}
+        <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">
+          <div class="row"><img src="{{ url_for('static', filename='headshots/' + player + '.png') }}"></div>
+          {% if p.status != 'Active' %}
+            {% if p.status == 'D' or p.status == 'Q' %}
+            <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></div>
+            {% else %}
+            <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></div>
+            {% endif %}
+          {% else %}
+          <div class="row"><span class="text-center">{{ p.name }}</span></div>
+          {% endif %}
+        </button>
+      {% else %}
+        {% if p.status != 'Active' %}
+          {% if p.status == 'D' or p.status == 'Q' %}
+          <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></button>
+          {% else %}
+          <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></button>
+          {% endif %}
+        {% else %}
+        <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }}</button>
+        {% endif %}
+      {% endif %}
+      {% endfor %}
+      <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Right Inside Linebacker</span>
+      </div>
+    </div>
+            {% endif %}
+            <!-- Free Safety -->
+            <div class="col-2">
+      <div class="btn-group-vertical position-relative">
+      {% for player in team.depth_chart.FSs.split(" ") %}
+      {% set p = Player.query.get(player|int) %}
+      {% if loop.index == 1 %}
+        <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">
+          <div class="row"><img src="{{ url_for('static', filename='headshots/' + player + '.png') }}"></div>
+          {% if p.status != 'Active' %}
+            {% if p.status == 'D' or p.status == 'Q' %}
+            <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></div>
+            {% else %}
+            <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></div>
+            {% endif %}
+          {% else %}
+          <div class="row"><span class="text-center">{{ p.name }}</span></div>
+          {% endif %}
+        </button>
+      {% else %}
+        {% if p.status != 'Active' %}
+          {% if p.status == 'D' or p.status == 'Q' %}
+          <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></button>
+          {% else %}
+          <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></button>
+          {% endif %}
+        {% else %}
+        <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }}</button>
+        {% endif %}
+      {% endif %}
+      {% endfor %}
+      <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Free Safety</span>
+      </div>
+    </div>
+          </div>
+          <div class="row mt-4 justify-content-center">
+            <!-- Left Cornerback -->
+            <div class="col-2">
+      <div class="btn-group-vertical position-relative">
+      {% for player in team.depth_chart.LCBs.split(" ") %}
+      {% set p = Player.query.get(player|int) %}
+      {% if loop.index == 1 %}
+        <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">
+          <div class="row"><img src="{{ url_for('static', filename='headshots/' + player + '.png') }}"></div>
+          {% if p.status != 'Active' %}
+            {% if p.status == 'D' or p.status == 'Q' %}
+            <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></div>
+            {% else %}
+            <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></div>
+            {% endif %}
+          {% else %}
+          <div class="row"><span class="text-center">{{ p.name }}</span></div>
+          {% endif %}
+        </button>
+      {% else %}
+        {% if p.status != 'Active' %}
+          {% if p.status == 'D' or p.status == 'Q' %}
+          <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></button>
+          {% else %}
+          <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></button>
+          {% endif %}
+        {% else %}
+        <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }}</button>
+        {% endif %}
+      {% endif %}
+      {% endfor %}
+      <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Left Cornerback</span>
+      </div>
+    </div>
+            <!-- Left Defensive End -->
+            <div class="col-2">
+      <div class="btn-group-vertical mt-4 position-relative">
+      {% for player in team.depth_chart.LDEs.split(" ") %}
+      {% set p = Player.query.get(player|int) %}
+      {% if loop.index == 1 %}
+        <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">
+          <div class="row"><img src="{{ url_for('static', filename='headshots/' + player + '.png') }}"></div>
+          {% if p.status != 'Active' %}
+            {% if p.status == 'D' or p.status == 'Q' %}
+            <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></div>
+            {% else %}
+            <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></div>
+            {% endif %}
+          {% else %}
+          <div class="row"><span class="text-center">{{ p.name }}</span></div>
+          {% endif %}
+        </button>
+      {% else %}
+        {% if p.status != 'Active' %}
+          {% if p.status == 'D' or p.status == 'Q' %}
+          <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></button>
+          {% else %}
+          <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></button>
+          {% endif %}
+        {% else %}
+        <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }}</button>
+        {% endif %}
+      {% endif %}
+      {% endfor %}
+      <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Left Defensive End</span>
+      </div>
+    </div>
+            {% if team.depth_chart.NTs %}
+            <!-- Nose Tackle -->
+            <div class="col-2">
+      <div class="btn-group-vertical mt-4 position-relative">
+      {% for player in team.depth_chart.NTs.split(" ") %}
+      {% set p = Player.query.get(player|int) %}
+      {% if loop.index == 1 %}
+        <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">
+          <div class="row"><img src="{{ url_for('static', filename='headshots/' + player + '.png') }}"></div>
+          {% if p.status != 'Active' %}
+            {% if p.status == 'D' or p.status == 'Q' %}
+            <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></div>
+            {% else %}
+            <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></div>
+            {% endif %}
+          {% else %}
+          <div class="row"><span class="text-center">{{ p.name }}</span></div>
+          {% endif %}
+        </button>
+      {% else %}
+        {% if p.status != 'Active' %}
+          {% if p.status == 'D' or p.status == 'Q' %}
+          <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></button>
+          {% else %}
+          <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></button>
+          {% endif %}
+        {% else %}
+        <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }}</button>
+        {% endif %}
+      {% endif %}
+      {% endfor %}
+      <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Nose Tackle</span>
+      </div>
+    </div>
+            {% endif %}
+            {% if team.depth_chart.LDTs %}
+            <!-- Left Defensive Tackle -->
+            <div class="col-2">
+      <div class="btn-group-vertical mt-4 position-relative">
+      {% for player in team.depth_chart.LDTs.split(" ") %}
+      {% set p = Player.query.get(player|int) %}
+      {% if loop.index == 1 %}
+        <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">
+          <div class="row"><img src="{{ url_for('static', filename='headshots/' + player + '.png') }}"></div>
+          {% if p.status != 'Active' %}
+            {% if p.status == 'D' or p.status == 'Q' %}
+            <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></div>
+            {% else %}
+            <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></div>
+            {% endif %}
+          {% else %}
+          <div class="row"><span class="text-center">{{ p.name }}</span></div>
+          {% endif %}
+        </button>
+      {% else %}
+        {% if p.status != 'Active' %}
+          {% if p.status == 'D' or p.status == 'Q' %}
+          <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></button>
+          {% else %}
+          <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></button>
+          {% endif %}
+        {% else %}
+        <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }}</button>
+        {% endif %}
+      {% endif %}
+      {% endfor %}
+      <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Left Defensive Tackle</span>
+      </div>
+    </div>
+            {% endif %}
+            {% if team.depth_chart.RDTs %}
+            <!-- Right Defensive Tackle -->
+            <div class="col-2">
+      <div class="btn-group-vertical mt-4 position-relative">
+      {% for player in team.depth_chart.RDTs.split(" ") %}
+      {% set p = Player.query.get(player|int) %}
+      {% if loop.index == 1 %}
+        <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">
+          <div class="row"><img src="{{ url_for('static', filename='headshots/' + player + '.png') }}"></div>
+          {% if p.status != 'Active' %}
+            {% if p.status == 'D' or p.status == 'Q' %}
+            <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></div>
+            {% else %}
+            <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></div>
+            {% endif %}
+          {% else %}
+          <div class="row"><span class="text-center">{{ p.name }}</span></div>
+          {% endif %}
+        </button>
+      {% else %}
+        {% if p.status != 'Active' %}
+          {% if p.status == 'D' or p.status == 'Q' %}
+          <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></button>
+          {% else %}
+          <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></button>
+          {% endif %}
+        {% else %}
+        <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }}</button>
+        {% endif %}
+      {% endif %}
+      {% endfor %}
+      <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Right Defensive Tackle</span>
+      </div>
+    </div>
+            {% endif %}
+            <!-- Right Defensive End -->
+            <div class="col-2">
+      <div class="btn-group-vertical mt-4 position-relative">
+      {% for player in team.depth_chart.RDEs.split(" ") %}
+      {% set p = Player.query.get(player|int) %}
+      {% if loop.index == 1 %}
+        <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">
+          <div class="row"><img src="{{ url_for('static', filename='headshots/' + player + '.png') }}"></div>
+          {% if p.status != 'Active' %}
+            {% if p.status == 'D' or p.status == 'Q' %}
+            <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></div>
+            {% else %}
+            <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></div>
+            {% endif %}
+          {% else %}
+          <div class="row"><span class="text-center">{{ p.name }}</span></div>
+          {% endif %}
+        </button>
+      {% else %}
+        {% if p.status != 'Active' %}
+          {% if p.status == 'D' or p.status == 'Q' %}
+          <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></button>
+          {% else %}
+          <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></button>
+          {% endif %}
+        {% else %}
+        <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }}</button>
+        {% endif %}
+      {% endif %}
+      {% endfor %}
+      <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Right Defensive End</span>
+      </div>
+    </div>
+            <!-- Right Cornerback -->
+            <div class="col-2">
+      <div class="btn-group-vertical position-relative">
+      {% for player in team.depth_chart.RCBs.split(" ") %}
+      {% set p = Player.query.get(player|int) %}
+      {% if loop.index == 1 %}
+        <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">
+          <div class="row"><img src="{{ url_for('static', filename='headshots/' + player + '.png') }}"></div>
+          {% if p.status != 'Active' %}
+            {% if p.status == 'D' or p.status == 'Q' %}
+            <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></div>
+            {% else %}
+            <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></div>
+            {% endif %}
+          {% else %}
+          <div class="row"><span class="text-center">{{ p.name }}</span></div>
+          {% endif %}
+        </button>
+      {% else %}
+        {% if p.status != 'Active' %}
+          {% if p.status == 'D' or p.status == 'Q' %}
+          <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></button>
+          {% else %}
+          <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></button>
+          {% endif %}
+        {% else %}
+        <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }}</button>
+        {% endif %}
+      {% endif %}
+      {% endfor %}
+      <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Right Cornerback</span>
+      </div>
+    </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Offense -->
+    <div class="row mt-4">
+      <div class="card bg-dark">
+        <div class="card-title text-center">Offense</div>
+        <div class="card-body">
+          <div class="row justify-content-center">
+            <!-- Left Tackle -->
+            <div class="col-2">
+      <div class="btn-group-vertical mt-2 position-relative">
+      {% for player in team.depth_chart.LTs.split(" ") %}
+      {% set p = Player.query.get(player|int) %}
+      {% if loop.index == 1 %}
+        <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">
+          <div class="row"><img src="{{ url_for('static', filename='headshots/' + player + '.png') }}"></div>
+          {% if p.status != 'Active' %}
+            {% if p.status == 'D' or p.status == 'Q' %}
+            <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></div>
+            {% else %}
+            <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></div>
+            {% endif %}
+          {% else %}
+          <div class="row"><span class="text-center">{{ p.name }}</span></div>
+          {% endif %}
+        </button>
+      {% else %}
+        {% if p.status != 'Active' %}
+          {% if p.status == 'D' or p.status == 'Q' %}
+          <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></button>
+          {% else %}
+          <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></button>
+          {% endif %}
+        {% else %}
+        <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }}</button>
+        {% endif %}
+      {% endif %}
+      {% endfor %}
+      <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Left Tackle</span>
+      </div>
+    </div>
+            <!-- Left Guard -->
+            <div class="col-2">
+              <div class="btn-group-vertical mt-1 position-relative">
+              {% for player in team.depth_chart.LGs.split(" ") %}
+              {% set p = Player.query.get(player|int) %}
+              {% if loop.index == 1 %}
+                <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">
+                  <div class="row"><img src="{{ url_for('static', filename='headshots/' + player + '.png') }}"></div>
+                  {% if p.status != 'Active' %}
+                    {% if p.status == 'D' or p.status == 'Q' %}
+                    <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></div>
+                    {% else %}
+                    <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></div>
+                    {% endif %}
+                  {% else %}
+                  <div class="row"><span class="text-center">{{ p.name }}</span></div>
+                  {% endif %}
+                </button>
+              {% else %}
+                {% if p.status != 'Active' %}
+                  {% if p.status == 'D' or p.status == 'Q' %}
+                  <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></button>
+                  {% else %}
+                  <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></button>
+                  {% endif %}
+                {% else %}
+                <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }}</button>
+                {% endif %}
+              {% endif %}
+              {% endfor %}
+              <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Left Guard</span>
+              </div>
+            </div>
+            <!-- Center -->
+            <div class="col-2">
+              <div class="btn-group-vertical position-relative">
+              {% for player in team.depth_chart.Cs.split(" ") %}
+              {% set p = Player.query.get(player|int) %}
+              {% if loop.index == 1 %}
+                <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">
+                  <div class="row"><img src="{{ url_for('static', filename='headshots/' + player + '.png') }}"></div>
+                  {% if p.status != 'Active' %}
+                    {% if p.status == 'D' or p.status == 'Q' %}
+                    <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></div>
+                    {% else %}
+                    <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></div>
+                    {% endif %}
+                  {% else %}
+                  <div class="row"><span class="text-center">{{ p.name }}</span></div>
+                  {% endif %}
+                </button>
+              {% else %}
+                {% if p.status != 'Active' %}
+                  {% if p.status == 'D' or p.status == 'Q' %}
+                  <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></button>
+                  {% else %}
+                  <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></button>
+                  {% endif %}
+                {% else %}
+                <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }}</button>
+                {% endif %}
+              {% endif %}
+              {% endfor %}
+              <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Center</span>
+              </div>
+            </div>
+            <!-- Right Guard -->
+            <div class="col-2">
+              <div class="btn-group-vertical mt-1 position-relative">
+              {% for player in team.depth_chart.RGs.split(" ") %}
+              {% set p = Player.query.get(player|int) %}
+              {% if loop.index == 1 %}
+                <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">
+                  <div class="row"><img src="{{ url_for('static', filename='headshots/' + player + '.png') }}"></div>
+                  {% if p.status != 'Active' %}
+                    {% if p.status == 'D' or p.status == 'Q' %}
+                    <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></div>
+                    {% else %}
+                    <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></div>
+                    {% endif %}
+                  {% else %}
+                  <div class="row"><span class="text-center">{{ p.name }}</span></div>
+                  {% endif %}
+                </button>
+              {% else %}
+                {% if p.status != 'Active' %}
+                  {% if p.status == 'D' or p.status == 'Q' %}
+                  <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></button>
+                  {% else %}
+                  <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></button>
+                  {% endif %}
+                {% else %}
+                <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }}</button>
+                {% endif %}
+              {% endif %}
+              {% endfor %}
+              <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Right Guard</span>
+              </div>
+            </div>
+            <!-- Right Tackle -->
+            <div class="col-2">
+              <div class="btn-group-vertical mt-2 position-relative">
+              {% for player in team.depth_chart.RTs.split(" ") %}
+              {% set p = Player.query.get(player|int) %}
+              {% if loop.index == 1 %}
+                <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">
+                  <div class="row"><img src="{{ url_for('static', filename='headshots/' + player + '.png') }}"></div>
+                  {% if p.status != 'Active' %}
+                    {% if p.status == 'D' or p.status == 'Q' %}
+                    <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></div>
+                    {% else %}
+                    <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></div>
+                    {% endif %}
+                  {% else %}
+                  <div class="row"><span class="text-center">{{ p.name }}</span></div>
+                  {% endif %}
+                </button>
+              {% else %}
+                {% if p.status != 'Active' %}
+                  {% if p.status == 'D' or p.status == 'Q' %}
+                  <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></button>
+                  {% else %}
+                  <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></button>
+                  {% endif %}
+                {% else %}
+                <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }}</button>
+                {% endif %}
+              {% endif %}
+              {% endfor %}
+              <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Right Tackle</span>
+              </div>
+            </div>
+            <!-- Tight End -->
+            <div class="col-2">
+              <div class="btn-group-vertical mt-4 position-relative">
+              {% for player in team.depth_chart.TEs.split(" ") %}
+              {% set p = Player.query.get(player|int) %}
+              {% if loop.index == 1 %}
+                <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">
+                  <div class="row"><img src="{{ url_for('static', filename='headshots/' + player + '.png') }}"></div>
+                  {% if p.status != 'Active' %}
+                    {% if p.status == 'D' or p.status == 'Q' %}
+                    <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></div>
+                    {% else %}
+                    <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></div>
+                    {% endif %}
+                  {% else %}
+                  <div class="row"><span class="text-center">{{ p.name }}</span></div>
+                  {% endif %}
+                </button>
+              {% else %}
+                {% if p.status != 'Active' %}
+                  {% if p.status == 'D' or p.status == 'Q' %}
+                  <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></button>
+                  {% else %}
+                  <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></button>
+                  {% endif %}
+                {% else %}
+                <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }}</button>
+                {% endif %}
+              {% endif %}
+              {% endfor %}
+              <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Tight End</span>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-4 justify-content-center">
+            <!-- Wide Receiver 1 -->
+            <div class="col-2">
+              <div class="btn-group-vertical position-relative">
+              {% for player in team.depth_chart.WR1s.split(" ") %}
+              {% set p = Player.query.get(player|int) %}
+              {% if loop.index == 1 %}
+                <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">
+                  <div class="row"><img src="{{ url_for('static', filename='headshots/' + player + '.png') }}"></div>
+                  {% if p.status != 'Active' %}
+                    {% if p.status == 'D' or p.status == 'Q' %}
+                    <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></div>
+                    {% else %}
+                    <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></div>
+                    {% endif %}
+                  {% else %}
+                  <div class="row"><span class="text-center">{{ p.name }}</span></div>
+                  {% endif %}
+                </button>
+              {% else %}
+                {% if p.status != 'Active' %}
+                  {% if p.status == 'D' or p.status == 'Q' %}
+                  <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></button>
+                  {% else %}
+                  <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></button>
+                  {% endif %}
+                {% else %}
+                <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }}</button>
+                {% endif %}
+              {% endif %}
+              {% endfor %}
+              <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">X Receiver</span>
+              </div>
+            </div>
+            <!-- Fullback -->
+            <div class="col-2">
+              {% if team.depth_chart.FBs %}
+              <div class="btn-group-vertical mt-2 position-relative">
+              {% for player in team.depth_chart.FBs.split(" ") %}
+              {% set p = Player.query.get(player|int) %}
+              {% if loop.index == 1 %}
+                <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">
+                  <div class="row"><img src="{{ url_for('static', filename='headshots/' + player + '.png') }}"></div>
+                  {% if p.status != 'Active' %}
+                    {% if p.status == 'D' or p.status == 'Q' %}
+                    <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></div>
+                    {% else %}
+                    <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></div>
+                    {% endif %}
+                  {% else %}
+                  <div class="row"><span class="text-center">{{ p.name }}</span></div>
+                  {% endif %}
+                </button>
+              {% else %}
+                {% if p.status != 'Active' %}
+                  {% if p.status == 'D' or p.status == 'Q' %}
+                  <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></button>
+                  {% else %}
+                  <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></button>
+                  {% endif %}
+                {% else %}
+                <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }}</button>
+                {% endif %}
+              {% endif %}
+              {% endfor %}
+              <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Fullbacks</span>
+              </div>
+              {% endif %}
+            </div>
+            <!-- Quarterback -->
+            <div class="col-2">
+              <div class="btn-group-vertical position-relative">
+              {% for player in team.depth_chart.QBs.split(" ") %}
+              {% set p = Player.query.get(player|int) %}
+              {% if loop.index == 1 %}
+                <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">
+                  <div class="row"><img src="{{ url_for('static', filename='headshots/' + player + '.png') }}"></div>
+                  {% if p.status != 'Active' %}
+                    {% if p.status == 'D' or p.status == 'Q' %}
+                    <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></div>
+                    {% else %}
+                    <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></div>
+                    {% endif %}
+                  {% else %}
+                  <div class="row"><span class="text-center">{{ p.name }}</span></div>
+                  {% endif %}
+                </button>
+              {% else %}
+                {% if p.status != 'Active' %}
+                  {% if p.status == 'D' or p.status == 'Q' %}
+                  <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></button>
+                  {% else %}
+                  <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></button>
+                  {% endif %}
+                {% else %}
+                <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }}</button>
+                {% endif %}
+              {% endif %}
+              {% endfor %}
+              <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Quarterbacks</span>
+              </div>
+            </div>
+            <!-- Runningback -->
+            <div class="col-2">
+              <div class="btn-group-vertical mt-2 position-relative">
+              {% for player in team.depth_chart.RBs.split(" ") %}
+              {% set p = Player.query.get(player|int) %}
+              {% if loop.index == 1 %}
+                <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">
+                  <div class="row"><img src="{{ url_for('static', filename='headshots/' + player + '.png') }}"></div>
+                  {% if p.status != 'Active' %}
+                    {% if p.status == 'D' or p.status == 'Q' %}
+                    <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></div>
+                    {% else %}
+                    <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></div>
+                    {% endif %}
+                  {% else %}
+                  <div class="row"><span class="text-center">{{ p.name }}</span></div>
+                  {% endif %}
+                </button>
+              {% else %}
+                {% if p.status != 'Active' %}
+                  {% if p.status == 'D' or p.status == 'Q' %}
+                  <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></button>
+                  {% else %}
+                  <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></button>
+                  {% endif %}
+                {% else %}
+                <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }}</button>
+                {% endif %}
+              {% endif %}
+              {% endfor %}
+              <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Runningbacks</span>
+              </div>
+            </div>
+            <!-- Wide Receiver 3 -->
+            <div class="col-2">
+              <div class="btn-group-vertical mt-4 position-relative">
+              {% for player in team.depth_chart.WR3s.split(" ") %}
+              {% set p = Player.query.get(player|int) %}
+              {% if loop.index == 1 %}
+                <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">
+                  <div class="row"><img src="{{ url_for('static', filename='headshots/' + player + '.png') }}"></div>
+                  {% if p.status != 'Active' %}
+                    {% if p.status == 'D' or p.status == 'Q' %}
+                    <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></div>
+                    {% else %}
+                    <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></div>
+                    {% endif %}
+                  {% else %}
+                  <div class="row"><span class="text-center">{{ p.name }}</span></div>
+                  {% endif %}
+                </button>
+              {% else %}
+                {% if p.status != 'Active' %}
+                  {% if p.status == 'D' or p.status == 'Q' %}
+                  <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></button>
+                  {% else %}
+                  <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></button>
+                  {% endif %}
+                {% else %}
+                <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }}</button>
+                {% endif %}
+              {% endif %}
+              {% endfor %}
+              <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Y Receiver</span>
+              </div>
+            </div>
+            <!-- Wide Receiver 2 -->
+            <div class="col-2">
+              <div class="btn-group-vertical position-relative">
+              {% for player in team.depth_chart.WR2s.split(" ") %}
+              {% set p = Player.query.get(player|int) %}
+              {% if loop.index == 1 %}
+                <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">
+                  <div class="row"><img src="{{ url_for('static', filename='headshots/' + player + '.png') }}"></div>
+                  {% if p.status != 'Active' %}
+                    {% if p.status == 'D' or p.status == 'Q' %}
+                    <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></div>
+                    {% else %}
+                    <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></div>
+                    {% endif %}
+                  {% else %}
+                  <div class="row"><span class="text-center">{{ p.name }}</span></div>
+                  {% endif %}
+                </button>
+              {% else %}
+                {% if p.status != 'Active' %}
+                  {% if p.status == 'D' or p.status == 'Q' %}
+                  <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></button>
+                  {% else %}
+                  <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></button>
+                  {% endif %}
+                {% else %}
+                <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }}</button>
+                {% endif %}
+              {% endif %}
+              {% endfor %}
+              <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Z Receiver</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Special Teams -->
+    <div class="row mt-4">
+      <div class="card bg-dark">
+        <div class="card-title text-center">Special Teams</div>
+        <div class="card-body">
+          <div class="row justify-content-center">
+            <!-- Placekicker -->
+            <div class="col-2">
+              <div class="btn-group-vertical position-relative">
+              {% for player in team.depth_chart.PKs.split(" ") %}
+              {% set p = Player.query.get(player|int) %}
+              {% if loop.index == 1 %}
+                <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">
+                  <div class="row"><img src="{{ url_for('static', filename='headshots/' + player + '.png') }}"></div>
+                  {% if p.status != 'Active' %}
+                    {% if p.status == 'D' or p.status == 'Q' %}
+                    <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></div>
+                    {% else %}
+                    <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></div>
+                    {% endif %}
+                  {% else %}
+                  <div class="row"><span class="text-center">{{ p.name }}</span></div>
+                  {% endif %}
+                </button>
+              {% else %}
+                {% if p.status != 'Active' %}
+                  {% if p.status == 'D' or p.status == 'Q' %}
+                  <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></button>
+                  {% else %}
+                  <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></button>
+                  {% endif %}
+                {% else %}
+                <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }}</button>
+                {% endif %}
+              {% endif %}
+              {% endfor %}
+              <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Placekicker</span>
+              </div>
+            </div>
+            <!-- Punter -->
+            <div class="col-2">
+              <div class="btn-group-vertical position-relative">
+              {% for player in team.depth_chart.Ps.split(" ") %}
+              {% set p = Player.query.get(player|int) %}
+              {% if loop.index == 1 %}
+                <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">
+                  <div class="row"><img src="{{ url_for('static', filename='headshots/' + player + '.png') }}"></div>
+                  {% if p.status != 'Active' %}
+                    {% if p.status == 'D' or p.status == 'Q' %}
+                    <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></div>
+                    {% else %}
+                    <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></div>
+                    {% endif %}
+                  {% else %}
+                  <div class="row"><span class="text-center">{{ p.name }}</span></div>
+                  {% endif %}
+                </button>
+              {% else %}
+                {% if p.status != 'Active' %}
+                  {% if p.status == 'D' or p.status == 'Q' %}
+                  <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></button>
+                  {% else %}
+                  <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></button>
+                  {% endif %}
+                {% else %}
+                <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }}</button>
+                {% endif %}
+              {% endif %}
+              {% endfor %}
+              <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Punter</span>
+              </div>
+            </div>
+            <!-- Holder -->
+            <div class="col-2">
+              <div class="btn-group-vertical position-relative">
+              {% for player in team.depth_chart.Hs.split(" ") %}
+              {% set p = Player.query.get(player|int) %}
+              {% if loop.index == 1 %}
+                <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">
+                  <div class="row"><img src="{{ url_for('static', filename='headshots/' + player + '.png') }}"></div>
+                  {% if p.status != 'Active' %}
+                    {% if p.status == 'D' or p.status == 'Q' %}
+                    <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></div>
+                    {% else %}
+                    <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></div>
+                    {% endif %}
+                  {% else %}
+                  <div class="row"><span class="text-center">{{ p.name }}</span></div>
+                  {% endif %}
+                </button>
+              {% else %}
+                {% if p.status != 'Active' %}
+                  {% if p.status == 'D' or p.status == 'Q' %}
+                  <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></button>
+                  {% else %}
+                  <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></button>
+                  {% endif %}
+                {% else %}
+                <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }}</button>
+                {% endif %}
+              {% endif %}
+              {% endfor %}
+              <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Holder</span>
+              </div>
+            </div>
+            <!-- Long Snapper -->
+            <div class="col-2">
+              <div class="btn-group-vertical position-relative">
+              {% for player in team.depth_chart.LSs.split(" ") %}
+              {% set p = Player.query.get(player|int) %}
+              {% if loop.index == 1 %}
+                <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">
+                  <div class="row"><img src="{{ url_for('static', filename='headshots/' + player + '.png') }}"></div>
+                  {% if p.status != 'Active' %}
+                    {% if p.status == 'D' or p.status == 'Q' %}
+                    <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></div>
+                    {% else %}
+                    <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></div>
+                    {% endif %}
+                  {% else %}
+                  <div class="row"><span class="text-center">{{ p.name }}</span></div>
+                  {% endif %}
+                </button>
+              {% else %}
+                {% if p.status != 'Active' %}
+                  {% if p.status == 'D' or p.status == 'Q' %}
+                  <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></button>
+                  {% else %}
+                  <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></button>
+                  {% endif %}
+                {% else %}
+                <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }}</button>
+                {% endif %}
+              {% endif %}
+              {% endfor %}
+              <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Long Snapper</span>
+              </div>
+            </div>
+            <!-- Kick Returner -->
+            <div class="col-2">
+              <div class="btn-group-vertical position-relative">
+              {% for player in team.depth_chart.KRs.split(" ") %}
+              {% set p = Player.query.get(player|int) %}
+              {% if loop.index == 1 %}
+                <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">
+                  <div class="row"><img src="{{ url_for('static', filename='headshots/' + player + '.png') }}"></div>
+                  {% if p.status != 'Active' %}
+                    {% if p.status == 'D' or p.status == 'Q' %}
+                    <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></div>
+                    {% else %}
+                    <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></div>
+                    {% endif %}
+                  {% else %}
+                  <div class="row"><span class="text-center">{{ p.name }}</span></div>
+                  {% endif %}
+                </button>
+              {% else %}
+                {% if p.status != 'Active' %}
+                  {% if p.status == 'D' or p.status == 'Q' %}
+                  <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></button>
+                  {% else %}
+                  <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></button>
+                  {% endif %}
+                {% else %}
+                <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }}</button>
+                {% endif %}
+              {% endif %}
+              {% endfor %}
+              <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Kick Returner</span>
+              </div>
+            </div>
+            <!-- Punt Returner -->
+            <div class="col-2">
+              <div class="btn-group-vertical position-relative">
+              {% for player in team.depth_chart.PRs.split(" ") %}
+              {% set p = Player.query.get(player|int) %}
+              {% if loop.index == 1 %}
+                <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">
+                  <div class="row"><img src="{{ url_for('static', filename='headshots/' + player + '.png') }}"></div>
+                  {% if p.status != 'Active' %}
+                    {% if p.status == 'D' or p.status == 'Q' %}
+                    <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></div>
+                    {% else %}
+                    <div class="row"><span class="text-center">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></div>
+                    {% endif %}
+                  {% else %}
+                  <div class="row"><span class="text-center">{{ p.name }}</span></div>
+                  {% endif %}
+                </button>
+              {% else %}
+                {% if p.status != 'Active' %}
+                  {% if p.status == 'D' or p.status == 'Q' %}
+                  <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-warning"><span>{{ p.status }}</span></div></button>
+                  {% else %}
+                  <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }} <div class="badge rounded-pill p-1 bg-danger"><span>{{ p.status }}</span></div></button>
+                  {% endif %}
+                {% else %}
+                <button data-id="{{ p.ID }}" class=" player-btn btn btn-block btn-dark border-secondary">{{ p.name }}</button>
+                {% endif %}
+              {% endif %}
+              {% endfor %}
+              <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Punt Returner</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   <!-- Injury Page Content -->
   <div id="injuryPage" class="container text-white visually-hidden">
     <div class="row">
@@ -1179,6 +2289,17 @@
             document.getElementById("mainContainer").classList.remove("visually-hidden");
             document.getElementById("teamNav").classList.remove("visually-hidden");
             document.getElementById("rosterPage").classList.remove("visually-hidden");
+            document.getElementById("playerCardContainer").classList.remove("visually-hidden");
+          });
+        });
+
+  $(function() {
+          $('#depthChartSelection').on('click', function(e) {
+            e.preventDefault()
+            hideContainers();
+            document.getElementById("mainContainer").classList.remove("visually-hidden");
+            document.getElementById("teamNav").classList.remove("visually-hidden");
+            document.getElementById("depthChartPage").classList.remove("visually-hidden");
             document.getElementById("playerCardContainer").classList.remove("visually-hidden");
           });
         });

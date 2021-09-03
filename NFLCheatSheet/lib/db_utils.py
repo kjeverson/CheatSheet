@@ -14,6 +14,7 @@ from NFLCheatSheet.lib.classes.team import Team
 from NFLCheatSheet.lib.classes.player import Player, add_player, get_player, player_url
 from NFLCheatSheet.lib.classes import stats
 from NFLCheatSheet.lib.classes.game import Game
+from NFLCheatSheet.lib.classes.depth_chart import DepthChart
 
 from NFLCheatSheet.lib.fantasy.scoring import Scoring, get_score
 
@@ -93,6 +94,10 @@ def add_teams(database, teams: List[Dict]) -> None:
         database.session.add(stats.TeamStats(
             team_id=team['id'],
             preseason=False
+        ))
+
+        database.session.add(DepthChart(
+            team_id=team['id']
         ))
 
     database.session.add(Team(
@@ -202,7 +207,7 @@ def get_all_player_data(thread, position: str = "ALL") -> List:
 
     #players = filter_by_position(player_data, position)
 
-    url = "http://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/2021/teams/{}/athletes?limit=70"
+    url = "http://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/2021/teams/{}/athletes?limit=150"
 
     players = []
     teams = Team.query.all()
@@ -973,7 +978,7 @@ def build_db(db, thread):
 
     players = get_all_player_data(thread)
     add_players(db, players, thread)
-    update_player_status(db, thread)
+    #update_player_status(db, thread)
 
     add_default_scoring(db)
 

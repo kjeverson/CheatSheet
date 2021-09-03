@@ -1,6 +1,7 @@
 from app import db
 from NFLCheatSheet.lib.classes import stats
-from NFLCheatSheet.lib.classes.game import Game
+import requests
+import re
 
 
 class Team(db.Model):
@@ -37,6 +38,7 @@ class Team(db.Model):
     preseasonWinPCT = db.Column(db.Integer)
 
     players = db.relationship('Player', backref='current_team', foreign_keys="Player.team_id", lazy=True)
+    depth_chart = db.relationship('DepthChart', backref='team', foreign_keys="DepthChart.team_id", lazy=True, uselist=False)
 
     away_games = db.relationship('Game', foreign_keys="Game.away_team_id")
     home_games = db.relationship('Game', foreign_keys="Game.home_team_id")
@@ -81,3 +83,81 @@ class Team(db.Model):
         weeks = [game.week for game in games]
         bye = [week for week in range(1, 19) if week not in weeks]
         return bye[-1]
+
+    def set_depth_chart(self):
+
+        o = {"qb": [], "rb": [], "fb": [], "wr1": [], "wr2": [], "wr3": [], "te": [], "lt": [],
+             "lg": [], "c": [], "rg": [], "rt": []}
+
+        d = {"lde": [], "ldt": [], "rdt": [], "rde": [], "wlb": [], "mlb": [], "slb": [],
+             "lcb": [], "rcb": [], "ss": [], "fs": [], "nt": [], "lilb": [], "rilb": []}
+
+        st = {"pk":[], "p": [], "h": [], "pr": [], "kr": [], "ls": []}
+
+        url = "https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/2021/teams/{}/depthcharts?lang=en&region=us".format(self.ID)
+        data = requests.get(url).json()
+
+        data = data['items']
+        defense = data[0]
+        special = data[1]
+        offense = data[2]
+
+        for position, info in offense['positions'].items():
+            if position == "wr":
+                athletes = info['athletes']
+                for athlete in athletes:
+                    slot = athlete['slot']
+                    slot = 3 if slot > 3 else slot
+                    ID = re.search(r'athletes\/(\d+)', athlete['athlete']['$ref']).groups()[0]
+                    o[position+str(slot)].append(ID)
+            else:
+                athletes = info['athletes']
+                for athlete in athletes:
+                    ID = re.search(r'athletes\/(\d+)', athlete['athlete']['$ref']).groups()[0]
+                    o[position].append(ID)
+
+        for position, info in defense['positions'].items():
+            athletes = info['athletes']
+            for athlete in athletes:
+                ID = re.search(r'athletes\/(\d+)', athlete['athlete']['$ref']).groups()[0]
+                d[position].append(ID)
+
+        for position, info in special['positions'].items():
+            athletes = info['athletes']
+            for athlete in athletes:
+                ID = re.search(r'athletes\/(\d+)', athlete['athlete']['$ref']).groups()[0]
+                st[position].append(ID)
+
+        depth_chart = self.depth_chart
+        depth_chart.QBs = " ".join(o["qb"])
+        depth_chart.RBs = " ".join(o["rb"])
+        depth_chart.FBs = " ".join(o["fb"])
+        depth_chart.WR1s = " ".join(o["wr1"])
+        depth_chart.WR2s = " ".join(o["wr2"])
+        depth_chart.WR3s = " ".join(o["wr3"])
+        depth_chart.TEs = " ".join(o["te"])
+        depth_chart.LTs = " ".join(o["lt"])
+        depth_chart.LGs = " ".join(o["lg"])
+        depth_chart.Cs = " ".join(o["c"])
+        depth_chart.RGs = " ".join(o["rg"])
+        depth_chart.RTs = " ".join(o["rt"])
+        depth_chart.LDEs = " ".join(d["lde"])
+        depth_chart.LDTs = " ".join(d["ldt"])
+        depth_chart.RDTs = " ".join(d["rdt"])
+        depth_chart.RDEs = " ".join(d["rde"])
+        depth_chart.WLBs = " ".join(d["wlb"])
+        depth_chart.MLBs = " ".join(d["mlb"])
+        depth_chart.SLBs = " ".join(d["slb"])
+        depth_chart.LCBs = " ".join(d["lcb"])
+        depth_chart.RCBs = " ".join(d["rcb"])
+        depth_chart.SSs = " ".join(d["ss"])
+        depth_chart.FSs = " ".join(d["fs"])
+        depth_chart.NTs = " ".join(d["nt"])
+        depth_chart.LILBs = " ".join(d["lilb"])
+        depth_chart.RILBs = " ".join(d["rilb"])
+        depth_chart.PKs = " ".join(st["pk"])
+        depth_chart.Ps = " ".join(st["p"])
+        depth_chart.Hs = " ".join(st["h"])
+        depth_chart.PRs = " ".join(st["pr"])
+        depth_chart.KRs = " ".join(st["kr"])
+        depth_chart.LSs = " ".join(st["ls"])
