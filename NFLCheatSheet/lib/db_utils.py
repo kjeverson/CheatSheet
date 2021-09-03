@@ -210,7 +210,7 @@ def get_all_player_data(thread, position: str = "ALL") -> List:
     url = "http://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/2021/teams/{}/athletes?limit=150"
 
     players = []
-    teams = Team.query.all()
+    teams = Team.query.filter(Team.ID != 100).all()
     for team in teams:
         data = requests.get(url.format(team.ID))
         data = data.json()
