@@ -248,15 +248,10 @@
   </body>
 <script>
 
-    // Disable filtered position button
-    $(document).ready(function(){
-      $("#{{ position }}").prop("disabled",true);
-    });
-
     // Show Player Modal on table row click
     $(function(){
       $('#playerCard').modal({
-        keyboard: true,
+        keyboard: false,
         backdrop: "static",
         show: false,
       }).on('show', function () {
@@ -363,9 +358,6 @@
         getPlayerCard(ID);
       });
 
-    //$("#closeBtnModal").click(function(){
-    //  $('#playerCard').modal("hide");
-    //  });
     });
 
   //$("#QB").click(function(){

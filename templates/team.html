@@ -27,22 +27,23 @@
     <div class="col-7 align-self-center">
       <!-- Team Rankings -->
       <div class="row">
+        {% set team_stats = team.get_team_stats(preseason=preseason) %}
         <!-- DVOA -->
         <div class="col text-center">
-          <button class="btn btn-block btn-secondary position-relative">
+          <button class="btn w-100 bgcolor{{ team_stats.DVOA }} text-dark btn-secondary position-relative" style="pointer-events: none">
             <div class="row mt-3">
-              <h2>BLANK</h2>
+              <h1>{{ team_stats.DVOA }}</h1>
             </div>
             <div class="row">
             </div>
-            <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">DVOA</span>
+            <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">DVOA Rank</span>
           </button>
         </div>
         <!-- OFF Rank -->
         <div class="col text-center">
-          <button class="btn btn-block btn-secondary position-relative">
+          <button class="btn w-100 bgcolor{{ team_stats.OFF }} text-dark btn-secondary position-relative" style="pointer-events: none">
             <div class="row mt-3">
-              <h2>BLANK</h2>
+              <h1>{{ team_stats.OFF }}</h1>
             </div>
             <div class="row">
             </div>
@@ -51,9 +52,9 @@
         </div>
         <!-- DEF Rank -->
         <div class="col text-center">
-          <button class="btn btn-block btn-secondary position-relative">
+          <button class="btn w-100 bgcolor{{ team_stats.DEF }} text-dark btn-secondary position-relative" style="pointer-events: none">
             <div class="row mt-3">
-              <h2>BLANK</h2>
+              <h1>{{ team_stats.DEF }}</h1>
             </div>
             <div class="row">
             </div>
@@ -62,9 +63,9 @@
         </div>
         <!-- ST Rank -->
         <div class="col text-center">
-          <button class="btn btn-block btn-secondary position-relative">
+          <button class="btn w-100 bgcolor{{ team_stats.ST }} text-dark btn-secondary position-relative" style="pointer-events: none">
             <div class="row mt-3">
-              <h2>BLANK</h2>
+              <h1>{{ team_stats.ST }}</h1>
             </div>
             <div class="row">
             </div>
@@ -298,7 +299,7 @@
               {% set team_stats = team.get_team_stats(preseason=True) %}
               <div class="row">
                 <div class="col text-center">
-                  <button class="btn text-dark bgcolor{{ team_stats.passYDsPerGameRank }} w-100 position-relative">
+                  <button class="btn text-dark bgcolor{{ team_stats.passYDsPerGameRank }} w-100 position-relative" style="pointer-events: none">
                     <div class="row mt-3">
                       <h1>{{ '%0.1f' |format(team_stats.passYDsPerGame) }}</h1>
                     </div>
@@ -309,7 +310,7 @@
                   </button>
                 </div>
                 <div class="col text-center">
-                  <button class="btn text-dark bgcolor{{ team_stats.rushYDsPerGameRank }} w-100 position-relative">
+                  <button class="btn text-dark bgcolor{{ team_stats.rushYDsPerGameRank }} w-100 position-relative" style="pointer-events: none">
                     <div class="row mt-3">
                       <h1>{{ '%0.1f' |format(team_stats.rushYDsPerGame) }}</h1>
                     </div>
@@ -320,7 +321,7 @@
                   </button>
                 </div>
                 <div class="col text-center">
-                  <button class="btn text-dark bgcolor{{ team_stats.PPGRank }} w-100 position-relative">
+                  <button class="btn text-dark bgcolor{{ team_stats.PPGRank }} w-100 position-relative" style="pointer-events: none">
                     <div class="row mt-3">
                       <h1>{{ '%0.1f'| format(team_stats.PPG|float) }}</h1>
                     </div>
@@ -331,7 +332,7 @@
                   </button>
                 </div>
                 <div class="col text-center">
-                  <button class="btn text-dark bgcolor{{ 33 - team_stats.PAPGRank }} w-100 position-relative">
+                  <button class="btn text-dark bgcolor{{ 33 - team_stats.PAPGRank }} w-100 position-relative" style="pointer-events: none">
                     <div class="row mt-3">
                       <h1>{{ '%0.1f'| format(team_stats.PAPG|float) }}</h1>
                     </div>
@@ -461,6 +462,7 @@
     <div class="row justify-content-center">
       <!-- MAIN CONTENT -->
       <div class="col-12">
+        {% if passLeader and rushLeader and recLeader %}
         <!-- Team Stat Leaders -->
         <div class="row mt-2">
             <div class="card bg-dark">
@@ -516,6 +518,7 @@
                 </div>
             </div>
         </div>
+        {% endif %}
         <!-- Player Season Stats -->
         <div class="row mt-2">
           <div class="card bg-dark">
@@ -880,7 +883,59 @@
                     </tr>
                   </thead>
                   {% for player in players | sort(attribute='experience', reverse=True) %}
-                  {% if not player.practice_squad %}
+                  {% if not player.practice_squad and player.designation != "Injured Reserve" %}
+                  <tr data-id="{{ player.ID }}">
+                    {% if player.number %}
+                    <td>{{ player.number }}</td>
+                    {% else %}
+                    <td>-</td>
+                    {% endif %}
+                    {% if player.designation == "Questionable" or player.designation == "Doubtful" %}
+                    <td>{{ player.name }} <div class="badge rounded-pill p-1 bg-warning"><span class="visually-hidden">N</span></div></td>
+                    {% elif player.designation == "Out" or player.designation == "Injured Reserve" %}
+                    <td>{{ player.name }} <div class="badge rounded-pill p-1 bg-danger"><span class="visually-hidden">N</span></div></td>
+                    {% else %}
+                    <td>{{ player.name }}</td>
+                    {% endif %}
+                    <td>{{ player.position }}</td>
+                    <td>{{ player.age }}</td>
+                    <td>{{ player.height }}</td>
+                    <td>{{ player.weight }}</td>
+                    {% if player.experience == 0 %}
+                    <td>R</td>
+                    {% else %}
+                    <td>{{ player.experience }}</td>
+                    {% endif %}
+                    <td>{{ player.college }}</td>
+                  </tr>
+                  {% endif %}
+                  {% endfor %}
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Injured Reserve -->
+        <div class="row mt-2">
+          <div class="card bg-dark">
+            <div class="card-title text-center">Injured Reserve</div>
+            <div class="card-body">
+              <div class="row text-white">
+                <table class="sortable player-table table table-dark table-hover">
+                  <thead>
+                    <tr>
+                      <td>#</td>
+                      <td>Name</td>
+                      <td>Pos</td>
+                      <td>Age</td>
+                      <td>Ht</td>
+                      <td>Wt</td>
+                      <td>Exp</td>
+                      <td>College</td>
+                    </tr>
+                  </thead>
+                  {% for player in players | sort(attribute='experience', reverse=True) %}
+                  {% if not player.practice_squad and player.designation == "Injured Reserve" %}
                   <tr data-id="{{ player.ID }}">
                     {% if player.number %}
                     <td>{{ player.number }}</td>
@@ -1760,7 +1815,7 @@
                 {% endif %}
               {% endif %}
               {% endfor %}
-              <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Fullbacks</span>
+              <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Fullback</span>
               </div>
               {% endif %}
             </div>
@@ -1794,7 +1849,7 @@
                 {% endif %}
               {% endif %}
               {% endfor %}
-              <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Quarterbacks</span>
+              <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Quarterback</span>
               </div>
             </div>
             <!-- Runningback -->
@@ -1827,7 +1882,7 @@
                 {% endif %}
               {% endif %}
               {% endfor %}
-              <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Runningbacks</span>
+              <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Runningback</span>
               </div>
             </div>
             <!-- Wide Receiver 3 -->

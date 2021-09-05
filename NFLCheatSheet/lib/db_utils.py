@@ -251,6 +251,7 @@ def add_players(database, players: List, thread) -> None:
 
     thread.state = "Adding Players to Database"
     thread.total = len(players)
+    rostered_ids = []
     print("Adding Players to Database..\r", end="")
     for i in range(len(players)):
         print("Adding Players to Database...{}/{} - {:0.2f}%\r"
@@ -997,9 +998,9 @@ def build_db(db, thread):
 
 def update_db(db, thread):
 
-    #players = get_all_player_data(thread)
-    #add_players(db, players, thread)
-    #update_player_status(db, thread)
+    players = get_all_player_data(thread)
+    add_players(db, players, thread)
+    update_player_status(db, thread)
 
     update_schedule(db, thread)
 
