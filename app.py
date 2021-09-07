@@ -311,12 +311,25 @@ def fantasy():
 
         if "inputLeagueName" in request.form:
             name = request.form.get("inputLeagueName")
-            number = request.form.get("inputNumber")
+            number = request.form.get("inputLeagueSize")
 
             db.session.add(
                 FantasyLeague(
                     name=name,
-                    number_teams=int(number)
+                    size=int(number),
+                    QB=request.form['QB'] if request.form.get("QB") else 0,
+                    RB=request.form['RB'] if request.form.get("RB") else 0,
+                    WR=request.form['WR'] if request.form.get("WR") else 0,
+                    TE=request.form['TE'] if request.form.get("TE") else 0,
+                    RBWR=request.form['WR/RB'] if request.form.get("WR/RB") else 0,
+                    WRTE=request.form['WR/TE'] if request.form.get("WR/TE") else 0,
+                    RBTE=request.form['RB/TE'] if request.form.get("RB/TE") else 0,
+                    FLEX=request.form['RB/WR/TE'] if request.form.get("RB/WR/TE") else 0,
+                    SFLEX=request.form['QB/RB/WR/TE'] if request.form.get("QB/RB/WR/TE") else 0,
+                    DST=request.form['DST'] if request.form.get("DST") else 0,
+                    K=request.form['K'] if request.form.get("K") else 0,
+                    BENCH=request.form['BENCH'] if request.form.get("BENCH") else 0,
+                    IR=request.form['IR'] if request.form.get("IR") else 0
                 )
             )
             db.session.commit()
