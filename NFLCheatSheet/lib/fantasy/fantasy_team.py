@@ -1,35 +1,12 @@
-from owner import Owner
-from player_orig import Player
-from typing import Type
+from app import db
 
 
-class FantasyTeam:
+class FantasyTeam(db.Model):
 
-    def __init__(self, name: str, owner: Type[Owner]):
+    ID = db.Column(db.Integer, primary_key=True)
+    league_id = db.Column(db.Integer, db.ForeignKey('fantasy_league.ID'))
+    name = db.Column(db.String(30))
+    players = db.Column(db.String(300))
 
-        self.id = 0 # TBD how to implement unique ID
-        self.name = name
-        self.owner = owner
-        self.roster = []
-        self.reserve = []
-
-    def getRosterSize(self) -> int:
-
-        return len(self.roster)
-
-    def getNumberOfPos(self, position) -> int:
-
-        count = 0
-        for player in self.roster:
-            if player.Position == position:
-                count += count
-
-        return count
-
-    def addPlayer(self, player: Type[Player]):
-
-        self.roster.append(player)
-
-    def dropPlayer(self, player: Type[Player]):
-
-        self.roster.remove(player)
+    def __repr__(self):
+        return "FantasyTeam({}-{})".format(self.name, self.ID)
