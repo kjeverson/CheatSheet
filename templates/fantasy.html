@@ -4,8 +4,8 @@
 {% endblock %}
 {% block content %}
 <div class="container mt-4 pt-4 text-white">
+    <!-- Fantasy Leagues -->
     <div class="row">
-        <!-- Fantasy Leagues -->
         <div class="card bg-dark">
             <div class="card-title text-center">Fantasy Leagues</div>
             <div class="card-body">
@@ -31,8 +31,8 @@
             </div>
         </div>
     </div>
+    <!-- Fantasy Teams -->
     <div class="row mt-4">
-        <!-- Fantasy Teams -->
         <div class="card bg-dark">
             <div class="card-title text-center">Fantasy Teams</div>
         <div class="card-body">
@@ -47,8 +47,10 @@
                             </div>
                             <div class="row mt-3">
                                 <div class="col">
-                                    <button class="btn btn-sm btn-secondary">League</button>
-                                    <button class="btn btn-sm btn-secondary">Roster</button>
+                                    <form action="{{ url_for('fantasy_team') }}" role="form" method="GET">
+                                        <input type="submit" class="btn btn-sm btn-secondary" value="League">
+                                        <button type="submit" class="btn btn-sm btn-secondary" name="team" value="{{ team.ID }}">Roster</button>
+                                    </form>
                                 </div>
                             </div>
 
@@ -64,6 +66,7 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
     <!-- Add Team Modal -->
     <div class="modal fade" id="addTeamModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">

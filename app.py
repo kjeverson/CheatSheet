@@ -374,6 +374,18 @@ def fantasy():
                                teams=teams, fantasy_leagues=leagues, fantasy_teams=fantasy_teams)
 
 
+@app.route('/fantasy_team', methods=["GET", "POST"])
+def fantasy_team():
+
+    teams = Team.query.filter(Team.ID != 100).all()
+
+    if request.method == "GET":
+        team_id = request.args.get("team")
+        team = FantasyTeam.query.get(int(team_id))
+
+    return render_template("fantasy_team.html", teams=teams, team=team)
+
+
 @app.route('/player', methods=["GET", "POST"])
 def player():
     games = Game.query.all()

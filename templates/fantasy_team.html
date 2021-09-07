@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% block title %}
+    {{ team.name }}-{{ team.league.name }}
+{% endblock %}
+{% block content %}
+<div class="container mt-4 p-4 text-white">
+    <div class="row text-white">
+        <div class="card bg-dark">
+            <div class="card-title text-center">Roster</div>
+            <div class="card-body">
+                <div class="row me-2 text-end">
+                    <div class="col">
+                        <button class="btn btn-sm btn-secondary">Add Player</button>
+                        <button class="btn btn-sm btn-secondary">Drop Player</button>
+                        <button class="btn btn-sm btn-secondary">Propose Trade</button>
+                    </div>
+                </div>
+                    {% for spot in range(team.league.QB) %}
+                        <div class="row mt-1">
+                            <div class="col-1"><button class="btn btn-primary w-100">QB</button></div>
+                            <div class="col-3">PLAYER</div>
+                            <div class="col-2">BYE</div>
+                            <div class="col-4">STATS</div>
+                            <div class="col-2">FPs</div>
+                        </div>
+                    {% endfor %}
+                    {% for spot in range(team.league.RB) %}
+                        <div class="row mt-1">
+                            <div class="col-1"><button class="btn btn-primary w-100">RB</button></div>
+                            <div class="col-3">PLAYER</div>
+                            <div class="col-2">BYE</div>
+                            <div class="col-4">STATS</div>
+                            <div class="col-2">FPs</div>
+                        </div>
+                    {% endfor %}
+                    {% for spot in range(team.league.WR) %}
+                        <div class="row mt-1">
+                            <div class="col-1"><button class="btn btn-primary w-100">WR</button></div>
+                            <div class="col-3">PLAYER</div>
+                            <div class="col-2">BYE</div>
+                            <div class="col-4">STATS</div>
+                            <div class="col-2">FPs</div>
+                        </div>
+                    {% endfor %}
+                    {% for spot in range(team.league.TE) %}
+                        <div class="row mt-1">
+                            <div class="col-1"><button class="btn btn-primary w-100">TE</button></div>
+                            <div class="col-3">PLAYER</div>
+                            <div class="col-2">BYE</div>
+                            <div class="col-4">STATS</div>
+                            <div class="col-2">FPs</div>
+                        </div>
+                    {% endfor %}
+                    {% for spot in range(team.league.RBWR) %}
+                        <div class="row mt-1">
+                            <div class="col-1"><button class="btn btn-primary w-100">R/W</button></div>
+                            <div class="col-3">PLAYER</div>
+                            <div class="col-2">BYE</div>
+                            <div class="col-4">STATS</div>
+                            <div class="col-2">FPs</div>
+                        </div>
+                    {% endfor %}
+                    {% for spot in range(team.league.RBTE) %}
+                       <div class="row mt-1">
+                            <div class="col-1"><button class="btn btn-primary w-100">R/T</button></div>
+                            <div class="col-3">PLAYER</div>
+                            <div class="col-2">BYE</div>
+                            <div class="col-4">STATS</div>
+                            <div class="col-2">FPs</div>
+                        </div>
+                    {% endfor %}
+                    {% for spot in range(team.league.WRTE) %}
+                        <div class="row mt-1">
+                            <div class="col-1"><button class="btn btn-primary w-100">W/T</button></div>
+                            <div class="col-3">PLAYER</div>
+                            <div class="col-2">BYE</div>
+                            <div class="col-4">STATS</div>
+                            <div class="col-2">FPs</div>
+                        </div>
+                    {% endfor %}
+                    {% for spot in range(team.league.FLEX) %}
+                        <div class="row mt-1">
+                            <div class="col-1"><button class="btn btn-primary w-100">R/W/T</button></div>
+                            <div class="col-3">PLAYER</div>
+                            <div class="col-2">BYE</div>
+                            <div class="col-4">STATS</div>
+                            <div class="col-2">FPs</div>
+                        </div>
+                    {% endfor %}
+                    {% for spot in range(team.league.SFLEX) %}
+                        <div class="row mt-1">
+                            <div class="col-1"><button class="btn btn-primary w-100">Q/R/W/T</button></div>
+                            <div class="col-3">PLAYER</div>
+                            <div class="col-2">BYE</div>
+                            <div class="col-4">STATS</div>
+                            <div class="col-2">FPs</div>
+                        </div>
+                    {% endfor %}
+                    {% for spot in range(team.league.K) %}
+                        <div class="row mt-1">
+                            <div class="col-1"><button class="btn btn-primary w-100">K</button></div>
+                            <div class="col-3">PLAYER</div>
+                            <div class="col-2">BYE</div>
+                            <div class="col-4">STATS</div>
+                            <div class="col-2">FPs</div>
+                        </div>
+                    {% endfor %}
+                    {% for spot in range(team.league.BENCH) %}
+                        <div class="row mt-1">
+                            <div class="col-1"><button class="btn btn-primary w-100">BN</button></div>
+                            <div class="col-3">PLAYER</div>
+                            <div class="col-2">BYE</div>
+                            <div class="col-4">STATS</div>
+                            <div class="col-2">FPs</div>
+                        </div>
+                    {% endfor %}
+                    {% for spot in range(team.league.IR) %}
+                        <div class="row mt-1">
+                            <div class="col-1"><button class="btn btn-primary w-100">IR</button></div>
+                            <div class="col-3">PLAYER</div>
+                            <div class="col-2">BYE</div>
+                            <div class="col-4">STATS</div>
+                            <div class="col-2">FPs</div>
+                        </div>
+                    {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
