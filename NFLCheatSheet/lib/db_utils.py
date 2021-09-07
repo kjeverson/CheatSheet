@@ -264,10 +264,17 @@ def add_players(database, players: List, thread) -> None:
         player_obj = get_player(player_data['id'])
 
         if not player_obj:
+            rostered_ids.append(int(player_data['id']))
             add_player(database, player_data)
 
         else:
+            rostered_ids.append(player_obj.ID)
             player_obj.update_info(player_data)
+
+    players = Player.query.all()
+    for player in players:
+        if player.ID not in rostered_ids:
+            player.team_id = 100
 
     print("Adding Players to Database...\x1b[32mCOMPLETE!\x1b[0m\033[K")
 
