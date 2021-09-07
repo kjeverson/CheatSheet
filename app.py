@@ -26,6 +26,8 @@ from NFLCheatSheet.lib.fantasy.scoring import Scoring
 from NFLCheatSheet.lib.classes.game import Game, sort, get_week
 from NFLCheatSheet.lib.classes.stats import SeasonStats, WeeklyStats, get_stats_leaders, TeamStats
 from NFLCheatSheet.lib import db_utils
+from NFLCheatSheet.lib.fantasy.fantasy_league import FantasyLeague
+from NFLCheatSheet.lib.fantasy.fantasy_team import FantasyTeam
 
 
 @app.route('/')
@@ -260,9 +262,20 @@ def team():
 
         team_stats = TeamStats.query.filter_by(team_id=team.ID).filter_by(preseason=preseason).first()
 
-        passLeader = Player.query.get(team_stats.passingLeader_id)
-        rushLeader = Player.query.get(team_stats.rushingLeader_id)
-        recLeader = Player.query.get(team_stats.receivingLeader_id)
+        if team_stats.passingLeader_id:
+            passLeader = Player.query.get(team_stats.passingLeader_id)
+        else:
+            passLeader = None
+
+        if team_stats.rushingLeader_id:
+            rushLeader = Player.query.get(team_stats.rushingLeader_id)
+        else:
+            rushLeader = None
+
+        if team_stats.receivingLeader_id:
+            recLeader = Player.query.get(team_stats.receivingLeader_id)
+        else:
+            recLeader = None
 
         player_stats = [player.get_season_stats(preseason=preseason) for player in players]
 
@@ -287,6 +300,65 @@ def team():
                                recLeader=recLeader,
                                player_stats=player_stats, injured=injured,
                                default_headshot_path=default_headshot_path)
+
+
+@app.route('/fantasy', methods=["GET", "POST"])
+def fantasy():
+
+    teams = Team.query.all()
+
+    if request.method == "POST":
+
+        if "inputLeagueName" in request.form:
+            name = request.form.get("inputLeagueName")
+            number = request.form.get("inputNumber")
+
+            db.session.add(
+                FantasyLeague(
+                    name=name,
+                    number_teams=int(number)
+                )
+            )
+            db.session.commit()
+
+        elif "inputTeamName" in request.form:
+            name = request.form.get("inputTeamName")
+            league = request.form.get("league")
+
+            db.session.add(
+                FantasyTeam(
+                    league_id=int(league),
+                    name=name
+                )
+            )
+            db.session.commit()
+
+        elif "deleteTeam" in request.form:
+            team = request.form.get("deleteTeam")
+            team = FantasyTeam.query.get(team)
+            db.session.delete(team)
+            db.session.commit()
+
+        else:
+            league = request.form.get("deleteLeague")
+            league = FantasyLeague.query.get(league)
+
+            for team in league.teams:
+                db.session.delete(team)
+
+            db.session.delete(league)
+            db.session.commit()
+
+        leagues = FantasyLeague.query.all()
+        fantasy_teams = FantasyTeam.query.all()
+        return render_template("fantasy.html",
+                               teams=teams, fantasy_leagues=leagues, fantasy_teams=fantasy_teams)
+
+    else:
+        leagues = FantasyLeague.query.all()
+        fantasy_teams = FantasyTeam.query.all()
+        return render_template("fantasy.html",
+                               teams=teams, fantasy_leagues=leagues, fantasy_teams=fantasy_teams)
 
 
 @app.route('/player', methods=["GET", "POST"])

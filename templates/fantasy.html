@@ -1,0 +1,203 @@
+{% extends 'base.html' %}
+{% block title %}
+    Fantasy Home
+{% endblock %}
+{% block content %}
+<div class="container mt-4 pt-4 text-white">
+    <div class="row">
+        <div class="card bg-dark">
+            <div class="card-title text-center">Fantasy Leagues</div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+            {% for league in fantasy_leagues %}
+                <div class="col-4">
+                    <div class="card bg-dark">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ league.name }}</h5>
+                            <button class="btn btn-secondary">Overview</button>
+                            <button class="btn btn-secondary">Roster</button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
+            <div class="row">
+                <div class="col text-end">
+                    <button class="btn btn-secondary mt-4" data-bs-toggle="modal" data-bs-target="#addLeagueModal"><i class="bi bi-plus"></i> Add</button>
+                    <button class="btn btn-secondary mt-4" data-bs-toggle="modal" data-bs-target="#removeLeagueModal">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="card bg-dark">
+            <div class="card-title text-center">Fantasy Teams</div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+            {% for team in fantasy_teams %}
+                <div class="col-4">
+                    <div class="card bg-dark">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ team.name }} <small class="text-muted">{{ team.league.name }}</small></h5>
+                            <button class="btn btn-secondary">League</button>
+                            <button class="btn btn-secondary">Roster</button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
+            <div class="row">
+                <div class="col text-end">
+                    <button class="btn btn-secondary mt-4" data-bs-toggle="modal" data-bs-target="#addTeamModal"><i class="bi bi-plus"></i> Add</button>
+                    <button class="btn btn-secondary mt-4" data-bs-toggle="modal" data-bs-target="#removeTeamModal">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Add Team Modal -->
+    <div class="modal fade" id="addTeamModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+        <div class="modal-dialog bg-dark text-white">
+            <div class="modal-content">
+                <div class="modal-header bg-dark">
+                    <h5 class="modal-title">Add Fantasy Team</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body bg-dark text-white">
+                    <form action="{{ url_for('fantasy') }}" role="form" method="POST">
+                        <div class="row g-3 align-items-center">
+                            <div class="col">
+                                <label for="inputTeamName" class="col-form-label">Team Name</label>
+                            </div>
+                        <div class="col">
+                            <input id="inputTeamName" name="inputTeamName" class="form-control">
+                        </div>
+                        </div>
+                        <div class="row g-3 align-items-center">
+                            <div class="col">
+                                <label for="inputNumber" class="col-form-label">League</label>
+                            </div>
+                        <div class="col">
+                            <select class="form-select" aria-label="Default select example" name="league">
+                              <option selected>Select League</option>
+                                {% for league in fantasy_leagues %}
+                                  <option value="{{ league.ID }}">{{ league.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col text-end">
+                                <input type="submit" class="btn btn-secondary" value="Add Team">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Delete Team Modal -->
+    <div class="modal fade" id="removeTeamModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+        <div class="modal-dialog bg-dark text-white">
+            <div class="modal-content">
+                <div class="modal-header bg-dark">
+                    <h5 class="modal-title">Remove Fantasy Team</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body bg-dark text-white">
+                    <form action="{{ url_for('fantasy') }}" role="form" method="POST">
+                        <div class="row g-3 align-items-center">
+                            <div class="col">
+                                <label for="inputNumber" class="col-form-label">Team to remove:</label>
+                            </div>
+                        <div class="col">
+                            <select class="form-select" aria-label="Default select example" name="deleteTeam">
+                              <option selected>Select Team</option>
+                                {% for team in fantasy_teams %}
+                                  <option value="{{ team.ID }}">{{ team.name }}-{{team.league.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col text-end">
+                                <input type="submit" class="btn btn-secondary" value="Remove Team">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Add League Modal -->
+    <div class="modal fade" id="addLeagueModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+        <div class="modal-dialog bg-dark text-white">
+            <div class="modal-content">
+                <div class="modal-header bg-dark">
+                    <h5 class="modal-title">Add Fantasy League</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body bg-dark text-white">
+                    <form action="{{ url_for('fantasy') }}" role="form" method="POST">
+                        <div class="row g-3 align-items-center">
+                            <div class="col">
+                                <label for="inputLeagueName" class="col-form-label">League Name</label>
+                            </div>
+                        <div class="col">
+                            <input id="inputLeagueName" name="inputLeagueName" class="form-control">
+                        </div>
+                        </div>
+                        <div class="row g-3 align-items-center">
+                            <div class="col">
+                                <label for="inputNumber" class="col-form-label">Number of Teams</label>
+                            </div>
+                        <div class="col">
+                            <input id="inputNumber" name="inputNumber" type="number" class="form-control">
+                        </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col text-end">
+                                <input type="submit" class="btn btn-secondary" value="Add League">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Delete League Modal -->
+    <div class="modal fade" id="removeLeagueModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+        <div class="modal-dialog bg-dark text-white">
+            <div class="modal-content">
+                <div class="modal-header bg-dark">
+                    <h5 class="modal-title">Remove Fantasy League</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body bg-dark text-white">
+                    <form action="{{ url_for('fantasy') }}" role="form" method="POST">
+                        <div class="row g-3 align-items-center">
+                            <div class="col">
+                                <label for="inputNumber" class="col-form-label">League to remove: </label>
+                            </div>
+                        <div class="col">
+                            <select class="form-select" aria-label="Default select example" name="deleteLeague">
+                              <option selected>Select League</option>
+                                {% for league in fantasy_leagues %}
+                                  <option value="{{ league.ID }}">{{ league.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col text-end">
+                                <input type="submit" class="btn btn-secondary" value="Remove League">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,26 +1,12 @@
-from typing import Type
-from fantasy_team import FantasyTeam
+from app import db
 
 
-class FantasyLeague:
+class FantasyLeague(db.Model):
 
-    def __init__(self, name):
+    ID = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(30))
+    number_teams = db.Column(db.Integer)
+    teams = db.relationship('FantasyTeam', backref='league', foreign_keys="FantasyTeam.league_id", lazy=True)
 
-        self.name = name
-        self.teams = []
-        self.players = []
-
-    def addTeam(self, team: Type[FantasyTeam]) -> None:
-
-        self.teams.append(team)
-
-    def removeTeam(self, team: Type[FantasyTeam]) -> None:
-
-        self.teams.remove(team)
-
-
-    def getTeamFromEmail(self, email: str) -> Type[FantasyTeam]:
-
-        for team in self.teams:
-            if team.owner.email == email:
-                return team
+    def __repr__(self):
+        return "League({}-{})".format(self.name, self.ID)
