@@ -14,72 +14,46 @@
                         <button class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#dropPlayerModal">Drop Player</button>
                     </div>
                 </div>
-                    {% if team.QB %}
-                        {% set QBs = team.QB.split(" ") %}
-                    {% else %}
-                        {% set QBs = [] %}
-                    {% endif %}
-                    {% for spot in range(team.league.QB) %}
-                        {% if QBs[loop.index-1] %}
-                            {% set QB = Player.query.get(QBs[loop.index-1]|int) %}
-                            <div class="row mt-1" >
-                                <div class="col-1"><button data-id='' id="QB{{loop.index}}" class="rosterBtn btn btn-primary w-100">QB</button></div>
-                                <div class="col-3">{{QB.name}}</div>
-                                <div class="col-2">BYE</div>
-                                <div class="col-4">STATS</div>
-                                <div class="col-2">FPs</div>
-                            </div>
-                        {% else %}
-                            <div class="row mt-1" >
-                                <div class="col-1"><button data-id='' id="QB{{loop.index}}" class="rosterBtn btn btn-primary w-100">QB</button></div>
-                                <div class="col-3">PLAYER</div>
-                                <div class="col-2">BYE</div>
-                                <div class="col-4">STATS</div>
-                                <div class="col-2">FPs</div>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
 
-                    {% for player in roster %}
-                        <div class="rosterBtn row mt-1">
+                    <table class="table table-dark table-hover player-table">
+                        <tbody>
+                        {% for player in roster %}
                             {% set player = Player.query.get(player) %}
-                            <div data-id="{{player.ID}}" class="col-1"><button data-id="{{player.ID}}" class="rosterBtn btn btn-primary w-100 h-100" id="BN{{loop.index}}">BN</button></div>
-                            <div data-id="{{player.ID}}" class="col-4 player-btn">
-                                <div class="row">
-                                    <div class="col-3">
-                                        <img src="{{ url_for('static', filename='headshots/'+player.ID|string+'.png') }}" height="60">
+                            <tr data-id="{{player.ID}}">
+                                <td class="col-1 align-middle" style="width: 6.25%">
+                                    <div class="row">
+                                        <button data-id="{{player.ID}}" class="rosterBtn btn btn-primary w-100 h-100" id="BN{{loop.index}}">BN</button>
                                     </div>
-                                    <div class="col-8">
-                                        <div class="row">
-                                            <div class="col">
-                                                {{player.name}} <span class="text-muted"><small><small><small><small>{{player.current_team.key}} • {{player.position}}</small></small></small></small></span>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col">
-                                                {% set game = player.current_team.get_game(week) %}
-                                                {% if player.current_team == game.home_team %}
-                                                    <small><small>{{ game.get_readable_date() }} vs. {{game.away_team.key}}</small></small>
-                                                {% else %}
-                                                    <small><small>{{ game.get_readable_date() }} @ {{game.home_team.key}}</small></small>
-                                                {% endif %}
-                                            </div>
+                                </td>
+                                <td class="col-1" style="width: 3.125%"></td>
+                                <td class="col-1">
+                                    <img src="{{ url_for('static', filename='headshots/'+player.ID|string+'.png') }}" class="img-fluid">
+                                </td>
+                                <td class="col-2 align-middle">
+                                    <div class="row">
+                                        <div class="col">
+                                            {{player.name}} <span class="text-muted"><small><small>{{player.current_team.key}} • {{player.position}}</small></small></span>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="col-5">STATS</div>
-                        </div>
-                    {% endfor %}
-                    {% for spot in range(team.league.IR) %}
-                        <div class="row mt-1">
-                            <div class="col-1"><button class="btn btn-primary w-100">IR</button></div>
-                            <div class="col-3">PLAYER</div>
-                            <div class="col-2">BYE</div>
-                            <div class="col-4">STATS</div>
-                            <div class="col-2">FPs</div>
-                        </div>
-                    {% endfor %}
+                                    <div class="row">
+                                        <div class="col">
+                                            {% set game = player.current_team.get_game(week) %}
+                                            {% if player.current_team == game.home_team %}
+                                                <small><small>{{ game.get_readable_date() }} vs. {{game.away_team.key}}</small></small>
+                                            {% else %}
+                                                <small><small>{{ game.get_readable_date() }} @ {{game.home_team.key}}</small></small>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="col-1 align-middle text-center">
+                                    {{player.current_team.bye}}
+                                </td>
+                                <td>Stats</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
             </div>
         </div>
     </div>
