@@ -71,6 +71,11 @@ class Game(db.Model):
 
         return self.completed
 
+    def get_readable_date(self):
+
+        dt = self.get_time()
+        return dt.strftime('%a %-I:%M %p')
+
 
 def sort(matches):
 

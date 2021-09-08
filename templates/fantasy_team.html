@@ -10,108 +10,65 @@
             <div class="card-body">
                 <div class="row me-2 text-end">
                     <div class="col">
-                        <button class="btn btn-sm btn-secondary">Add Player</button>
-                        <button class="btn btn-sm btn-secondary">Drop Player</button>
-                        <button class="btn btn-sm btn-secondary">Propose Trade</button>
+                        <button class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#addPlayerModal">Add Player</button>
+                        <button class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#dropPlayerModal">Drop Player</button>
                     </div>
                 </div>
+                    {% if team.QB %}
+                        {% set QBs = team.QB.split(" ") %}
+                    {% else %}
+                        {% set QBs = [] %}
+                    {% endif %}
                     {% for spot in range(team.league.QB) %}
-                        <div class="row mt-1">
-                            <div class="col-1"><button class="btn btn-primary w-100">QB</button></div>
-                            <div class="col-3">PLAYER</div>
-                            <div class="col-2">BYE</div>
-                            <div class="col-4">STATS</div>
-                            <div class="col-2">FPs</div>
-                        </div>
+                        {% if QBs[loop.index-1] %}
+                            {% set QB = Player.query.get(QBs[loop.index-1]|int) %}
+                            <div class="row mt-1" >
+                                <div class="col-1"><button data-id='' id="QB{{loop.index}}" class="rosterBtn btn btn-primary w-100">QB</button></div>
+                                <div class="col-3">{{QB.name}}</div>
+                                <div class="col-2">BYE</div>
+                                <div class="col-4">STATS</div>
+                                <div class="col-2">FPs</div>
+                            </div>
+                        {% else %}
+                            <div class="row mt-1" >
+                                <div class="col-1"><button data-id='' id="QB{{loop.index}}" class="rosterBtn btn btn-primary w-100">QB</button></div>
+                                <div class="col-3">PLAYER</div>
+                                <div class="col-2">BYE</div>
+                                <div class="col-4">STATS</div>
+                                <div class="col-2">FPs</div>
+                            </div>
+                        {% endif %}
                     {% endfor %}
-                    {% for spot in range(team.league.RB) %}
-                        <div class="row mt-1">
-                            <div class="col-1"><button class="btn btn-primary w-100">RB</button></div>
-                            <div class="col-3">PLAYER</div>
-                            <div class="col-2">BYE</div>
-                            <div class="col-4">STATS</div>
-                            <div class="col-2">FPs</div>
-                        </div>
-                    {% endfor %}
-                    {% for spot in range(team.league.WR) %}
-                        <div class="row mt-1">
-                            <div class="col-1"><button class="btn btn-primary w-100">WR</button></div>
-                            <div class="col-3">PLAYER</div>
-                            <div class="col-2">BYE</div>
-                            <div class="col-4">STATS</div>
-                            <div class="col-2">FPs</div>
-                        </div>
-                    {% endfor %}
-                    {% for spot in range(team.league.TE) %}
-                        <div class="row mt-1">
-                            <div class="col-1"><button class="btn btn-primary w-100">TE</button></div>
-                            <div class="col-3">PLAYER</div>
-                            <div class="col-2">BYE</div>
-                            <div class="col-4">STATS</div>
-                            <div class="col-2">FPs</div>
-                        </div>
-                    {% endfor %}
-                    {% for spot in range(team.league.RBWR) %}
-                        <div class="row mt-1">
-                            <div class="col-1"><button class="btn btn-primary w-100">R/W</button></div>
-                            <div class="col-3">PLAYER</div>
-                            <div class="col-2">BYE</div>
-                            <div class="col-4">STATS</div>
-                            <div class="col-2">FPs</div>
-                        </div>
-                    {% endfor %}
-                    {% for spot in range(team.league.RBTE) %}
-                       <div class="row mt-1">
-                            <div class="col-1"><button class="btn btn-primary w-100">R/T</button></div>
-                            <div class="col-3">PLAYER</div>
-                            <div class="col-2">BYE</div>
-                            <div class="col-4">STATS</div>
-                            <div class="col-2">FPs</div>
-                        </div>
-                    {% endfor %}
-                    {% for spot in range(team.league.WRTE) %}
-                        <div class="row mt-1">
-                            <div class="col-1"><button class="btn btn-primary w-100">W/T</button></div>
-                            <div class="col-3">PLAYER</div>
-                            <div class="col-2">BYE</div>
-                            <div class="col-4">STATS</div>
-                            <div class="col-2">FPs</div>
-                        </div>
-                    {% endfor %}
-                    {% for spot in range(team.league.FLEX) %}
-                        <div class="row mt-1">
-                            <div class="col-1"><button class="btn btn-primary w-100">R/W/T</button></div>
-                            <div class="col-3">PLAYER</div>
-                            <div class="col-2">BYE</div>
-                            <div class="col-4">STATS</div>
-                            <div class="col-2">FPs</div>
-                        </div>
-                    {% endfor %}
-                    {% for spot in range(team.league.SFLEX) %}
-                        <div class="row mt-1">
-                            <div class="col-1"><button class="btn btn-primary w-100">Q/R/W/T</button></div>
-                            <div class="col-3">PLAYER</div>
-                            <div class="col-2">BYE</div>
-                            <div class="col-4">STATS</div>
-                            <div class="col-2">FPs</div>
-                        </div>
-                    {% endfor %}
-                    {% for spot in range(team.league.K) %}
-                        <div class="row mt-1">
-                            <div class="col-1"><button class="btn btn-primary w-100">K</button></div>
-                            <div class="col-3">PLAYER</div>
-                            <div class="col-2">BYE</div>
-                            <div class="col-4">STATS</div>
-                            <div class="col-2">FPs</div>
-                        </div>
-                    {% endfor %}
-                    {% for spot in range(team.league.BENCH) %}
-                        <div class="row mt-1">
-                            <div class="col-1"><button class="btn btn-primary w-100">BN</button></div>
-                            <div class="col-3">PLAYER</div>
-                            <div class="col-2">BYE</div>
-                            <div class="col-4">STATS</div>
-                            <div class="col-2">FPs</div>
+
+                    {% for player in roster %}
+                        <div class="rosterBtn row mt-1">
+                            {% set player = Player.query.get(player) %}
+                            <div data-id="{{player.ID}}" class="col-1"><button data-id="{{player.ID}}" class="rosterBtn btn btn-primary w-100 h-100" id="BN{{loop.index}}">BN</button></div>
+                            <div data-id="{{player.ID}}" class="col-4 player-btn">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <img src="{{ url_for('static', filename='headshots/'+player.ID|string+'.png') }}" height="60">
+                                    </div>
+                                    <div class="col-8">
+                                        <div class="row">
+                                            <div class="col">
+                                                {{player.name}} <span class="text-muted"><small><small><small><small>{{player.current_team.key}} • {{player.position}}</small></small></small></small></span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                {% set game = player.current_team.get_game(week) %}
+                                                {% if player.current_team == game.home_team %}
+                                                    <small><small>{{ game.get_readable_date() }} vs. {{game.away_team.key}}</small></small>
+                                                {% else %}
+                                                    <small><small>{{ game.get_readable_date() }} @ {{game.home_team.key}}</small></small>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-5">STATS</div>
                         </div>
                     {% endfor %}
                     {% for spot in range(team.league.IR) %}
@@ -127,4 +84,96 @@
         </div>
     </div>
 </div>
+<!-- Add Player Modal -->
+<div class="modal fade" id="addPlayerModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+        <div class="modal-dialog modal-lg bg-dark text-white">
+            <div class="modal-content">
+                <div class="modal-header bg-dark">
+                    <h5 class="modal-title">Add Player</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body bg-dark text-white">
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                      <button type="button" class="btn btn-primary">ALL</button>
+                      <button type="button" class="btn btn-primary">QB</button>
+                      <button type="button" class="btn btn-primary">RB</button>
+                      <button type="button" class="btn btn-primary">WR</button>
+                      <button type="button" class="btn btn-primary">TE</button>
+                      <button type="button" class="btn btn-primary">K</button>
+                    </div>
+                    <form action="{{ url_for('fantasy_team') }}" role="form" method="POST">
+                        <table class="table table-dark table-hover" id="addPlayerTable">
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th>Name</th>
+                                <th>Stats</th>
+                                <th>FPS</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                        {% for player in players %}
+                            <tr>
+                                <td><button name="addPlayer" type="submit" class="btn text-success" value="{{team.ID}}-{{player.ID}}"><i class="bi bi-plus-circle-fill"></i></button></td>
+                                <td data-id="{{player.ID}}" class="player-btn">{{player.name}} <span class="text-muted"><small><small>{{player.current_team.key}}•{{player.position}}</small></small></span></td>
+                                <td data-id="{{player.ID}}" class="player-btn">STATS</td>
+                                <td data-id="{{player.ID}}" class="player-btn">FPS</td>
+                            </tr>
+                        {% endfor %}
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+</div>
+<!-- Drop Player Modal -->
+<div class="modal fade" id="dropPlayerModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+        <div class="modal-dialog modal-lg bg-dark text-white">
+            <div class="modal-content">
+                <div class="modal-header bg-dark">
+                    <h5 class="modal-title">Add Player</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body bg-dark text-white">
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                      <button type="button" class="btn btn-primary">ALL</button>
+                      <button type="button" class="btn btn-primary">QB</button>
+                      <button type="button" class="btn btn-primary">RB</button>
+                      <button type="button" class="btn btn-primary">WR</button>
+                      <button type="button" class="btn btn-primary">TE</button>
+                      <button type="button" class="btn btn-primary">K</button>
+                    </div>
+                    <form action="{{ url_for('fantasy_team') }}" role="form" method="POST">
+                        <table class="table table-dark table-hover" id="dropPlayerTable">
+                        {% for player in roster %}
+                            {% set player = Player.query.get(player) %}
+                            <tr>
+                                <td><button name="dropPlayer" type="submit" class="btn text-danger" value="{{team.ID}}-{{player.ID}}"><i class="bi bi-dash-circle-fill"></i></button></td>
+                                <td data-id="{{player.ID}}" class="player-btn">{{player.name}} <span class="text-muted"><small><small>{{player.current_team.key}}•{{player.position}}</small></small></span></td>
+                                <td data-id="{{player.ID}}" class="player-btn">MATCHUP</td>
+                                <td data-id="{{player.ID}}" class="player-btn">STATS</td>
+                                <td data-id="{{player.ID}}" class="player-btn">FPS</td>
+                            </tr>
+                        {% endfor %}
+                        </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+</div>
+<script>
+    $(document).ready( function () {
+        $('#addPlayerTable').DataTable();
+    });
+
+    $('.rosterBtn').click(function () {
+        var ID = $(this).data('id');
+        if(ID.length != 0){
+            console.log(ID);
+        }
+        });
+
+
+</script>
 {% endblock %}

@@ -377,13 +377,41 @@ def fantasy():
 @app.route('/fantasy_team', methods=["GET", "POST"])
 def fantasy_team():
 
+    games = Game.query.all()
+    current_week, preseason = get_week(games)
+
     teams = Team.query.filter(Team.ID != 100).all()
+    players = Player.query.filter(
+        (Player.position == 'QB') | (Player.position == 'RB') | (Player.position == 'WR') |
+        (Player.position == 'TE') | (Player.position == 'PK')
+    ).all()
 
     if request.method == "GET":
+
         team_id = request.args.get("team")
         team = FantasyTeam.query.get(int(team_id))
 
-    return render_template("fantasy_team.html", teams=teams, team=team)
+    else:
+
+        if "addPlayer" in request.form:
+            team_id, player_id = request.form.get("addPlayer").split("-")
+            team = FantasyTeam.query.get(int(team_id))
+
+            team.add_player(player_id)
+            db.session.commit()
+        else:
+            team_id, player_id = request.form.get("dropPlayer").split("-")
+            team = FantasyTeam.query.get(int(team_id))
+
+            team.drop_player(player_id)
+            db.session.commit()
+
+    if team.players:
+        roster = team.players.split(" ")
+    else:
+        roster = []
+
+    return render_template("fantasy_team.html", preseason=preseason, week=current_week, teams=teams, team=team, Player=Player, players=players, roster=roster)
 
 
 @app.route('/player', methods=["GET", "POST"])

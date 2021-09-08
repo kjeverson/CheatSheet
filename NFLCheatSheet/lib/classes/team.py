@@ -77,6 +77,22 @@ class Team(db.Model):
 
         return games
 
+    def get_game(self, week, preseason=False):
+
+        if week == self.bye:
+            return 'Bye'
+
+        games = []
+        games.extend(self.away_games)
+        games.extend(self.home_games)
+
+        if preseason:
+            games = [game for game in games if game.preseason]
+        else:
+            games = [game for game in games if not game.preseason]
+
+        return sorted(games)[week-1]
+
     def get_bye(self):
 
         games = self.get_games(completed=False, home=True, away=True)

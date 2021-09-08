@@ -25,7 +25,7 @@
                 <div class="row">
                     <div class="col text-end">
                         <button class="btn btn-secondary mt-4" data-bs-toggle="modal" data-bs-target="#addLeagueModal"><i class="bi bi-plus"></i> Add</button>
-                        <button class="btn btn-secondary mt-4" data-bs-toggle="modal" data-bs-target="#removeLeagueModal">Delete</button>
+                        <button class="btn btn-secondary mt-4" data-bs-toggle="modal" data-bs-target="#removeLeagueModal"><i class="bi bi-dash"></i> Delete</button>
                     </div>
                 </div>
             </div>
@@ -62,7 +62,7 @@
             <div class="row">
                 <div class="col text-end">
                     <button class="btn btn-secondary mt-4" data-bs-toggle="modal" data-bs-target="#addTeamModal"><i class="bi bi-plus"></i> Add</button>
-                    <button class="btn btn-secondary mt-4" data-bs-toggle="modal" data-bs-target="#removeTeamModal">Delete</button>
+                    <button class="btn btn-secondary mt-4" data-bs-toggle="modal" data-bs-target="#removeTeamModal"><i class="bi bi-dash"></i> Delete</button>
                 </div>
             </div>
         </div>
@@ -121,7 +121,7 @@
                     <form action="{{ url_for('fantasy') }}" role="form" method="POST">
                         <div class="row g-3 align-items-center">
                             <div class="col">
-                                <label for="inputNumber" class="col-form-label">Team to remove:</label>
+                                <label class="col-form-label">Team to remove:</label>
                             </div>
                         <div class="col">
                             <select class="form-select" aria-label="Default select example" name="deleteTeam">
@@ -250,7 +250,7 @@
                     <form action="{{ url_for('fantasy') }}" role="form" method="POST">
                         <div class="row g-3 align-items-center">
                             <div class="col">
-                                <label for="inputNumber" class="col-form-label">League to remove: </label>
+                                <label class="col-form-label">League to remove: </label>
                             </div>
                         <div class="col">
                             <select class="form-select" aria-label="Default select example" name="deleteLeague">

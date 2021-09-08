@@ -188,7 +188,7 @@
     </div>
   </div>
 </nav>
-<div id="playerCard" class="modal fade" role="dialog" data-bs-toggle="modal" data-bs-target="#playerCard">
+<div id="playerCard" class="modal fade" role="dialog" data-bs-toggle="modal" data-bs-target="#playerCard" style="z-index:9999">
     <div class="modal-dialog modal-lg bg-dark text-white" role="document">
       <div class="modal-content bg-dark">
         <div class="modal-body bg-dark">
@@ -235,6 +235,9 @@
 
 {% block content %}
 {% endblock %}
+
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.1/css/jquery.dataTables.css">
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.js"></script>
 
     <!-- Optional JavaScript; choose one of the two! -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
