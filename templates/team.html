@@ -2165,7 +2165,42 @@
         </div>
       </div>
     </div>
-  </div>
+    <!-- Practice Squad -->
+    <div class="row mt-4">
+      <div class="card bg-dark">
+        <div class="card-title text-center">Practice Squad</div>
+        <div class="card-body">
+          <div class="row justify-content-center">
+            {% for player in players %}
+            {% if player.practice_squad %}
+            <div class="col-1" style="width:12.5%">
+              <div class="btn-group-vertical position-relative">
+                <button data-id="{{ player.ID }}" class=" player-btn btn btn-block btn-dark border-secondary m-1 ">
+                  <div class="row"><img src="{{ url_for('static', filename='headshots/' + player.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'"></div>
+                  {% if player.number == 0 %}
+                    {% set number = '-' %}
+                  {% else %}
+                    {% set number=player.number %}
+                  {% endif %}
+                  {% if player.status != 'Active' %}
+                    {% if player.status == 'D' or player.status == 'Q' %}
+                  <div class="row"><span class="text-center"><span class="text-muted"><small><small>{{ number }} </small></small></span><small> {{ player.shortname }} </small><div class="badge rounded-pill p-1 bg-warning"><span><small>{{ player.status }}</small></span></div></div>
+                    {% else %}
+                    <div class="row"><span class="text-center"><span class="text-muted"><small><small>{{ number }} </small></small></span><small> {{ player.shortname }} </small><div class="badge rounded-pill p-1 bg-danger"><span><small>{{ player.status }}</small></span></div></div>
+                    {% endif %}
+                  {% else %}
+                  <div class="row"><span class="text-center"><span class="text-muted"><small><small>{{ number }} </small></small></span><small> {{ player.shortname }}</small></span></div>
+                  {% endif %}
+                </button>
+                <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">{{ player.position }}</span>
+              </div>
+            </div>
+          {% endif %}
+          {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
   <!-- Injury Page Content -->
   <div id="injuryPage" class="container text-white visually-hidden">
     <div class="row">
