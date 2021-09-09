@@ -403,6 +403,9 @@ def update_rosters():
 
 @app.route('/updateStats')
 def update_stats():
+    games = Game.query.all()
+    current_week, preseason = get_week(games)
+
     thread_id = int(request.args.get('id'))
     global update_threads
     thread = update_threads[thread_id]
@@ -418,7 +421,7 @@ def update_stats():
     thread.state = "Updating Player Season Stats"
     db_utils.update_player_season_stats(db, thread)
     thread.state = "Updating Team Stats"
-    db_utils.update_team_stats(db, thread)
+    db_utils.update_team_stats(db, thread, preseason)
     thread.state = "Updating Team Rankings"
     db_utils.update_rankings(db, thread)
     db.session.commit()
@@ -443,12 +446,15 @@ def update_status():
 
 @app.route('/updateDatabase')
 def update_database():
+    games = Game.query.all()
+    current_week, preseason = get_week(games)
+
     thread_id = int(request.args.get('id'))
     global update_threads
     update_threads[thread_id].state = "STARTED"
     update_threads[thread_id].start()
 
-    db_utils.update_db(db, update_threads[thread_id])
+    db_utils.update_db(db, update_threads[thread_id], preseason)
     db.session.commit()
     print("Updating Database")
     return jsonify("Done")
@@ -456,6 +462,9 @@ def update_database():
 
 @app.route('/rebuildDatabase')
 def rebuild_database():
+    games = Game.query.all()
+    current_week, preseason = get_week(games)
+    
     thread_id = int(request.args.get('id'))
     global update_threads
     thread = update_threads[thread_id]
@@ -463,7 +472,7 @@ def rebuild_database():
     thread.start()
 
     thread.state = "Rebuilding Database"
-    db_utils.build_db(db, thread)
+    db_utils.build_db(db, thread, preseason)
     print("Rebuilding Database")
     return jsonify("Done")
 

@@ -854,7 +854,7 @@ def update_player_season_stats(db, thread):
     print("Update Season Stats...\x1b[32mCOMPLETE!\x1b[0m\033[K")
 
 
-def update_team_stats(db, thread):
+def update_team_stats(db, thread, preseason=False):
 
     teams = Team.query.all()
 
@@ -868,15 +868,15 @@ def update_team_stats(db, thread):
         if team.ID == 100:
             continue
 
-        team_stats = team.get_team_stats(preseason=True)
+        team_stats = team.get_team_stats(preseason=preseason)
 
-        pass_leader_id, rush_leader_id, rec_leader_id = stats.get_stats_leaders(team.players, preseason=True)
+        pass_leader_id, rush_leader_id, rec_leader_id = stats.get_stats_leaders(team.players, preseason=preseason)
 
         team_stats.passingLeader_id = pass_leader_id
         team_stats.rushingLeader_id = rush_leader_id
         team_stats.receivingLeader_id = rec_leader_id
 
-        week_stats = team.get_week_stats(preseason=True)
+        week_stats = team.get_week_stats(preseason=preseason)
         
         for week_stat in week_stats:
 
@@ -918,16 +918,20 @@ def update_team_stats(db, thread):
         team_stats.pointsFor = 0
         team_stats.pointsAgainst = 0
 
-        for game in team.get_games(preseason=True, completed=True, home=True):
+        for game in team.get_games(preseason=preseason, completed=True, home=True):
             team_stats.pointsFor += game.home_team_score
             team_stats.pointsAgainst += game.away_team_score
-        for game in team.get_games(preseason=True, completed=True, away=True):
+        for game in team.get_games(preseason=preseason, completed=True, away=True):
             team_stats.pointsFor += game.away_team_score
             team_stats.pointsAgainst += game.home_team_score
 
-        if team.preseason_games_played:
+        if preseason and team.preseason_games_played:
             team_stats.PPG = team_stats.pointsFor / team.preseason_games_played
             team_stats.PAPG = team_stats.pointsAgainst / team.preseason_games_played
+
+        elif not preseason and team.games_played:
+            team_stats.PPG = team_stats.pointsFor / team.games_played
+            team_stats.PAPG = team_stats.pointsAgainst / team.games_played
 
 
 def update_fantasy_points(db, thread):
@@ -978,7 +982,7 @@ def update_rankings(db, thread):
         s.PAPGRank = PAPGRank.index(s)+1
 
 
-def build_db(db, thread):
+def build_db(db, thread, preseason):
     db.create_all()
 
     teams = get_all_team_data()
@@ -997,13 +1001,13 @@ def build_db(db, thread):
     update_fantasy_points(db, thread)
     update_player_season_stats(db, thread)
 
-    update_team_stats(db, thread)
+    update_team_stats(db, thread, preseason)
     update_rankings(db, thread)
 
     db.session.commit()
 
 
-def update_db(db, thread):
+def update_db(db, thread, preseason):
 
     players = get_all_player_data(thread)
     add_players(db, players, thread)
@@ -1015,7 +1019,7 @@ def update_db(db, thread):
     update_fantasy_points(db, thread)
     update_player_season_stats(db, thread)
 
-    update_team_stats(db, thread)
+    update_team_stats(db, thread, preseason)
 
     update_rankings(db, thread)
 
