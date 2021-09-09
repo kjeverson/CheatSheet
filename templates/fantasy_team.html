@@ -16,20 +16,55 @@
                 </div>
 
                     <table class="table table-dark table-hover player-table">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th class="text-center" colspan="3">Passing</th>
+                            <th class="text-center" colspan="3">Rushing</th>
+                            <th class="text-center" colspan="4">Receiving</th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th class="text-center">BYE</th>
+                            <th class="text-end">Yds</th>
+                            <th class="text-end">TD</th>
+                            <th class="text-end">Int</th>
+                            <th class="text-end">Att</th>
+                            <th class="text-end">Yds</th>
+                            <th class="text-end">TD</th>
+                            <th class="text-end">Tgt</th>
+                            <th class="text-end">Rec</th>
+                            <th class="text-end">Yds</th>
+                            <th class="text-end">TD</th>
+                            <th class="text-end">FPs</th>
+                        </tr>
+                        </thead>
                         <tbody>
                         {% for player in roster %}
                             {% set player = Player.query.get(player) %}
                             <tr data-id="{{player.ID}}">
+                                <!-- Button -->
                                 <td class="col-1 align-middle" style="width: 6.25%">
                                     <div class="row">
                                         <button data-id="{{player.ID}}" class="rosterBtn btn btn-primary w-100 h-100" id="BN{{loop.index}}">BN</button>
                                     </div>
                                 </td>
+                                <!-- Empty Space -->
                                 <td class="col-1" style="width: 3.125%"></td>
+                                <!-- Player Image -->
                                 <td class="col-1">
                                     <img src="{{ url_for('static', filename='headshots/'+player.ID|string+'.png') }}" class="img-fluid">
                                 </td>
-                                <td class="col-2 align-middle">
+                                <!-- Player Info -->
+                                <td class="col-2 align-middle" style="border-right: 1px solid white">
                                     <div class="row">
                                         <div class="col">
                                             {{player.name}} <span class="text-muted"><small><small>{{player.current_team.key}} • {{player.position}}</small></small></span>
@@ -46,10 +81,46 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td class="col-1 align-middle text-center">
+                                <!-- Player Bye Week -->
+                                <td class="col-1 align-middle text-center" style="border-right: 1px solid white">
                                     {{player.current_team.bye}}
                                 </td>
-                                <td>Stats</td>
+                                <!-- Player Stats -->
+                                <!-- Player Fantasy Points -->
+                                {% set stats = player.get_season_stats(preseason) %}
+                                <td class="align-middle text-end">
+                                    {% if stats.passYDs == 0 %} - {% else %} {{ stats.passYDs }} {% endif %}
+                                </td>
+                                <td class="align-middle text-end">
+                                    {% if stats.passTDs == 0 %} - {% else %} {{ stats.passTDs }} {% endif %}
+                                </td>
+                                <td class="align-middle text-end" style="border-right: 1px solid white">
+                                    {% if stats.passINTs == 0 %} - {% else %} {{ stats.passINTs }} {% endif %}
+                                </td>
+                                <td class="align-middle text-end">
+                                    {% if stats.rushAtts == 0 %} - {% else %} {{ stats.rushAtts }} {% endif %}
+                                </td>
+                                <td class="align-middle text-end">
+                                    {% if stats.rushYDs == 0 %} - {% else %} {{ stats.rushYDs }} {% endif %}
+                                </td>
+                                <td class="align-middle text-end">
+                                    {% if stats.rushTDs == 0 %} - {% else %} {{ stats.rushTDs }} {% endif %}
+                                </td>
+                                <td class="align-middle text-end" style="border-right: 1px solid white">
+                                    {% if stats.recTGTS == 0 %} - {% else %} {{ stats.recTGTS }} {% endif %}
+                                </td>
+                                <td class="align-middle text-end">
+                                    {% if stats.recs == 0 %} - {% else %} {{ stats.recs }} {% endif %}
+                                </td>
+                                <td class="align-middle text-end">
+                                    {% if stats.recYDs == 0 %} - {% else %} {{ stats.recYDs }} {% endif %}
+                                </td>
+                                <td class="align-middle text-end" style="border-right: 1px solid white">
+                                    {% if stats.recTDs == 0 %} - {% else %} {{ stats.recTDs }} {% endif %}
+                                </td>
+                                <td class="align-middle text-end" style="border-right: 1px solid white">
+                                    {% if stats.FPs == 0 %} - {% else %} {{ stats.FPs }} {% endif %}
+                                </td>
                             </tr>
                         {% endfor %}
                         </tbody>
