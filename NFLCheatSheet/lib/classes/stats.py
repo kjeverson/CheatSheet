@@ -92,6 +92,10 @@ class SeasonStats(db.Model):
     # Fantasy
     FPs = db.Column(db.Integer, default=0)
 
+    def __repr__(self):
+
+        return "SeasonStats({})".format(self.player.name)
+
     def as_dict(self):
         return {col.name: getattr(self, col.name) for col in self.__table__.columns}
 
@@ -190,6 +194,10 @@ class WeeklyStats(db.Model):
     # Fantasy Points
     FPs = db.Column(db.Integer, default=0)
 
+    def __repr__(self):
+
+        return "WeeklyStats({}-Week {})".format(self.player.name, self.week)
+
     def as_dict(self):
         return {col.name: getattr(self, col.name) for col in self.__table__.columns}
 
@@ -260,6 +268,10 @@ class TeamStats(db.Model):
     rushYDsPerGameRank = db.Column(db.Integer, default=0)
     passYDsRank = db.Column(db.Integer, default=0)
     rushYDsRank = db.Column(db.Integer, default=0)
+
+    def __repr__(self):
+
+        return "TeamStats({}-{})".format(self.team.name, 'Preseason' if self.preseason else "RegularSeason")
 
 
 def get_stats_leaders(players, preseason, week=None):
