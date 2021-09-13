@@ -1,5 +1,4 @@
 from app import db
-from NFLCheatSheet.lib.scrape.status import player_status_from_id
 from NFLCheatSheet.lib.classes import stats
 
 import json
