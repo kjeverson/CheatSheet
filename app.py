@@ -218,20 +218,6 @@ def team():
         team = Team.query.filter_by(key=team_key).first()
 
         players = team.players
-        if position != 'ALL':
-            if position == 'REC':
-                players = [player for player in players if player.position in ['RB', 'WR', 'TE']]
-            elif position == 'OFF':
-                players = [player for player in players if player.position_group == "OFF"]
-            elif position == 'DEF':
-                players = [player for player in players if player.position_group == "DEF"]
-            elif position == 'ST':
-                players = [player for player in players if player.position_group == "ST"]
-            elif position == "OL":
-                players = [player for player in players if player.position in
-                           ["OL", "OT", "G", "C"]]
-            else:
-                players = [player for player in players if player.position == position]
 
         schedule = list()
         schedule.extend(team.away_games)
@@ -255,9 +241,6 @@ def team():
 
         default_headshot_path = url_for('static', filename='headshots/default.png')
 
-        stats = [stats for player in team.players for stats in player.season_stats if
-                 stats.preseason]
-
         team_stats = TeamStats.query.filter_by(team_id=team.ID).filter_by(preseason=preseason).first()
 
         passLeader = Player.query.get(team_stats.passingLeader_id)
@@ -279,8 +262,8 @@ def team():
             player.date = player.date.strftime('%B %d, %Y')
 
         return render_template("team.html", preseason=preseason,
-                               teams=teams, players=players, team=team, stats=stats,
-                               position=position, schedule=schedule, preschedule=preschedule,
+                               teams=teams, players=players, team=team,
+                               schedule=schedule, preschedule=preschedule,
                                Player=Player,
                                passLeader=passLeader,
                                rushLeader=rushLeader,
@@ -423,7 +406,7 @@ def update_stats():
     thread.state = "Updating Team Stats"
     db_utils.update_team_stats(db, thread, preseason)
     thread.state = "Updating Team Rankings"
-    db_utils.update_rankings(db, thread)
+    db_utils.update_rankings(db, thread, preseason)
     db.session.commit()
     print("Updating Stats")
     return jsonify("Done")

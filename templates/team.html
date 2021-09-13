@@ -168,7 +168,15 @@
                     <span class="text-center"><small>vs. {{ game.away_team.name }}</small></span>
                   </div>
                   <span class="position-absolute top-50 start-0 translate-middle badge rounded-pill text-dark"><img src="{{ url_for('static', filename='logos/'+game.away_team.key+'.png') }}" height="40"></span>
+                  {% if game.completed %}
+                    {% if game.winner == team.key %}
+                    <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill text-dark bg-success">W</span>
+                    {% else %}
+                    <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill text-dark bg-danger">L</span>
+                    {% endif %}
+                  {% else %}
                   <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill text-dark bg-light">{{game.week}}</span>
+                  {% endif %}
                 </button>
                 {% else %}
                 <button type="submit" class="btn btn-dark text-white p-2 position-relative" name="matchup" value="{{ game.ID }}">
@@ -176,7 +184,15 @@
                     <span class="text-center"><small>@ {{ game.home_team.name }}</small></span>
                   </div>
                   <span class="position-absolute top-50 start-0 translate-middle badge rounded-pill text-dark"><img src="{{ url_for('static', filename='logos/'+game.home_team.key+'.png') }}" height="40"></span>
+                  {% if game.completed %}
+                    {% if game.winner == team.key %}
+                    <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill text-dark bg-success">W</span>
+                    {% else %}
+                    <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill text-dark bg-danger">L</span>
+                    {% endif %}
+                  {% else %}
                   <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill text-dark bg-light">{{game.week}}</span>
+                  {% endif %}
                 </button>
                 {% endif %}
               </div>
@@ -296,7 +312,7 @@
           <div class="card bg-dark">
             <div class="card-title text-center">Team Stats Per Game</div>
             <div class="card-body">
-              {% set team_stats = team.get_team_stats(preseason=True) %}
+              {% set team_stats = team.get_team_stats(preseason=preseason) %}
               <div class="row">
                 <div class="col text-center">
                   <button class="btn text-dark bgcolor{{ team_stats.passYDsPerGameRank }} w-100 position-relative" style="pointer-events: none">
@@ -363,6 +379,7 @@
                 </thead>
                 <tbody>
                   {% for player in players %}
+                    {% if not player.practice_squad %}
                     <tr data-id="{{ player.ID }}">
                         {% if player.designation == 'Questionable' or player.designation == 'Doubtful' %}
                         <td>{{ player.position }}</td>
@@ -372,6 +389,7 @@
                         <td>{{ player.shortname }} <div class="badge rounded-pill p-1 bg-danger"><span class="visually-hidden">N</span></div></td>
                         {% endif %}
                     </tr>
+                    {% endif %}
                   {% endfor %}
                 </tbody>
               </table>
@@ -2201,6 +2219,7 @@
         </div>
       </div>
     </div>
+  </div>
   <!-- Injury Page Content -->
   <div id="injuryPage" class="container text-white visually-hidden">
     <div class="row">
@@ -2277,6 +2296,7 @@
                 </thead>
                 <tbody>
                   {% for player in players %}
+                    {% if not player.practice_squad %}
                     <tr data-id="{{ player.ID }}">
                         {% if player.designation == 'Questionable' or player.designation == 'Doubtful' %}
                         <td>{{ player.position }}</td>
@@ -2288,6 +2308,7 @@
                         <td>{{ player.injury}} </td>
                         {% endif %}
                     </tr>
+                    {% endif %}
                   {% endfor %}
                 </tbody>
               </table>
