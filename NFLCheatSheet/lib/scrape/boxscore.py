@@ -116,7 +116,7 @@ def is_completed(game_id):
 
     result = soup.find("span", {"class": "game-time status-detail"})
     if result:
-        if result.text == "Final":
+        if result.text == "Final" or result.text == "Final/OT":
             return True
 
     return False
@@ -154,7 +154,7 @@ def get_headers(section):
     elif section == 'receiving':
         return ['recs', 'recYDs', 'AVG', 'recTDs', 'recLng', 'recTGTS']
 
-    elif section == 'fumble':
+    elif section == 'fumbles':
         return ["fum", "fumLost", "fumRec"]
 
     elif section == 'defensive':
@@ -201,7 +201,7 @@ def get_game_stats_api(game_id):
             0: {},
             1: {}
         },
-        'fumble': {
+        'fumbles': {
             0: {},
             1: {}
         },

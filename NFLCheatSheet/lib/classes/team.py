@@ -71,6 +71,8 @@ class Team(db.Model):
 
         if preseason:
             games = [game for game in games if game.preseason]
+        else:
+            games = [game for game in games if not game.preseason]
 
         if completed:
             games = [game for game in games if game.completed]

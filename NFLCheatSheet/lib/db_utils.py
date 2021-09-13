@@ -481,7 +481,10 @@ def parse_week_stats(stats):
                 stat1, stat2 = stat.split("-")
             week_stats.update({key1: float(stat1), key2: float(stat2)})
         else:
-            week_stats.update({key: float(stat)})
+            try:
+                week_stats.update({key: float(stat)})
+            except ValueError:
+                week_stats.update({key: 0})
             
     return week_stats
 
@@ -503,7 +506,7 @@ def add_player_week_stats(db, thread):
         passing = game_stats.get('passing')
         rushing = game_stats.get('rushing')
         receiving = game_stats.get('receiving')
-        fumbles = game_stats.get('fumble')
+        fumbles = game_stats.get('fumbles')
         defense = game_stats.get('defensive')
         interceptions = game_stats.get('interceptions')
         kick_returns = game_stats.get('kickReturns')
@@ -532,8 +535,9 @@ def add_player_week_stats(db, thread):
                 player_names.add(name)
             for name in receiving[j].keys():
                 player_names.add(name)
-            for name in fumbles[j].keys():
-                player_names.add(name)
+            if fumbles.get(j):
+                for name in fumbles[j].keys():
+                    player_names.add(name)
             for name in defense[j].keys():
                 player_names.add(name)
             for name in interceptions[j].keys():
@@ -564,7 +568,7 @@ def add_player_week_stats(db, thread):
                 else:
                     home_players.append(player)
 
-                week_stats = {"preseason": game.preseason}
+                week_stats = {}
 
                 pass_stats = passing[j].get(name)
                 if pass_stats:
@@ -623,7 +627,7 @@ def add_player_week_stats(db, thread):
                     game_id=int(game.ID),
                     week=int(game.week),
                     team_id=team.ID,
-                    preseason=week_stats["preseason"],
+                    preseason=game.preseason,
                     counted=False,
                     passer=week_stats["passer"],
                     passComps=week_stats["passComps"] if week_stats.get("passComps") else 0,
@@ -870,6 +874,12 @@ def update_team_stats(db, thread, preseason=False):
 
         team_stats = team.get_team_stats(preseason=preseason)
 
+        if preseason:
+            if not team.preseason_games_played:
+                continue
+        else:
+            if not team.games_played:
+                continue
         pass_leader_id, rush_leader_id, rec_leader_id = stats.get_stats_leaders(team.players, preseason=preseason)
 
         team_stats.passingLeader_id = pass_leader_id
@@ -877,7 +887,7 @@ def update_team_stats(db, thread, preseason=False):
         team_stats.receivingLeader_id = rec_leader_id
 
         week_stats = team.get_week_stats(preseason=preseason)
-        
+
         for week_stat in week_stats:
 
             if week_stat.counted:
@@ -909,27 +919,23 @@ def update_team_stats(db, thread, preseason=False):
         if team_stats.recs:
             team_stats.recAVG = team_stats.recYDs / team_stats.recs
 
-        if team.preseason_games_played > 0:
-            team_stats.passYDsPerGame = team_stats.passYDs / team.preseason_games_played
-            team_stats.rushYDsPerGame = team_stats.rushYDs / team.preseason_games_played
+        if team.games_played:
+            team_stats.passYDsPerGame = team_stats.passYDs / team.games_played
+            team_stats.rushYDsPerGame = team_stats.rushYDs / team.games_played
 
         team_stats.totalYards = team_stats.passYDs + team_stats.rushYDs
 
         team_stats.pointsFor = 0
         team_stats.pointsAgainst = 0
 
-        for game in team.get_games(preseason=preseason, completed=True, home=True):
+        for game in team.get_games(preseason=False, completed=True, home=True):
             team_stats.pointsFor += game.home_team_score
             team_stats.pointsAgainst += game.away_team_score
-        for game in team.get_games(preseason=preseason, completed=True, away=True):
+        for game in team.get_games(preseason=False, completed=True, away=True):
             team_stats.pointsFor += game.away_team_score
             team_stats.pointsAgainst += game.home_team_score
 
-        if preseason and team.preseason_games_played:
-            team_stats.PPG = team_stats.pointsFor / team.preseason_games_played
-            team_stats.PAPG = team_stats.pointsAgainst / team.preseason_games_played
-
-        elif not preseason and team.games_played:
+        if team.games_played:
             team_stats.PPG = team_stats.pointsFor / team.games_played
             team_stats.PAPG = team_stats.pointsAgainst / team.games_played
 
@@ -956,12 +962,12 @@ def update_fantasy_points(db, thread):
     print("Calculating Fantasy Points...\x1b[32mCOMPLETE!\x1b[0m\033[K")
 
 
-def update_rankings(db, thread):
+def update_rankings(db, thread, preseason):
 
     thread.progress = 0
 
     teams = Team.query.filter(Team.ID != 100).all()
-    s = stats.TeamStats.query.filter(stats.TeamStats.team_id != 100).filter_by(preseason=True).all()
+    s = stats.TeamStats.query.filter(stats.TeamStats.team_id != 100).filter_by(preseason=preseason).all()
     passYDsPerGameRank = sorted(s, key=operator.attrgetter("passYDsPerGame"), reverse=True)
     rushYDsPerGameRank = sorted(s, key=operator.attrgetter("rushYDsPerGame"), reverse=True)
     passYDsRank = sorted(s, key=operator.attrgetter("passYDs"), reverse=True)
@@ -973,7 +979,7 @@ def update_rankings(db, thread):
     for i in range(len(teams)):
         thread.progress = i+1
         team = teams[i]
-        s = team.get_team_stats(preseason=True)
+        s = team.get_team_stats(preseason=preseason)
         s.passYDsPerGameRank = passYDsPerGameRank.index(s)+1
         s.rushYDsPerGameRank = rushYDsPerGameRank.index(s)+1
         s.passYDsRank = passYDsRank.index(s)+1
@@ -1002,7 +1008,7 @@ def build_db(db, thread, preseason):
     update_player_season_stats(db, thread)
 
     update_team_stats(db, thread, preseason)
-    update_rankings(db, thread)
+    update_rankings(db, thread, preseason)
 
     db.session.commit()
 
@@ -1021,6 +1027,6 @@ def update_db(db, thread, preseason):
 
     update_team_stats(db, thread, preseason)
 
-    update_rankings(db, thread)
+    update_rankings(db, thread, preseason)
 
     db.session.commit()
