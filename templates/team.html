@@ -663,6 +663,7 @@
                         </tr>
                         </thead>
                         <tbody>
+                        {% set preschedule = team.get_games(preseason=true, completed=false, home=true, away=true) %}
                         {% set record = namespace(wins=0, losses=0, ties=0) %}
                         {% for game in preschedule|sort(attribute='week') %}
                         {% if not game.completed %}
@@ -758,6 +759,7 @@
                         </tr>
                         </thead>
                         <tbody>
+                        {% set schedule = team.get_games(preseason=false, completed=false, home=true, away=true) %}
                         {% set record = namespace(wins=0, losses=0, ties=0) %}
                         {% for game in schedule|sort(attribute='week') %}
                         {% if not game.completed %}
