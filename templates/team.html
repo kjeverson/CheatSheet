@@ -107,60 +107,14 @@
     <div class="row">
       <!-- LEFT COLUMN -->
       <div class="col-lg-2">
-        <!-- PRESEASON SCHEDULE -->
-        <div class="row mt-2">
-          <div class="card bg-dark">
-          <div class="card-title text-center">Preseason Schedule</div>
-          <div class="card-body">
-            <form action="{{ url_for('matchup') }}" method="GET">
-              {% for game in preschedule %}
-              <div class="row justify-content-center mt-1">
-                {% if game.home_team.key == team.key %}
-                <button type="submit" class="btn btn-dark text-white p-2 position-relative" name="matchup" value="{{ game.ID }}">
-                  <div class="row px-1 mx-1">
-                    <span class="text-center"><small>vs. {{ game.away_team.name }}</small></span>
-                  </div>
-                  <span class="position-absolute top-50 start-0 translate-middle badge rounded-pill text-dark"><img src="{{ url_for('static', filename='logos/'+game.away_team.key+'.png') }}" height="40"></span>
-                  {% if game.completed %}
-                    {% if game.winner == team.key %}
-                    <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill text-dark bg-success">W</span>
-                    {% else %}
-                    <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill text-dark bg-danger">L</span>
-                    {% endif %}
-                  {% else %}
-                  <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill text-dark bg-light">{{game.week}}</span>
-                  {% endif %}
-                </button>
-                {% else %}
-                <button type="submit" class="btn btn-dark text-white p-2 position-relative" name="matchup" value="{{ game.ID }}">
-                  <div class="row px-1 mx-1">
-                    <span class="text-center"><small>@ {{ game.home_team.name }}</small></span>
-                  </div>
-                  <span class="position-absolute top-50 start-0 translate-middle badge rounded-pill text-dark"><img src="{{ url_for('static', filename='logos/'+game.home_team.key+'.png') }}" height="40"></span>
-                  {% if game.completed %}
-                    {% if game.winner == team.key %}
-                    <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill text-dark bg-success">W</span>
-                    {% else %}
-                    <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill text-dark bg-danger">L</span>
-                    {% endif %}
-                  {% else %}
-                  <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill text-dark bg-light">{{game.week}}</span>
-                  {% endif %}
-                </button>
-                {% endif %}
-              </div>
-              {% endfor %}
-            </form>
-          </div>
-        </div>
-        </div>
-        <!-- REGULAR SEASON SCHEDULE -->
+        <!-- REGULAR SEASON SCHEDULE  -->
         <div class="row mt-2">
           <div class="card bg-dark">
           <div class="card-title text-center">Season Schedule</div>
           <div class="card-body">
             <form action="{{ url_for('matchup') }}" method="GET">
-              {% for game in schedule %}
+              {% set schedule = team.get_games(preseason=false, completed=false, home=true, away=true) %}
+              {% for game in schedule|sort(attribute='week') %}
               <div class="row justify-content-center mt-1">
                 {% if game.home_team.key == team.key %}
                 <button type="submit" class="btn btn-dark text-white p-2 position-relative" name="matchup" value="{{ game.ID }}">
@@ -212,7 +166,9 @@
               <div class="row">
                 <!-- Passing Yards Leader -->
                 <div class="col">
-                  {% if passLeader %}
+                  {% set passLeaderID = team.get_team_stats(preseason=preseason).passingLeader_id %}
+                  {% if passLeaderID %}
+                  {% set passLeader = Player.query.get(passLeaderID) %}
                   <button data-id="{{ passLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
                     <div class="row mt-2">
                       <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + passLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
@@ -243,7 +199,9 @@
                 </div>
                 <!-- Rushing Yards Leader -->
                 <div class="col">
-                  {% if rushLeader %}
+                  {% set rushLeaderID = team.get_team_stats(preseason=preseason).rushingLeader_id %}
+                  {% if rushLeaderID %}
+                  {% set rushLeader = Player.query.get(rushLeaderID) %}
                   <button data-id="{{ rushLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
                     <div class="row mt-2">
                       <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + rushLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
@@ -274,7 +232,9 @@
                 </div>
                 <!-- Receiving Yards Leader -->
                 <div class="col">
-                  {% if recLeader %}
+                  {% set recLeaderID = team.get_team_stats(preseason=preseason).receivingLeader_id %}
+                  {% if recLeaderID %}
+                  {% set recLeader = Player.query.get(recLeaderID) %}
                   <button data-id="{{ recLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
                     <div class="row mt-2">
                       <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + recLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
@@ -441,27 +401,27 @@
                     </tr>
                   </thead>
                   <tbody>
-                    {% for t in teams |sort(attribute='preseason_wins', reverse=True) %}
+                    {% for t in teams |sort(attribute='wins', reverse=True) %}
                     {% if t.conference == team.conference and t.division == team.division %}
                     {% if t.key == team.key %}
                     <tr>
                       <td><strong>{{ t.name }}</strong></td>
-                      <td><strong>{{ t.preseason_wins }}</strong></td>
-                      <td><strong>{{ t.preseason_loses }}</strong></td>
-                      <td><strong>{{ t.preseason_ties }}</strong></td>
+                      <td><strong>{{ t.wins }}</strong></td>
+                      <td><strong>{{ t.loses }}</strong></td>
+                      <td><strong>{{ t.ties }}</strong></td>
                       <td><strong></strong></td>
-                      <td><strong>{{ t.get_team_stats(preseason=true).pointsFor }}</strong></td>
-                      <td><strong>{{ t.get_team_stats(preseason=true).pointsAgainst }}</strong></td>
+                      <td><strong>{{ t.get_team_stats(preseason=false).pointsFor }}</strong></td>
+                      <td><strong>{{ t.get_team_stats(preseason=false).pointsAgainst }}</strong></td>
                     </tr>
                     {% else %}
                     <tr>
                       <td>{{ t.name }}</td>
-                      <td>{{ t.preseason_wins }}</td>
-                      <td>{{ t.preseason_loses }}</td>
-                      <td>{{ t.preseason_ties }}</td>
+                      <td>{{ t.wins }}</td>
+                      <td>{{ t.loses }}</td>
+                      <td>{{ t.ties }}</td>
                       <td></td>
-                      <td>{{ t.get_team_stats(preseason=true).pointsFor }}</td>
-                      <td>{{ t.get_team_stats(preseason=true).pointsAgainst }}</td>
+                      <td>{{ t.get_team_stats(preseason=false).pointsFor }}</td>
+                      <td>{{ t.get_team_stats(preseason=false).pointsAgainst }}</td>
                     </tr>
                     {% endif %}
                     {% endif %}

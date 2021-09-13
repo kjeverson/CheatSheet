@@ -208,44 +208,12 @@ def team():
 
         teams = Team.query.all()
 
-        data = request.args.get('sort')
-        if not data:
-            team_key = request.args.get('team')
-            position = 'ALL'
-        else:
-            team_key, position = data.split("-")
-
+        team_key = request.args.get('team')
         team = Team.query.filter_by(key=team_key).first()
 
         players = team.players
 
-        schedule = list()
-        schedule.extend(team.away_games)
-        schedule.extend(team.home_games)
-
-        preschedule = [game for game in schedule if game.preseason]
-        preschedule = sort(preschedule)
-        for game in preschedule:
-            if game.date not in ["TBD", "Final"]:
-                dt = zulu.parse(game.date, '%Y-%m-%dT%H:%MZ')
-                game.date = dt.format('%m/%d', 'local')
-                game.time = dt.format('%I:%M', 'local').lstrip("0")
-
-        schedule = [game for game in schedule if not game.preseason]
-        schedule = sort(schedule)
-        for game in schedule:
-            if game.date not in ["TBD", "Final"]:
-                dt = zulu.parse(game.date, '%Y-%m-%dT%H:%MZ')
-                game.date = dt.format('%m/%d', 'local')
-                game.time = dt.format('%I:%M', 'local').lstrip("0")
-
         default_headshot_path = url_for('static', filename='headshots/default.png')
-
-        team_stats = TeamStats.query.filter_by(team_id=team.ID).filter_by(preseason=preseason).first()
-
-        passLeader = Player.query.get(team_stats.passingLeader_id)
-        rushLeader = Player.query.get(team_stats.rushingLeader_id)
-        recLeader = Player.query.get(team_stats.receivingLeader_id)
 
         player_stats = [player.get_season_stats(preseason=preseason) for player in players]
 
@@ -263,11 +231,7 @@ def team():
 
         return render_template("team.html", preseason=preseason,
                                teams=teams, players=players, team=team,
-                               schedule=schedule, preschedule=preschedule,
                                Player=Player,
-                               passLeader=passLeader,
-                               rushLeader=rushLeader,
-                               recLeader=recLeader,
                                player_stats=player_stats, injured=injured,
                                default_headshot_path=default_headshot_path)
 
