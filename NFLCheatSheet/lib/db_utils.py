@@ -18,9 +18,7 @@ from NFLCheatSheet.lib.classes.depth_chart import DepthChart
 
 from NFLCheatSheet.lib.fantasy.scoring import Scoring, get_score
 
-from NFLCheatSheet.lib.scrape.status import get_injured_list
-from NFLCheatSheet.lib.scrape.images import get_headshot
-from NFLCheatSheet.lib.scrape.boxscore import get_game_stats, get_scores, get_game_stats_api
+from NFLCheatSheet.lib.scrape.boxscore import get_game_stats, get_scores
 from NFLCheatSheet.lib.scrape import schedule
 
 
@@ -237,7 +235,8 @@ def get_headshots(db, thread):
             img_path = Path("/Users/everson/NFLCheatSheet/static/headshots/{}.png"
                             .format(player.ID))
             if not img_path.exists():
-                get_headshot(player.ID, player.yahooPlayerID)
+                player.get_headshot()
+
     print("")
 
 
@@ -502,7 +501,7 @@ def add_player_week_stats(db, thread):
         game = games[i]
         thread.progress = i+1
 
-        game_stats = get_game_stats_api(game.ID)
+        game_stats = get_game_stats(game.ID)
         passing = game_stats.get('passing')
         rushing = game_stats.get('rushing')
         receiving = game_stats.get('receiving')
