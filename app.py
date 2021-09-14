@@ -344,6 +344,11 @@ def update_rosters():
     thread.state = "Updating Player Database"
     db_utils.add_players(db, players, thread)
     db.session.commit()
+
+    thread.state = "Setting Depth Charts"
+    db_utils.set_depth_charts(db, thread)
+    db.session.commit()
+
     print("Updating Rosters")
     return jsonify("Done")
 

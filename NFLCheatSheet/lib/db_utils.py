@@ -278,6 +278,23 @@ def add_players(database, players: List, thread) -> None:
     print("Adding Players to Database...\x1b[32mCOMPLETE!\x1b[0m\033[K")
 
 
+def set_depth_charts(db, thread):
+
+    teams = Team.query.filter(Team.ID != 100).all()
+    thread.total = len(teams)
+    thread.state = "Updating Depth Charts"
+    print("Updating Depth Charts...\r", end="")
+    for i in range(len(teams)):
+        print("Updating Depth Charts...{}/{} - {:0.2f}%\r"
+              .format(i+1, len(teams), ((i+1)/len(teams))*100), end="")
+        thread.progress = i+1
+
+        team = teams[i]
+        team.set_depth_chart()
+
+    print("Updating Depth Charts...\x1b[32mCOMPLETE!\x1b[0m\033[K")
+
+
 def add_default_scoring(database):
     print("Adding Default Scoring to Database...\r", end="")
     database.session.add(Scoring(
