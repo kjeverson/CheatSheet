@@ -22,20 +22,32 @@ from NFLCheatSheet.lib.scrape.boxscore import get_game_stats, get_scores
 from NFLCheatSheet.lib.scrape import schedule
 
 
+team_conference = {
+    "Bengals": "AFC", "Browns": "AFC", "Steelers": "AFC", "Ravens": "AFC",
+    "Bills": "AFC", "Dolphins": "AFC", "Patriots": "AFC", "Jets": "AFC",
+    "Titans": "AFC", "Colts": "AFC", "Texans": "AFC", "Jaguars": "AFC",
+    "Broncos": "AFC", "Chargers": "AFC", "Raiders": "AFC", "Chiefs": "AFC",
+    "Bears": "NFC", "Lions": "NFC", "Vikings": "NFC", "Packers": "NFC",
+    "Cowboys": "NFC", "Giants": "NFC", "Eagles": "NFC", "Football Team": "NFC",
+    "Falcons": "NFC", "Saints": "NFC", "Panthers": "NFC", "Buccaneers": "NFC",
+    "Rams": "NFC", "49ers": "NFC", "Cardinals": "NFC", "Seahawks": "NFC"
+}
+
+team_division = {
+    "Bengals": "North", "Browns": "North", "Steelers": "North", "Ravens": "North",
+    "Bills": "East", "Dolphins": "East", "Patriots": "East", "Jets": "East",
+    "Titans": "South", "Colts": "South", "Texans": "South", "Jaguars": "South",
+    "Broncos": "West", "Chargers": "West", "Raiders": "West", "Chiefs": "West",
+    "Bears": "North", "Lions": "North", "Vikings": "North", "Packers": "North",
+    "Cowboys": "East", "Giants": "East", "Eagles": "East", "Football Team": "East",
+    "Falcons": "South", "Saints": "South", "Panthers": "South", "Buccaneers": "South",
+    "Rams": "West", "49ers": "West", "Cardinals": "West", "Seahawks": "West"
+}
+
+
 def get_all_team_data() -> List[Dict]:
 
     print("Getting Team Data...\r", end="")
-    #response = requests.get(
-    # 'https://fly.sportsdata.io/v3/nfl/scores/json/Teams?key=2810c12201be4499bff03931c186f9f5')
-    #team_data = response.json()
-
-    #team_file_path = Path("/Users/everson/NFLCheatSheet/data/teams.json")
-    #with team_file_path.open("w") as teams_file:
-    #    json.dump(team_data, teams_file)
-
-    #with team_file_path.open("r") as teams_file:
-    #    teams_data = json.load(teams_file)
-
     response = requests.get("https://sports.core.api.espn.com/v2/sports/"
                             "football/leagues/nfl/seasons/2021/teams/?limit=32")
     team_data = response.json()
@@ -63,17 +75,26 @@ def add_teams(database, teams: List[Dict]) -> None:
         except KeyError:
             name = team['nickname']
 
+        if name == "Washington":
+            name = 'Football Team'
+            team_full = 'Washington Football Team'
+        else:
+            name = name
+            team_full = team['displayName']
+
         database.session.add(Team(
             ID=team['id'],
             key=team['abbreviation'],
             location=team['location'],
             name=name,
-            fullname=team['displayName'],
+            fullname=team_full,
             primary=team['color'],
             secondary=team['alternateColor'],
             stadium=team["venue"]["fullName"],
             stadium_city=team["venue"]["address"]["city"],
             stadium_state=team["venue"]["address"]["state"],
+            conference=team_conference.get(name),
+            division=team_division.get(name),
             wins=0,
             loses=0,
             ties=0,
@@ -135,10 +156,6 @@ def filter_by_position(player_data: List[Dict], position: str = 'ALL') -> List[D
     """
 
     players = []
-
-    # Only get rostered players
-    # player_data = [player for player in player_data if player['Team'] is not None]
-
     for i in range(len(player_data)):
         experience_string = player_data[i]['ExperienceString']
         if experience_string:
@@ -188,22 +205,6 @@ def get_all_player_data(thread, position: str = "ALL") -> List:
     thread.progress = 0
     thread.total = 1
     print("Getting Player Data...\r", end="")
-
-    #time.sleep(5)
-
-    # API CAll for all Player data
-    #response = requests.get("https://api.sportsdata.io/v3/nfl/scores/json/Players?"
-    #                        "key=2810c12201be4499bff03931c186f9f5")
-    #player_data = response.json()
-
-    #player_file_path = Path("/Users/everson/NFLCheatSheet/data/players.json")
-    #with player_file_path.open("w") as player_file:
-    #    json.dump(player_data, player_file)
-
-    #with player_file_path.open("r") as player_file:
-    #    player_data = json.load(player_file)
-
-    #players = filter_by_position(player_data, position)
 
     url = "http://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/2021/teams/{}/athletes?limit=150"
 
