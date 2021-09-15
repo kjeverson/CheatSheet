@@ -94,41 +94,52 @@ class Team(db.Model):
         d = {"lde": [], "ldt": [], "rdt": [], "rde": [], "wlb": [], "mlb": [], "slb": [],
              "lcb": [], "rcb": [], "ss": [], "fs": [], "nt": [], "lilb": [], "rilb": []}
 
-        st = {"pk":[], "p": [], "h": [], "pr": [], "kr": [], "ls": []}
+        st = {"pk": [], "p": [], "h": [], "pr": [], "kr": [], "ls": []}
 
         url = "https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/2021/teams/{}/depthcharts?lang=en&region=us".format(self.ID)
         data = requests.get(url).json()
 
         data = data['items']
-        defense = data[0]
-        special = data[1]
-        offense = data[2]
 
-        for position, info in offense['positions'].items():
-            if position == "wr":
+        offense = []
+        defense = []
+        special = []
+        for unit in data:
+            if unit['name'] == "Special Teams":
+                special = unit
+            elif unit['name'] == "3WR 1TE":
+                offense = unit
+            elif unit['name'] == "Base 3-4 D" or unit['name'] == "Base 4-3 D":
+                defense = unit
+
+        if offense:
+            for position, info in offense['positions'].items():
+                if position == "wr":
+                    athletes = info['athletes']
+                    for athlete in athletes:
+                        slot = athlete['slot']
+                        slot = 3 if slot > 3 else slot
+                        ID = re.search(r'athletes\/(\d+)', athlete['athlete']['$ref']).groups()[0]
+                        o[position+str(slot)].append(ID)
+                else:
+                    athletes = info['athletes']
+                    for athlete in athletes:
+                        ID = re.search(r'athletes\/(\d+)', athlete['athlete']['$ref']).groups()[0]
+                        o[position].append(ID)
+
+        if defense:
+            for position, info in defense['positions'].items():
                 athletes = info['athletes']
                 for athlete in athletes:
-                    slot = athlete['slot']
-                    slot = 3 if slot > 3 else slot
                     ID = re.search(r'athletes\/(\d+)', athlete['athlete']['$ref']).groups()[0]
-                    o[position+str(slot)].append(ID)
-            else:
+                    d[position].append(ID)
+
+        if special:
+            for position, info in special['positions'].items():
                 athletes = info['athletes']
                 for athlete in athletes:
                     ID = re.search(r'athletes\/(\d+)', athlete['athlete']['$ref']).groups()[0]
-                    o[position].append(ID)
-
-        for position, info in defense['positions'].items():
-            athletes = info['athletes']
-            for athlete in athletes:
-                ID = re.search(r'athletes\/(\d+)', athlete['athlete']['$ref']).groups()[0]
-                d[position].append(ID)
-
-        for position, info in special['positions'].items():
-            athletes = info['athletes']
-            for athlete in athletes:
-                ID = re.search(r'athletes\/(\d+)', athlete['athlete']['$ref']).groups()[0]
-                st[position].append(ID)
+                    st[position].append(ID)
 
         depth_chart = self.depth_chart
         depth_chart.QBs = " ".join(o["qb"])

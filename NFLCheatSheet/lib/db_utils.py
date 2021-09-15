@@ -1012,7 +1012,7 @@ def build_db(db, thread, preseason):
 
     players = get_all_player_data(thread)
     add_players(db, players, thread)
-    #update_player_status(db, thread)
+    update_player_status(db, thread)
 
     add_default_scoring(db)
 

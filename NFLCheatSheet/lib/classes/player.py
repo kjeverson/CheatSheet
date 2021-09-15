@@ -134,9 +134,14 @@ class Player(db.Model):
             except KeyError:
                 self.injury = ""
 
-            self.news = injuries[0]['shortComment']
-            self.analysis = injuries[0]['longComment']
             self.date = injuries[0]['date']
+            if len(injuries[0]['shortComment'].split()) == 1:
+                self.news = "{} was listed as {} on {}."\
+                    .format(self.name, self.designation, self.date.strftime('%B %d'))
+                self.analysis = self.news
+            else:
+                self.news = injuries[0]['shortComment']
+                self.analysis = injuries[0]['longComment']
 
             try:
                 self.ret = injuries[0]['details']['returnDate']

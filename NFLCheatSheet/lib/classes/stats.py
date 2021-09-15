@@ -226,7 +226,11 @@ class TeamStats(db.Model):
 
     DVOA = db.Column(db.Integer, default=0)
     OFF = db.Column(db.Integer, default=0)
+    OFFPASS = db.Column(db.Integer, default=0)
+    OFFRUSH = db.Column(db.Integer, default=0)
     DEF = db.Column(db.Integer, default=0)
+    DEFPASS = db.Column(db.Integer, default=0)
+    DEFRUSH = db.Column(db.Integer, default=0)
     ST = db.Column(db.Integer, default=0)
 
     PPG = db.Column(db.Integer, default=0)
