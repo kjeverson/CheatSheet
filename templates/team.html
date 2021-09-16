@@ -1018,9 +1018,9 @@
                   </tr>
                 </thead>
                 <tbody>
-                  {% for player in players | sort(attribute="draft_round") | sort(attribute="draft_pick") %}
+                  {% for player in draft_picks | sort(attribute="draft_round") | sort(attribute="draft_pick") %}
                     <tr data-id="{{ player.ID }}">
-                        {% if player.experience == 0 and not player.undrafted and player.draft_team_id == team.ID %}
+                        {% if player.experience == 0 and not player.undrafted %}
                         <td>{{ player.draft_round }}</td>
                         <td>{{ player.draft_pick }}</td>
                         <td>{{ player.shortname  }}</td>

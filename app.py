@@ -229,9 +229,13 @@ def team():
         for player in injured:
             player.date = player.date.strftime('%B %d, %Y')
 
+        draft_picks = Player.query.filter(Player.draft_year == 2021)\
+            .filter(Player.draft_team_id == team.ID).all()
+
         return render_template("team.html", preseason=preseason,
                                teams=teams, players=players, team=team,
                                Player=Player,
+                               draft_picks=draft_picks,
                                player_stats=player_stats, injured=injured,
                                default_headshot_path=default_headshot_path)
 
