@@ -283,67 +283,19 @@ def get_stats_leaders(players, preseason, week=None):
     if not players:
         return None
 
-    passYDs_leader = None
-    passYDs_leader_stats = None
-    passYDs = 0
-    rushYDs_leader = None
-    rushYDs_leader_stats = None
-    rushYDs = 0
-    recYDs_leader = None
-    recYDs_leader_stats = None
-    recYDs = 0
+    if week:
+        stats = [player.get_weekly_stats(preseason, week) for player in players]
+    else:
+        stats = [player.get_season_stats(preseason) for player in players]
 
-    for player in players:
+    stats.sort(key=lambda player: player.passYDs, reverse=True)
+    passYDs_leader = stats.pop(0).player
 
-        if week:
-            stats = player.get_weekly_stats_by_week(preseason, week)
-        else:
-            stats = player.get_season_stats(preseason)
+    stats.sort(key=lambda player: player.rushYDs, reverse=True)
+    rushYDs_leader = stats.pop(0).player
 
-        if not stats:
-            continue
-
-        if not passYDs_leader:
-            passYDs_leader = player
-            passYDs_leader_stats = stats
-            passYDs = stats.passYDs
-
-        else:
-            if stats.passYDs > passYDs_leader_stats.passYDs:
-                passYDs_leader = player
-                passYDs_leader_stats = stats
-                passYDs = stats.passYDs
-
-        if not rushYDs_leader:
-            rushYDs_leader = player
-            rushYDs_leader_stats = stats
-            rushYDs = stats.rushYDs
-
-        else:
-            if stats.rushYDs > rushYDs_leader_stats.rushYDs:
-                rushYDs_leader = player
-                rushYDs_leader_stats = stats
-                rushYDs = stats.rushYDs
-
-        if not recYDs_leader:
-            recYDs_leader = player
-            recYDs_leader_stats = stats
-            recYDs = stats.recYDs
-
-        else:
-            if stats.recYDs > recYDs_leader_stats.recYDs:
-                recYDs_leader = player
-                recYDs_leader_stats = stats
-                recYDs = stats.recYDs
-
-    if passYDs == 0:
-        passYDs_leader = None
-
-    if rushYDs == 0:
-        rushYDs_leader = None
-
-    if recYDs == 0:
-        recYDs_leader = None
+    stats.sort(key=lambda player: player.recYDs, reverse=True)
+    recYDs_leader = stats.pop(0).player
 
     return passYDs_leader.ID, rushYDs_leader.ID, recYDs_leader.ID
 

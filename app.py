@@ -123,6 +123,34 @@ def matchups():
                                default_headshot_path=default_headshot_path)
 
 
+@app.route('/statistics', methods=["GET"])
+def stats():
+
+    games = Game.query.all()
+    current_week, preseason = get_week(games)
+
+    teams = Team.query.all()
+
+    players = Player.query.all()
+    player_stats = [player.get_season_stats(preseason=preseason) for player in players]
+
+    default_headshot_path = url_for('static', filename='headshots/default.png')
+
+    player_stats.sort(key=lambda player: player.passYDs, reverse=True)
+    passLeaders = player_stats[0:5]
+    player_stats.sort(key=lambda player: player.rushYDs, reverse=True)
+    rushLeaders = player_stats[0:5]
+    player_stats.sort(key=lambda player: player.recYDs, reverse=True)
+    recLeaders = player_stats[0:5]
+
+    return render_template("stats.html", preseason=preseason,
+                           teams=teams, players=players,
+                           Player=Player,
+                           player_stats=player_stats,
+                           passLeaders=passLeaders, rushLeaders=rushLeaders, recLeaders=recLeaders,
+                           default_headshot_path=default_headshot_path)
+
+
 @app.route('/matchup', methods=["GET", "POST"])
 def matchup():
 

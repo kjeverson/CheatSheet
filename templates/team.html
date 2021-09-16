@@ -2,7 +2,7 @@
 {% block title %}
   {{ team.fullname }}
 {% endblock %}
-{% block content %}'
+{% block content %}
 <div id="mainContainer" class="container mt-4 pt-4">
   <!-- Header -->
   <div class="row">
@@ -180,7 +180,7 @@
                       {% set passLeaderStats = passLeader.get_season_stats(preseason) %}
                       <h3>{{ passLeaderStats.passYDs }}</h3>
                     </div>
-                    <span class="position-absolute top-100 start-50 translate-middle badge rounded-pill text-dark bg-light">Passing Yards</span>
+                    <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Passing Yards</span>
                   </button>
                   {% else %}
                   <button class=" btn btn-block btn-dark position-relative">
@@ -193,7 +193,7 @@
                     <div class="row mt-1">
                       <h3>-</h3>
                     </div>
-                    <span class="position-absolute top-100 start-50 translate-middle badge rounded-pill text-dark bg-light">Passing Yards</span>
+                    <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Passing Yards</span>
                   </button>
                   {% endif %}
                 </div>
@@ -213,7 +213,7 @@
                       {% set rushLeaderStats = rushLeader.get_season_stats(preseason) %}
                       <h3>{{ rushLeaderStats.rushYDs }}</h3>
                     </div>
-                    <span class="position-absolute top-100 start-50 translate-middle badge rounded-pill text-dark bg-light">Rushing Yards</span>
+                    <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Rushing Yards</span>
                   </button>
                   {% else %}
                   <button class="btn btn-block btn-dark position-relative">
@@ -226,7 +226,7 @@
                     <div class="row mt-1">
                       <h3>-</h3>
                     </div>
-                    <span class="position-absolute top-100 start-50 translate-middle badge rounded-pill text-dark bg-light">Rushing Yards</span>
+                    <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Rushing Yards</span>
                   </button>
                   {% endif %}
                 </div>
@@ -246,7 +246,7 @@
                       {% set recLeaderStats = recLeader.get_season_stats(preseason) %}
                       <h3>{{ recLeaderStats.recYDs }}</h3>
                     </div>
-                    <span class="position-absolute top-100 start-50 translate-middle badge rounded-pill text-dark bg-light">Receiving Yards</span>
+                    <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Receiving Yards</span>
                   </button>
                   {% else %}
                   <button class="btn btn-block btn-dark position-relative">
@@ -259,7 +259,7 @@
                     <div class="row mt-1">
                       <h3>-</h3>
                     </div>
-                    <span class="position-absolute top-100 start-50 translate-middle badge rounded-pill text-dark bg-light">Receiving Yards</span>
+                    <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Receiving Yards</span>
                   </button>
                   {% endif %}
                 </div>
@@ -441,68 +441,126 @@
       <!-- MAIN CONTENT -->
       <div class="col-12">
         {% if passLeader and rushLeader and recLeader %}
-        <!-- Team Stat Leaders -->
+        <!-- Team Leaders -->
         <div class="row mt-2">
-            <div class="card bg-dark">
-                <div class="card-title text-center">Stat Leaders</div>
-                <div class="card-body">
-                    <div class="row mt-2">
-                      <!-- Passing Leader -->
-                      <div class="col-4">
-                        <button data-id="{{ passLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
-                            <div class="row">
-                                <div class="col-6 align-self-center">
-                                    <div class="row mt-2 text-start"><small>{{ passLeader.name }}</small></div>
-                                    <div class="row mt-1 text-start"><h1 class="text-muted">{{ passLeaderStats.passYDs }} YDs</h1></div>
-                                </div>
-                                <div class="col-6 position-relative">
-                                    <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + passLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
-                                </div>
-                            </div>
-                            <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Passing Yards</span>
-                        </button>
-                      </div>
-                      <!-- Rushing Leader -->
-                      <div class="col-4">
-                        <button data-id="{{ rushLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
-                            <div class="row">
-                                <div class="col-6 align-self-center">
-                                    <div class="row mt-2 text-start"><small>{{ rushLeader.name }}</small></div>
-                                    <div class="row mt-1 text-start"><h1 class="text-muted">{{ rushLeaderStats.rushYDs }} YDs</h1></div>
-                                </div>
-                                <div class="col-6 position-relative">
-                                    <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + rushLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
-                                </div>
-                            </div>
-                            <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Rushing Yards</span>
-                        </button>
-                      </div>
-                      <!-- Receiving Leader -->
-                      <div class="col-4">
-                        <button data-id="{{ recLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
-                            <div class="row">
-                                <div class="col-6 align-self-center">
-                                    <div class="row mt-2 text-start"><small>{{ recLeader.name }}</small></div>
-                                    <div class="row mt-1 text-start"><h1 class="text-muted">{{ recLeaderStats.recYDs }} YDs</h1></div>
-                                </div>
-                                <div class="col-6 position-relative">
-                                    <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + recLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
-                                </div>
-                            </div>
-                            <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Receiving Yards</span>
-                        </button>
-                      </div>
+          <div class="card bg-dark">
+            <div class="card-title text-center">Team Leaders</div>
+            <div class="card-body">
+              <div class="row justify-content-center">
+                <div class="col-7">
+                  <div class="row">
+                    <!-- Passing Yards Leader -->
+                    <div class="col">
+                      {% set passLeaderID = team.get_team_stats(preseason=preseason).passingLeader_id %}
+                      {% if passLeaderID %}
+                      {% set passLeader = Player.query.get(passLeaderID) %}
+                      <button data-id="{{ passLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
+                        <div class="row mt-2">
+                          <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + passLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
+                        </div>
+                        <div class="row mt-1">
+                          <small>{{ passLeader.name }} <span class="text-muted">{{ passLeader.position }}</span></small>
+                        </div>
+                        <div class="row mt-1">
+                          {% set passLeaderStats = passLeader.get_season_stats(preseason) %}
+                          <h3>{{ passLeaderStats.passYDs }}</h3>
+                        </div>
+                        <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Passing Yards</span>
+                      </button>
+                      {% else %}
+                      <button class=" btn btn-block btn-dark position-relative">
+                        <div class="row mt-2">
+                          <img class="img-fluid" src="{{ url_for('static', filename='headshots/default.png') }}">
+                        </div>
+                        <div class="row mt-1">
+                          <small>-</small>
+                        </div>
+                        <div class="row mt-1">
+                          <h3>-</h3>
+                        </div>
+                        <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Passing Yards</span>
+                      </button>
+                      {% endif %}
                     </div>
+                    <!-- Rushing Yards Leader -->
+                    <div class="col">
+                      {% set rushLeaderID = team.get_team_stats(preseason=preseason).rushingLeader_id %}
+                      {% if rushLeaderID %}
+                      {% set rushLeader = Player.query.get(rushLeaderID) %}
+                      <button data-id="{{ rushLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
+                        <div class="row mt-2">
+                          <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + rushLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
+                        </div>
+                        <div class="row mt-1">
+                          <small>{{ rushLeader.name }} <span class="text-muted">{{ rushLeader.position }}</span></small>
+                        </div>
+                        <div class="row mt-1">
+                          {% set rushLeaderStats = rushLeader.get_season_stats(preseason) %}
+                          <h3>{{ rushLeaderStats.rushYDs }}</h3>
+                        </div>
+                        <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Rushing Yards</span>
+                      </button>
+                      {% else %}
+                      <button class="btn btn-block btn-dark position-relative">
+                        <div class="row mt-2">
+                          <img class="img-fluid" src="{{ url_for('static', filename='headshots/default.png') }}">
+                        </div>
+                        <div class="row mt-1">
+                          <small>-</small>
+                        </div>
+                        <div class="row mt-1">
+                          <h3>-</h3>
+                        </div>
+                        <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Rushing Yards</span>
+                      </button>
+                      {% endif %}
+                    </div>
+                    <!-- Receiving Yards Leader -->
+                    <div class="col">
+                      {% set recLeaderID = team.get_team_stats(preseason=preseason).receivingLeader_id %}
+                      {% if recLeaderID %}
+                      {% set recLeader = Player.query.get(recLeaderID) %}
+                      <button data-id="{{ recLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
+                        <div class="row mt-2">
+                          <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + recLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
+                        </div>
+                        <div class="row mt-1">
+                          <small>{{ recLeader.name }} <span class="text-muted">{{ recLeader.position }}</span></small>
+                        </div>
+                        <div class="row mt-1">
+                          {% set recLeaderStats = recLeader.get_season_stats(preseason) %}
+                          <h3>{{ recLeaderStats.recYDs }}</h3>
+                        </div>
+                        <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Receiving Yards</span>
+                      </button>
+                      {% else %}
+                      <button class="btn btn-block btn-dark position-relative">
+                        <div class="row mt-2">
+                          <img class="img-fluid" src="{{ url_for('static', filename='headshots/default.png') }}">
+                        </div>
+                        <div class="row mt-1">
+                          <small>-</small>
+                        </div>
+                        <div class="row mt-1">
+                          <h3>-</h3>
+                        </div>
+                        <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Receiving Yards</span>
+                      </button>
+                      {% endif %}
+                    </div>
+                  </div>
                 </div>
+              </div>
             </div>
+          </div>
         </div>
         {% endif %}
         <!-- Player Season Stats -->
         <div class="row mt-2">
           <div class="card bg-dark">
-            <div class="card-title text-center">Preseason Stats</div>
+            <div class="card-title text-center">Regular Season Stats</div>
             <div class="card-body">
-              <!-- Preseason Passing -->
+              <!-- Passing -->
               <div class="row text-white">
                 <div class="row">
                   <h5>Passing</h5>
@@ -550,7 +608,7 @@
                   {% endfor %}
                 </table>
               </div>
-              <!-- Preseason Rushing -->
+              <!-- Rushing -->
               <div class="row text-white">
                 <div class="row">
                   <h5>Rushing</h5>
@@ -588,7 +646,7 @@
                   {% endfor %}
                 </table>
               </div>
-              <!-- Preseason Receiving -->
+              <!-- Receiving -->
               <div class="row text-white">
                 <div class="row">
                   <h5>Receiving</h5>
@@ -2309,6 +2367,7 @@
     </div>
   </div>
 </div>
+
 <!-- style="background: #{{ team.primary }}" -->
 <script>
 
