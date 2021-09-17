@@ -234,8 +234,11 @@ def add_player(db, player_data):
     if player_data['status']['abbreviation'] == "FA":
         team_id = 100
     else:
-        team_id = int(re.search(r'teams\/(\d+)', player_data['team']['$ref']).groups()[0])
-
+        try:
+            team_id = int(re.search(r'teams\/(\d+)', player_data['team']['$ref']).groups()[0])
+        except KeyError as error:
+            print(player_data['fullName'])
+            team_id = 100
     try:
         college = requests.get(player_data['college']['$ref']).json()['name']
     except KeyError:

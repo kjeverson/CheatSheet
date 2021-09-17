@@ -131,23 +131,30 @@ def stats():
 
     teams = Team.query.all()
 
-    players = Player.query.all()
-    player_stats = [player.get_season_stats(preseason=preseason) for player in players]
-
-    default_headshot_path = url_for('static', filename='headshots/default.png')
+    player_stats = SeasonStats.query.filter_by(preseason=preseason).all()
 
     player_stats.sort(key=lambda player: player.passYDs, reverse=True)
     passLeaders = player_stats[0:5]
+    player_stats.sort(key=lambda player: player.passTDs, reverse=True)
+    passTDLeaders = player_stats[0:5]
     player_stats.sort(key=lambda player: player.rushYDs, reverse=True)
     rushLeaders = player_stats[0:5]
+    player_stats.sort(key=lambda player: player.rushTDs, reverse=True)
+    rushTDLeaders = player_stats[0:5]
     player_stats.sort(key=lambda player: player.recYDs, reverse=True)
     recLeaders = player_stats[0:5]
+    player_stats.sort(key=lambda player: player.recTDs, reverse=True)
+    recTDLeaders = player_stats[0:5]
+
+    default_headshot_path = url_for('static', filename='headshots/default.png')
 
     return render_template("stats.html", preseason=preseason,
-                           teams=teams, players=players,
+                           teams=teams,
                            Player=Player,
                            player_stats=player_stats,
-                           passLeaders=passLeaders, rushLeaders=rushLeaders, recLeaders=recLeaders,
+                           passLeaders=passLeaders, passTDLeaders=passTDLeaders,
+                           rushLeaders=rushLeaders, rushTDLeaders=rushTDLeaders,
+                           recLeaders=recLeaders, recTDLeaders=recTDLeaders,
                            default_headshot_path=default_headshot_path)
 
 

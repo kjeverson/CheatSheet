@@ -572,9 +572,11 @@ def add_player_week_stats(db, thread):
                 player = Player.query.get(name)
 
                 if not player:
-
                     url = player_url.format(name)
                     player_data = requests.get(url).json()
+                    if player_data['fullName'] == ' Team':
+                        print(name)
+                        continue
                     add_player(db, player_data)
                     player = get_player(player_data['id'])
 
@@ -869,6 +871,56 @@ def update_player_season_stats(db, thread):
             if ws.recLng and int(ws.recLng) > ss.recLng:
                 ss.recLng = int(ws.recLng)
             ss.recTGTS = ss.recTGTS + int(ws.recTGTS) if ws.recTGTS else ss.recTGTS
+
+            ss.fumLost = ss.fumLost + int(ws.fumLost) if ws.fumLost else ss.fumLost
+            ss.fum = ss.fum + int(ws.fum) if ws.fum else ss.fum
+            ss.fumRec = ss.fumRec + int(ws.fumRec) if ws.fumRec else ss.fumRec
+
+            ss.totalTackles = ss.totalTackles + int(
+                ws.totalTackles) if ws.totalTackles else ss.totalTackles
+            ss.soloTackles = ss.soloTackles + int(
+                ws.soloTackles) if ws.soloTackles else ss.soloTackles
+            ss.sacks = ss.sacks + int(ws.sacks) if ws.sacks else ss.sacks
+            ss.tacklesForLoss = ss.tacklesForLoss + int(
+                ws.tacklesForLoss) if ws.tacklesForLoss else ss.tacklesForLoss
+            ss.passDefensed = ss.passDefensed + int(
+                ws.passDefensed) if ws.passDefensed else ss.passDefensed
+            ss.qbHits = ss.qbHits + int(ws.qbHits) if ws.qbHits else ss.qbHits
+            ss.defTDs = ss.defTDs + int(ws.defTDs) if ws.defTDs else ss.defTDs
+            ss.defINTs = ss.defINTs + int(ws.defINTs) if ws.defINTs else ss.defINTs
+            ss.defINTYDs = ss.defINTYDs + int(ws.defINTYDs) if ws.defINTYDs else ss.defINTYDs
+            ss.defINTTDs = ss.defINTTDs + int(ws.defINTTDs) if ws.defINTTDs else ss.defINTTDs
+
+            ss.krAtts = ss.krAtts + int(ws.krAtts) if ws.krAtts else ss.krAtts
+            ss.krYDs = ss.krYDs + int(ws.krYDs) if ws.krYDs else ss.krYDs
+            ss.krAVG = ss.krYDs / ss.krAtts if ss.krAtts else 0
+            if ws.krLng and int(ws.krLng) > ss.krLng:
+                ss.krLng = ws.krLng
+            ss.krTDs = ss.krTDs + int(ws.krTDs) if ws.krTDs else ss.krTDs
+
+            ss.prAtts = ss.prAtts + int(ws.prAtts) if ws.prAtts else ss.prAtts
+            ss.prYDs = ss.prYDs + int(ws.prYDs) if ws.prYDs else ss.prYDs
+            ss.prAVG = ss.prYDs / ss.prAtts if ss.prAtts else 0
+            if ws.prLng and int(ws.prLng) > ss.prLng:
+                ss.prLng = ws.prLng
+            ss.prTDs = ss.prTDs + int(ws.prTDs) if ws.prTDs else ss.prTDs
+
+            ss.fgMade = ss.fgMade + int(ws.fgMade) if ws.fgMade else ss.fgMade
+            ss.fgAtts = ss.fgAtts + int(ws.fgAtts) if ws.fgAtts else ss.fgAtts
+            ss.fgPCT = ss.fgMade / ss.fgAtts if ss.fgAtts else 0
+            if ws.fgLng and int(ws.fgLng) > ss.fgLng:
+                ss.fgLng = ws.fgLng
+            ss.xpMade = ss.xpMade + int(ws.xpMade) if ws.xpMade else ss.xpMade
+            ss.xpAtts = ss.xpAtts + int(ws.xpAtts) if ws.xpAtts else ss.xpAtts
+            ss.points = ss.points + int(ws.points) if ws.points else ss.points
+
+            ss.punts = ss.punts + int(ws.punts) if ws.punts else ss.punts
+            ss.puntYDs = ss.puntYDs + int(ws.puntYDs) if ws.puntYDs else ss.puntYDs
+            ss.puntAVG = ss.puntYDs / ss.punts if ss.punts else 0
+            ss.puntTB = ss.puntTB + int(ws.puntTB) if ws.puntTB else ss.puntTB
+            ss.puntIn20 = ss.puntIn20 + int(ws.puntIn20) if ws.puntIn20 else ss.puntIn20
+            if ws.puntLng and int(ws.puntLng) > ss.puntLng:
+                ss.puntLng = ws.puntLng
 
             ss.FPs = ws.FPs if not ss.FPs else ss.FPs + ws.FPs
 

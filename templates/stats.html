@@ -4,18 +4,18 @@
 {% endblock %}
 {% block content %}
 <!-- Stats Page Content -->
-<div id="statsPage" class="container text-white">
+<div id="statsPage" class="container mt-4 pt-4 text-white">
     <div class="row justify-content-center">
       <!-- MAIN CONTENT -->
       <div class="col-12">
         {% if passLeaders and rushLeaders and recLeaders %}
-        <!-- League Leaders -->
+        <!-- Offensive League Leaders -->
         <div class="row mt-2">
           <div class="card bg-dark">
-            <div class="card-title text-center">League Leaders</div>
+            <div class="card-title text-center">Offensive League Leaders</div>
             <div class="card-body">
               <div class="row justify-content-center">
-                <div class="col-8">
+                <div class="col">
                   <div class="row">
                     <!-- Passing Yards Leaders -->
                     <div class="col">
@@ -28,7 +28,7 @@
                           <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + passLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
                         </div>
                         <div class="row mt-1">
-                          <span>{{ passLeader.name }} <span class="text-muted">{{ passLeader.current_team.key }}</span></span>
+                          <span>{{ passLeader.name }} <span class="text-muted"><small>{{ passLeader.current_team.key }}</small></span></span>
                         </div>
                         <div class="row mt-1">
                           <h3>{{ passLeaderStats.passYDs }}</h3>
@@ -39,7 +39,7 @@
                         <div class="row mt-1">
                           <div class="col-10">
                             <div class="row text-start">
-                              <span>{{ passLeader.name }} <span class="text-muted">{{ passLeader.current_team.key }}</span></span>
+                              <span><small>{{ passLeader.shortname }} </small><span class="text-muted"><small><small><small>{{ passLeader.current_team.key }}</small></small></small></span></span>
                             </div>
                           </div>
                           <div class="col-2">
@@ -54,6 +54,43 @@
                         <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Passing Yards</span>
                       </div>
                     </div>
+                    <!-- Passing TDs Leaders -->
+                    <div class="col">
+                      <div class="btn-group-vertical mt-2 position-relative">
+                      {% for passTDLeaderStats in passTDLeaders %}
+                      {% set passTDLeader = passTDLeaderStats.player %}
+                      {% if loop.index == 1 %}
+                      <button data-id="{{ passTDLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark">
+                        <div class="row mt-2">
+                          <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + passTDLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
+                        </div>
+                        <div class="row mt-1">
+                          <span>{{ passTDLeader.name }} <span class="text-muted"><small>{{ passTDLeader.current_team.key }}</small></span></span>
+                        </div>
+                        <div class="row mt-1">
+                          <h3>{{ passTDLeaderStats.passTDs }}</h3>
+                        </div>
+                      </button>
+                      {% else %}
+                      <button data-id="{{ passTDLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark">
+                        <div class="row mt-1">
+                          <div class="col-10">
+                            <div class="row text-start">
+                              <span><small>{{ passTDLeader.shortname }} </small><span class="text-muted"><small><small><small>{{ passTDLeader.current_team.key }}</small></small></small></span></span>
+                            </div>
+                          </div>
+                          <div class="col-2">
+                            <div class="row">
+                              {{ passTDLeaderStats.passTDs }}
+                            </div>
+                          </div>
+                        </div>
+                      </button>
+                      {% endif %}
+                      {% endfor %}
+                        <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Passing TDs</span>
+                      </div>
+                    </div>
                     <!-- Rushing Yards Leaders -->
                     <div class="col">
                       <div class="btn-group-vertical mt-2 position-relative">
@@ -65,7 +102,7 @@
                           <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + rushLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
                         </div>
                         <div class="row mt-1">
-                          <span>{{ rushLeader.name }} <span class="text-muted">{{ rushLeader.current_team.key }}</span></span>
+                          <span>{{ rushLeader.name }} <span class="text-muted"><small>{{ rushLeader.current_team.key }}</small></span></span>
                         </div>
                         <div class="row mt-1">
                           <h3>{{ rushLeaderStats.rushYDs }}</h3>
@@ -76,7 +113,7 @@
                         <div class="row mt-1">
                           <div class="col-10">
                             <div class="row text-start">
-                              <span>{{ rushLeader.name }} <span class="text-muted">{{ rushLeader.current_team.key }}</span></span>
+                              <span><small>{{ rushLeader.shortname }} </small><span class="text-muted"><small><small><small>{{ rushLeader.current_team.key }}</small></small></small></span></span>
                             </div>
                           </div>
                           <div class="col-2">
@@ -91,6 +128,43 @@
                         <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Rushing Yards</span>
                       </div>
                     </div>
+                    <!-- Rushing TDs Leaders -->
+                    <div class="col">
+                      <div class="btn-group-vertical mt-2 position-relative">
+                      {% for rushTDLeaderStats in rushTDLeaders %}
+                      {% set rushTDLeader = rushTDLeaderStats.player %}
+                      {% if loop.index == 1 %}
+                      <button data-id="{{ rushTDLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark">
+                        <div class="row mt-2">
+                          <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + rushTDLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
+                        </div>
+                        <div class="row mt-1">
+                          <span>{{ rushTDLeader.name }} <span class="text-muted"><small>{{ rushTDLeader.current_team.key }}</small></span></span>
+                        </div>
+                        <div class="row mt-1">
+                          <h3>{{ rushTDLeaderStats.rushTDs }}</h3>
+                        </div>
+                      </button>
+                      {% else %}
+                      <button data-id="{{ rushTDLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark">
+                        <div class="row mt-1">
+                          <div class="col-10">
+                            <div class="row text-start">
+                              <span><small>{{ rushTDLeader.shortname }} </small><span class="text-muted"><small><small><small>{{ rushTDLeader.current_team.key }}</small></small></small></span></span>
+                            </div>
+                          </div>
+                          <div class="col-2">
+                            <div class="row">
+                              {{ rushTDLeaderStats.rushTDs }}
+                            </div>
+                          </div>
+                        </div>
+                      </button>
+                      {% endif %}
+                      {% endfor %}
+                        <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Rushing TDs</span>
+                      </div>
+                    </div>
                     <!-- Receiving Yards Leaders -->
                     <div class="col">
                       <div class="btn-group-vertical mt-2 position-relative">
@@ -102,7 +176,7 @@
                           <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + recLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
                         </div>
                         <div class="row mt-1">
-                          <span>{{ recLeader.name }} <span class="text-muted">{{ recLeader.current_team.key }}</span></span>
+                          <span>{{ recLeader.name }} <span class="text-muted"><small>{{ recLeader.current_team.key }}</small></span></span>
                         </div>
                         <div class="row mt-1">
                           <h3>{{ recLeaderStats.recYDs }}</h3>
@@ -113,7 +187,7 @@
                         <div class="row mt-1">
                           <div class="col-10">
                             <div class="row text-start">
-                              <span>{{ recLeader.name }} <span class="text-muted">{{ recLeader.current_team.key }}</span></span>
+                              <span><small>{{ recLeader.shortname }} </small><span class="text-muted"><small><small><small>{{ recLeader.current_team.key }}</small></small></small></span></span>
                             </div>
                           </div>
                           <div class="col-2">
@@ -128,6 +202,43 @@
                         <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Receiving Yards</span>
                       </div>
                     </div>
+                    <!-- Receiving TDs Leaders -->
+                    <div class="col">
+                      <div class="btn-group-vertical mt-2 position-relative">
+                      {% for recTDLeaderStats in recTDLeaders %}
+                      {% set recTDLeader = recTDLeaderStats.player %}
+                      {% if loop.index == 1 %}
+                      <button data-id="{{ recTDLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark">
+                        <div class="row mt-2">
+                          <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + recTDLeader.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
+                        </div>
+                        <div class="row mt-1">
+                          <span>{{ recTDLeader.name }} <span class="text-muted"><small>{{ recTDLeader.current_team.key }}</small></span></span>
+                        </div>
+                        <div class="row mt-1">
+                          <h3>{{ recTDLeaderStats.recTDs }}</h3>
+                        </div>
+                      </button>
+                      {% else %}
+                      <button data-id="{{ recTDLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark">
+                        <div class="row mt-1">
+                          <div class="col-10">
+                            <div class="row text-start">
+                              <span><small>{{ recTDLeader.shortname }} </small><span class="text-muted"><small><small><small>{{ recTDLeader.current_team.key }}</small></small></small></span></span>
+                            </div>
+                          </div>
+                          <div class="col-2">
+                            <div class="row">
+                              {{ recTDLeaderStats.recTDs }}
+                            </div>
+                          </div>
+                        </div>
+                      </button>
+                      {% endif %}
+                      {% endfor %}
+                        <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Receiving TDs</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -135,144 +246,6 @@
           </div>
         </div>
         {% endif %}
-        <!-- Player Season Stats -->
-        <div class="row mt-2">
-          <div class="card bg-dark">
-            <div class="card-title text-center">Regular Season Stats</div>
-            <div class="card-body">
-              <!-- Passing -->
-              <div class="row text-white">
-                <div class="row">
-                  <h5>Passing</h5>
-                </div>
-                <table class="sortable player-table table table-sm table-dark table-hover">
-                  <thead>
-                    <tr>
-                      <td>Name</td>
-                      <td class="text-end">GP</td>
-                      <td class="text-end">CMP</td>
-                      <td class="text-end">ATT</td>
-                      <td class="text-end">CMP%</td>
-                      <td class="text-end">YDS</td>
-                      <td class="text-end">AVG</td>
-                      <td class="text-end">YDS/G</td>
-                      <td class="text-end">TD</td>
-                      <td class="text-end">INT</td>
-                      <td class="text-end">SACK</td>
-                      <td class="text-end">SYL</td>
-                      <td class="text-end">RTG</td>
-                    </tr>
-                  </thead>
-                  {% for season_stats in player_stats|sort(attribute='passYDs', reverse=True) %}
-                  {% if season_stats.passAtts > 0 %}
-                  <tr data-id="{{ season_stats.player.ID }}">
-                    <td>{{ season_stats.player.name }} <small class="text-muted">{{season_stats.player.current_team.key}} • {{ season_stats.player.position }}</small></td>
-                    <td class="text-end">{{ season_stats.gamesPlayed }}</td>
-                    <td class="text-end">{{ season_stats.passComps }}</td>
-                    <td class="text-end">{{ season_stats.passAtts }}</td>
-                    <td class="text-end">{{  '%0.1f' | format((season_stats.passComps/season_stats.passAtts)*100) }}</td>
-                    <td class="text-end">{{ season_stats.passYDs }}</td>
-                    {% if season_stats.passComps > 0 %}
-                    <td class="text-end">{{  '%0.1f' | format(season_stats.passYDs/season_stats.passComps) }}</td>
-                    {% else %}
-                    <td class="text-end">0.0</td>
-                    {% endif %}
-                    <td class="text-end">{{ '%0.1f' | format(season_stats.passYDsPerGame) }}</td>
-                    <td class="text-end">{{ season_stats.passTDs }}</td>
-                    <td class="text-end">{{ season_stats.passINTs }}</td>
-                    <td class="text-end">{{ season_stats.passSacks }}</td>
-                    <td class="text-end">{{ season_stats.passSackYDs }}</td>
-                    <td class="text-end">{{ '%0.1f' | format(season_stats.passRTG) }}</td>
-                  </tr>
-                  {% endif %}
-                  {% endfor %}
-                </table>
-              </div>
-              <!-- Rushing -->
-              <div class="row text-white">
-                <div class="row">
-                  <h5>Rushing</h5>
-                </div>
-                <table class="sortable player-table table table-sm table-dark table-hover">
-                  <thead>
-                    <tr>
-                      <td>Name</td>
-                      <td class="text-end">GP</td>
-                      <td class="text-end">ATT</td>
-                      <td class="text-end">YDS</td>
-                      <td class="text-end">AVG</td>
-                      <td class="text-end">LNG</td>
-                      <td class="text-end">TD</td>
-                      <td class="text-end">YDS/G</td>
-                      <td class="text-end">FUM</td>
-                      <td class="text-end">LST</td>
-                    </tr>
-                  </thead>
-                  {% for season_stats in player_stats|sort(attribute='rushYDs', reverse=True) %}
-                  {% if season_stats.rushAtts > 0 %}
-                  <tr data-id="{{ season_stats.player.ID }}">
-                    <td>{{ season_stats.player.name }} <small class="text-muted">{{season_stats.player.current_team.key}} • {{ season_stats.player.position }}</small></td>
-                    <td class="text-end">{{ season_stats.gamesPlayed }}</td>
-                    <td class="text-end">{{ season_stats.rushAtts }}</td>
-                    <td class="text-end">{{ season_stats.rushYDs }}</td>
-                    <td class="text-end">{{ '%0.1f' | format(season_stats.rushYDs/season_stats.rushAtts) }}</td>
-                    <td class="text-end">{{ season_stats.rushLng }}</td>
-                    <td class="text-end">{{ season_stats.rushTDs }}</td>
-                    <td class="text-end">{{ '%0.1f' | format(season_stats.rushYDs/season_stats.gamesPlayed) }}</td>
-                    <td class="text-end">{{ season_stats.fum }}</td>
-                    <td class="text-end">{{ season_stats.fumLost }}</td>
-                  </tr>
-                  {% endif %}
-                  {% endfor %}
-                </table>
-              </div>
-              <!-- Receiving -->
-              <div class="row text-white">
-                <div class="row">
-                  <h5>Receiving</h5>
-                </div>
-                <table class="sortable player-table table table-sm table-dark table-hover">
-                  <thead>
-                    <tr>
-                      <td>Name</td>
-                      <td class="text-end">GP</td>
-                      <td class="text-end">REC</td>
-                      <td class="text-end">TGTS</td>
-                      <td class="text-end">YDS</td>
-                      <td class="text-end">AVG</td>
-                      <td class="text-end">TD</td>
-                      <td class="text-end">LNG</td>
-                      <td class="text-end">YDS/G</td>
-                      <td class="text-end">FUM</td>
-                      <td class="text-end">LST</td>
-                    </tr>
-                  </thead>
-                  {% for season_stats in player_stats|sort(attribute='recYDs', reverse=True) %}
-                  {% if season_stats.recTGTS > 0 %}
-                  <tr data-id="{{ season_stats.player.ID }}">
-                    <td>{{ season_stats.player.name }} <small class="text-muted">{{season_stats.player.current_team.key}} • {{ season_stats.player.position }}</small></td>
-                    <td class="text-end">{{ season_stats.gamesPlayed }}</td>
-                    <td class="text-end">{{ season_stats.recs }}</td>
-                    <td class="text-end">{{ season_stats.recTGTS }}</td>
-                    <td class="text-end">{{ season_stats.recYDs }}</td>
-                    {% if season_stats.recs > 0 %}
-                    <td class="text-end">{{ '%0.1f' | format(season_stats.recYDs/season_stats.recs) }}</td>
-                    {% else %}
-                    <td class="text-end">0.0</td>
-                    {% endif %}
-                    <td class="text-end">{{ season_stats.recTDs }}</td>
-                    <td class="text-end">{{ season_stats.recLng }}</td>
-                    <td class="text-end">{{ '%0.1f' | format(season_stats.recYDs/season_stats.gamesPlayed) }}</td>
-                    <td class="text-end">{{ season_stats.fum }}</td>
-                    <td class="text-end">{{ season_stats.fumLost }}</td>
-                  </tr>
-                  {% endif %}
-                  {% endfor %}
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
