@@ -284,18 +284,19 @@ def get_stats_leaders(players, preseason, week=None):
         return None
 
     if week:
-        stats = [player.get_weekly_stats(preseason, week) for player in players]
+        stats = [player.get_weekly_stats_by_week(preseason=preseason, week=week)
+                 for player in players]
     else:
         stats = [player.get_season_stats(preseason) for player in players]
 
     stats.sort(key=lambda player: player.passYDs, reverse=True)
-    passYDs_leader = stats.pop(0).player
+    passYDs_leader = stats[0].player
 
     stats.sort(key=lambda player: player.rushYDs, reverse=True)
-    rushYDs_leader = stats.pop(0).player
+    rushYDs_leader = stats[0].player
 
     stats.sort(key=lambda player: player.recYDs, reverse=True)
-    recYDs_leader = stats.pop(0).player
+    recYDs_leader = stats[0].player
 
     return passYDs_leader.ID, rushYDs_leader.ID, recYDs_leader.ID
 
