@@ -103,10 +103,10 @@
                                 <td class="align-middle text-end">
                                     {% if stats.rushYDs == 0 %} - {% else %} {{ stats.rushYDs }} {% endif %}
                                 </td>
-                                <td class="align-middle text-end">
+                                <td class="align-middle text-end" style="border-right: 1px solid white">
                                     {% if stats.rushTDs == 0 %} - {% else %} {{ stats.rushTDs }} {% endif %}
                                 </td>
-                                <td class="align-middle text-end" style="border-right: 1px solid white">
+                                <td class="align-middle text-end">
                                     {% if stats.recTGTS == 0 %} - {% else %} {{ stats.recTGTS }} {% endif %}
                                 </td>
                                 <td class="align-middle text-end">
@@ -119,7 +119,7 @@
                                     {% if stats.recTDs == 0 %} - {% else %} {{ stats.recTDs }} {% endif %}
                                 </td>
                                 <td class="align-middle text-end" style="border-right: 1px solid white">
-                                    {% if stats.FPs == 0 %} - {% else %} {{ stats.FPs }} {% endif %}
+                                    {% if stats.FPs == 0 %} - {% else %} {{ "%.2f"|format(stats.FPs) }} {% endif %}
                                 </td>
                             </tr>
                         {% endfor %}
