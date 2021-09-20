@@ -295,11 +295,20 @@ def player():
 
     status = player.designation
     if status in ['Questionable', 'Doubtful']:
-        status_string = '<span class="badge rounded-pill bg-warning">{} - {}</span>'\
-            .format(player.designation, player.injury)
+        if player.injury:
+            status_string = '<span class="badge rounded-pill bg-warning">{} - {}</span>' \
+                .format(player.designation, player.injury)
+        else:
+            status_string = '<span class="badge rounded-pill bg-warning">{}</span>' \
+                .format(player.designation)
+
     elif status in ['Injured Reserve', 'Out']:
-        status_string = '<span class="badge rounded-pill bg-danger">{} - {}</span>'\
-            .format(player.designation, player.injury)
+        if player.injury:
+            status_string = '<span class="badge rounded-pill bg-danger">{} - {}</span>'\
+                .format(player.designation, player.injury)
+        else:
+            status_string = '<span class="badge rounded-pill bg-danger">{}</span>'\
+                .format(player.designation)
     else:
         status_string = '<span class="badge rounded-pill bg-success">Active</span>'
 
