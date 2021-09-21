@@ -1073,7 +1073,7 @@ def read_dvoa_file(file):
 
 
 def update_dvoa_rankings():
-    
+
     path = DVOA_PATH / "DVOA.csv"
     dvoa_dict = read_dvoa_file(path)
 
@@ -1128,6 +1128,11 @@ def build_db(db, thread, preseason):
 
     update_team_stats(db, thread, preseason)
     update_rankings(db, thread, preseason)
+
+    teams = Team.query.filter(Team.ID != 100).all()
+    for team in teams:
+        team.bye = team.get_bye()
+        team.set_depth_chart()
 
     db.session.commit()
 

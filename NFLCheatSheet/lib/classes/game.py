@@ -18,6 +18,7 @@ class Game(db.Model):
     away_team = db.relationship("Team", foreign_keys="Game.away_team_id", viewonly=True)
 
     completed = db.Column(db.Boolean)
+    overtime = db.Column(db.Boolean)
 
     stats = db.relationship('WeeklyStats', backref='game', lazy=True, viewonly=True)
     scraped_stats = db.Column(db.Boolean)
@@ -65,10 +66,16 @@ class Game(db.Model):
 
         # Check if completed if not completed...
         if not self.completed:
-            if boxscore.is_completed(self.ID):
+            result = boxscore.is_completed(self.ID)
+            if result == "Final":
                 self.completed = True
+                self.overtime = False
+            elif result == "Final/OT":
+                self.completed = True
+                self.overtime = True
             else:
                 self.completed = False
+                self.overtime = False
 
         return self.completed
 

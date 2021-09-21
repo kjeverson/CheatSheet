@@ -9,10 +9,13 @@ def is_completed(game_id):
 
     result = soup.find("span", {"class": "game-time status-detail"})
     if result:
-        if result.text == "Final" or result.text == "Final/OT":
-            return True
+        if result.text == "Final":
+            return result.text
+        
+        if result.text == "Final/OT":
+            return result.text
 
-    return False
+    return None
 
 
 def get_scores(game_id):

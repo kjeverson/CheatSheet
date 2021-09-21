@@ -303,10 +303,10 @@ def get_stats_leaders(players, preseason, week=None):
 
 def get_passer_rating(passAtts, passComps, passYDs, passTDs, passINTs):
 
-    a = passComps/passAtts - 0.3 * 5
-    b = passYDs / passAtts - 3 * 0.25
-    c = passTDs/passAtts * 20
-    d = 2.375 - passINTs/passAtts * 25
+    a = ((passComps/passAtts) - 0.3) * 5
+    b = ((passYDs / passAtts) - 3) * 0.25
+    c = (passTDs/passAtts) * 20
+    d = 2.375 - ((passINTs/passAtts) * 25)
 
     if a > 2.375:
         a = 2.375
@@ -332,4 +332,4 @@ def get_passer_rating(passAtts, passComps, passYDs, passTDs, passINTs):
     if d < 0:
         d = 0
 
-    return a + b + c + d /6 * 100
+    return ((a + b + c + d) / 6) * 100
