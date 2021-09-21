@@ -2414,7 +2414,7 @@
                               {{ player.analysis }}
                             </div>
                           </div>
-                          <p class="card-text text-center"><small class="text-muted">{{ player.date }}</small></p>
+                          <p class="card-text text-center"><small class="text-muted">{{ player.get_injury_date().strftime('%B %d, %Y') }}</small></p>
                         </div>
                       </div>
                     </div>
