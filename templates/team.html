@@ -805,10 +805,10 @@
                           <td class="align-self-center">@ {{ game.home_team.name }}</td>
                           {% if game.away_team_score > game.home_team_score %}
                             {% set record.wins = record.wins + 1 %}
-                          <td><span class="fw-bold text-success">W </span> {{ game.home_team_score }}-{{ game.away_team_score }}</td>
+                          <td><span class="fw-bold text-success">W </span> {{ game.away_team_score }}-{{ game.home_team_score }}</td>
                             {% elif game.away_team_score < game.home_team_score %}
                             {% set record.losses = record.losses + 1 %}
-                            <td><span class="fw-bold text-danger">L </span> {{ game.home_team_score }}-{{ game.away_team_score }}</td>
+                            <td><span class="fw-bold text-danger">L </span> {{ game.away_team_score }}-{{ game.home_team_score }}</td>
                             {% else %}
                             {% set record.ties = record.ties + 1 %}
                             <td><span class="fw-bold">T </span> {{ game.away_team_score }}-{{ game.home_team_score }}</td>
@@ -906,10 +906,10 @@
                             <td class="align-self-center">@ {{ game.home_team.name }}</td>
                             {% if game.away_team_score > game.home_team_score %}
                               {% set record.wins = record.wins + 1 %}
-                            <td><span class="fw-bold text-success">W </span> {{ game.home_team_score }}-{{ game.away_team_score }}</td>
+                            <td><span class="fw-bold text-success">W </span> {{ game.away_team_score }}-{{ game.home_team_score }}</td>
                               {% elif game.away_team_score < game.home_team_score %}
                               {% set record.losses = record.losses + 1 %}
-                              <td><span class="fw-bold text-danger">L </span> {{ game.home_team_score }}-{{ game.away_team_score }}</td>
+                              <td><span class="fw-bold text-danger">L </span> {{ game.away_team_score }}-{{ game.home_team_score }}</td>
                               {% else %}
                               {% set record.ties = record.ties + 1 %}
                               <td><span class="fw-bold">T </span> {{ game.away_team_score }}-{{ game.home_team_score }}</td>
@@ -973,10 +973,10 @@
                             <td class="align-self-center">@ {{ game.home_team.name }}</td>
                             {% if game.away_team_score > game.home_team_score %}
                               {% set record.wins = record.wins + 1 %}
-                            <td><span class="fw-bold text-success">W </span> {{ game.home_team_score }}-{{ game.away_team_score }}</td>
+                            <td><span class="fw-bold text-success">W </span> {{ game.away_team_score }}-{{ game.home_team_score }}</td>
                               {% elif game.away_team_score < game.home_team_score %}
                               {% set record.losses = record.losses + 1 %}
-                              <td><span class="fw-bold text-danger">L </span> {{ game.home_team_score }}-{{ game.away_team_score }}</td>
+                              <td><span class="fw-bold text-danger">L </span> {{ game.away_team_score }}-{{ game.home_team_score }}</td>
                               {% else %}
                               {% set record.ties = record.ties + 1 %}
                               <td><span class="fw-bold">T </span> {{ game.away_team_score }}-{{ game.home_team_score }}</td>
