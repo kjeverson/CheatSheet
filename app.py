@@ -108,12 +108,6 @@ def matchups():
                 rushLeader = None
                 recLeader = None
 
-        # Render Times
-        for match in m:
-            if match.date not in ["TBD", "Final"]:
-                dt = zulu.parse(match.date, '%Y-%m-%dT%H:%MZ')
-                match.date = dt.format('%a %b %d, %Y %I:%M %p', 'local')
-
         default_headshot_path = url_for('static', filename='headshots/default.png')
 
         return render_template("matchups.html", teams=teams, week=week, week_string=week_string,

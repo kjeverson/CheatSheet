@@ -5,7 +5,7 @@
 {% block content %}
 <div class="container mt-4 pt-4">
     <!-- Content -->
-    <div class="container text-center text-white">
+    <div class="container text-white">
     <!-- Content -->
     <div class="row mt-4">
         <!-- Left Side -->
@@ -56,7 +56,7 @@
                                       {% if matchup.completed %}
                                         <small class="card-title text-end"><strong class="text-uppercase">Final</strong></small>
                                       {% else %}
-                                        <small>{{ matchup.date }}</small>
+                                        <small>{{ matchup.get_time().strftime('%a, %b %-d %-I:%M %p') }}</small>
                                       {% endif %}
                                     </button>
                                 </form>

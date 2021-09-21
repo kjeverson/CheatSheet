@@ -57,8 +57,9 @@ class Game(db.Model):
             return False
 
     def get_time(self):
-        dt = zulu.parse(self.date, '%Y-%m-%dT%H:%MZ')
-        return dt.datetime
+        dt = zulu.parse(self.date)
+        dt = dt.astimezone(tz="local")
+        return dt
 
     def is_complete(self):
 
