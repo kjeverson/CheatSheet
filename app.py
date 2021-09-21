@@ -424,6 +424,8 @@ def update_stats():
     db_utils.update_team_stats(db, thread, preseason)
     thread.state = "Updating Team Rankings"
     db_utils.update_rankings(db, thread, preseason)
+    thread.state = "Updating DVOA Rankings"
+    db_utils.update_dvoa_rankings()
     db.session.commit()
     print("Updating Stats")
     return jsonify("Done")
