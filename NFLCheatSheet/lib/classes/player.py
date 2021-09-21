@@ -1,6 +1,7 @@
 from app import db
 from NFLCheatSheet.lib.classes import stats
 
+import zulu
 import json
 import requests
 from pathlib import Path
@@ -137,7 +138,8 @@ class Player(db.Model):
             self.date = injuries[0]['date']
             if len(injuries[0]['shortComment'].split()) == 1:
                 self.news = "{} was listed as {} on {}."\
-                    .format(self.name, self.designation, self.date)
+                    .format(self.name, self.designation,
+                            self.get_injury_date().strftime('%B %d'))
                 self.analysis = self.news
             else:
                 self.news = injuries[0]['shortComment']
@@ -189,6 +191,11 @@ class Player(db.Model):
                     image.save(image_file)
                 except UnidentifiedImageError:
                     pass
+
+    def get_injury_date(self):
+        dt = zulu.parse(self.date)
+        dt = dt.astimezone(tz="local")
+        return dt
 
 
 def get_experience_string(experience):

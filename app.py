@@ -108,12 +108,6 @@ def matchups():
                 rushLeader = None
                 recLeader = None
 
-        # Render Times
-        for match in m:
-            if match.date not in ["TBD", "Final"]:
-                dt = zulu.parse(match.date, '%Y-%m-%dT%H:%MZ')
-                match.date = dt.format('%a %b %d, %Y %I:%M %p', 'local')
-
         default_headshot_path = url_for('static', filename='headshots/default.png')
 
         return render_template("matchups.html", teams=teams, week=week, week_string=week_string,
@@ -255,14 +249,7 @@ def team():
         injured = [player for player in players if player.date]
         injured = [player for player in injured if len(player.news) > 2]
 
-        for player in injured:
-            dt = zulu.parse(player.date, '%Y-%m-%dT%H:%MZ')
-            player.date = dt.format('%B %d, %Y', 'local')
-            player.date = datetime.strptime(player.date, '%B %d, %Y')
-
-        injured.sort(key=lambda x: x.date, reverse=True)
-        for player in injured:
-            player.date = player.date.strftime('%B %d, %Y')
+        injured.sort(key=lambda x: x.get_injury_date(), reverse=True)
 
         draft_picks = Player.query.filter(Player.draft_year == 2021)\
             .filter(Player.draft_team_id == team.ID).all()

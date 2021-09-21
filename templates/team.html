@@ -758,6 +758,7 @@
                         <tr>
                           <th>WK</th>
                           <th>DATE</th>
+                          <th>TIME</th>
                           <th>OPPONENT</th>
                           <th>RESULT</th>
                           <th>W-L</th>
@@ -773,7 +774,8 @@
                         {% if not game.completed %}
                         <tr>
                           <td>{{ game.week }}</td>
-                          <td>{{ game.date }}</td>
+                          <td>{{ game.get_time().strftime('%a, %b %-d') }}</td>
+                          <td>{{ game.get_time().strftime('%-I:%M %p') }}</td>
                           {% if game.home_team.key == team.key %}
                             <td> vs. {{ game.away_team.name }}</td>
                           {% else %}
@@ -788,7 +790,8 @@
                         {% else %}
                         <tr>
                           <td>{{ game.week }}</td>
-                          <td>{{ game.date }}</td>
+                          <td>{{ game.get_time().strftime('%a, %b %-d') }}</td>
+                          <td>{{ game.get_time().strftime('%-I:%M %p') }}</td>
                           {% if game.home_team.key == team.key %}
                           <td class="align-self-center">vs. {{ game.away_team.name }}</td>
                             {% if game.home_team_score > game.away_team_score %}
@@ -854,6 +857,7 @@
                         <tr>
                           <th>WK</th>
                           <th>DATE</th>
+                          <th>TIME</th>
                           <th>OPPONENT</th>
                           <th>RESULT</th>
                           <th>W-L</th>
@@ -874,7 +878,8 @@
                           {% if not game.completed %}
                           <tr>
                             <td>{{ game.week }}</td>
-                            <td>{{ game.date }}</td>
+                            <td>{{ game.get_time().strftime('%a, %b %-d') }}</td>
+                            <td>{{ game.get_time().strftime('%-I:%M %p') }}</td>
                             {% if game.home_team.key == team.key %}
                               <td> vs. {{ game.away_team.name }}</td>
                             {% else %}
@@ -889,7 +894,8 @@
                           {% else %}
                           <tr>
                             <td>{{ game.week }}</td>
-                            <td>{{ game.date }}</td>
+                            <td>{{ game.get_time().strftime('%a, %b %-d') }}</td>
+                            <td>{{ game.get_time().strftime('%-I:%M %p') }}</td>
                             {% if game.home_team.key == team.key %}
                             <td class="align-self-center">vs. {{ game.away_team.name }}</td>
                               {% if game.home_team_score > game.away_team_score %}
@@ -941,7 +947,8 @@
                           {% if not game.completed %}
                           <tr>
                             <td>{{ game.week }}</td>
-                            <td>{{ game.date }}</td>
+                            <td>{{ game.get_time().strftime('%a, %b %-d') }}</td>
+                            <td>{{ game.get_time().strftime('%-I:%M %p') }}</td>
                             {% if game.home_team.key == team.key %}
                               <td> vs. {{ game.away_team.name }}</td>
                             {% else %}
@@ -956,7 +963,8 @@
                           {% else %}
                           <tr>
                             <td>{{ game.week }}</td>
-                            <td>{{ game.date }}</td>
+                            <td>{{ game.get_time().strftime('%a, %b %-d') }}</td>
+                            <td>{{ game.get_time().strftime('%-I:%M %p') }}</td>
                             {% if game.home_team.key == team.key %}
                             <td class="align-self-center">vs. {{ game.away_team.name }}</td>
                               {% if game.home_team_score > game.away_team_score %}
@@ -2406,7 +2414,7 @@
                               {{ player.analysis }}
                             </div>
                           </div>
-                          <p class="card-text text-center"><small class="text-muted">{{ player.date }}</small></p>
+                          <p class="card-text text-center"><small class="text-muted">{{ player.get_injury_date().strftime('%B %d, %Y') }}</small></p>
                         </div>
                       </div>
                     </div>
