@@ -54,7 +54,7 @@
                                 <form class="text-end" action="{{ url_for('matchup') }}" method="GET">
                                     <button type="submit" class="btn-block btn bg-dark text-white card-title" name="matchup" value="{{ matchup.ID }}">
                                       {% if matchup.completed %}
-                                        <small class="card-title text-end"><strong class="text-uppercase">Final</strong></small>
+                                        <small class="card-title text-end"><strong class="text-uppercase">{% if matchup.overtime %}Final/OT{% else %}Final{%endif%}</strong></small>
                                       {% else %}
                                         <small>{{ matchup.get_time().strftime('%a, %b %-d %-I:%M %p') }}</small>
                                       {% endif %}

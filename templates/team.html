@@ -447,8 +447,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    {% for t in teams |sort(attribute='wins', reverse=True) %}
-                    {% if t.conference == team.conference and t.division == team.division %}
+                    {% for t in division %}
                     {% if t.key == team.key %}
                     <tr>
                       <td><strong>{{ t.name }}</strong></td>
@@ -469,7 +468,6 @@
                       <td>{{ t.get_team_stats(preseason=false).pointsFor }}</td>
                       <td>{{ t.get_team_stats(preseason=false).pointsAgainst }}</td>
                     </tr>
-                    {% endif %}
                     {% endif %}
                     {% endfor %}
                   </tbody>

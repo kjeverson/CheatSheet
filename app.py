@@ -254,8 +254,16 @@ def team():
         draft_picks = Player.query.filter(Player.draft_year == 2021)\
             .filter(Player.draft_team_id == team.ID).all()
 
+        division = Team.query.filter(
+            Team.division == team.division).filter(
+            Team.conference == team.conference).all()
+        division.sort(key=lambda team: team.get_team_stats(preseason=preseason).pointsFor,
+                      reverse=True)
+        division.sort(key=lambda team: team.wins, reverse=True)
+
         return render_template("team.html", preseason=preseason,
                                teams=teams, players=players, team=team,
+                               division=division,
                                Player=Player,
                                draft_picks=draft_picks,
                                player_stats=player_stats, injured=injured,

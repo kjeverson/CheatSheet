@@ -37,12 +37,12 @@
                       {% else %}
                       <button data-id="{{ passLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark">
                         <div class="row mt-1">
-                          <div class="col-10">
+                          <div class="col-9">
                             <div class="row text-start">
                               <span><small>{{ passLeader.shortname }} </small><span class="text-muted"><small><small><small>{{ passLeader.current_team.key }}</small></small></small></span></span>
                             </div>
                           </div>
-                          <div class="col-2">
+                          <div class="col-3 text-end">
                             <div class="row">
                               {{ passLeaderStats.passYDs }}
                             </div>
@@ -111,12 +111,12 @@
                       {% else %}
                       <button data-id="{{ rushLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark">
                         <div class="row mt-1">
-                          <div class="col-10">
+                          <div class="col-9">
                             <div class="row text-start">
                               <span><small>{{ rushLeader.shortname }} </small><span class="text-muted"><small><small><small>{{ rushLeader.current_team.key }}</small></small></small></span></span>
                             </div>
                           </div>
-                          <div class="col-2">
+                          <div class="col-3">
                             <div class="row">
                               {{ rushLeaderStats.rushYDs }}
                             </div>
@@ -185,12 +185,12 @@
                       {% else %}
                       <button data-id="{{ recLeader.ID }}" class="border-secondary player-btn btn btn-block btn-dark">
                         <div class="row mt-1">
-                          <div class="col-10">
+                          <div class="col-9">
                             <div class="row text-start">
                               <span><small>{{ recLeader.shortname }} </small><span class="text-muted"><small><small><small>{{ recLeader.current_team.key }}</small></small></small></span></span>
                             </div>
                           </div>
-                          <div class="col-2">
+                          <div class="col-3">
                             <div class="row">
                               {{ recLeaderStats.recYDs }}
                             </div>

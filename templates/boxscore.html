@@ -33,7 +33,7 @@
         </div>
         <div class="col-2 align-self-center">
             <div class="row"><small class="text-center font-weight-light">Week {{matchup.week }}</small></div>
-            <div class="row"><small class="text-center"><strong>FINAL</strong></small></div>
+            <div class="row"><small class="text-center"><strong>{% if matchup.overtime %} FINAL/OT {% else %} FINAL {% endif %}</strong></small></div>
         </div>
         <div class="col-5">
             <div class="row">
