@@ -6,7 +6,7 @@
 <div class="container mt-4 pt-4">
     <!-- Header -->
     <form action="{{ url_for('team') }}" method="GET">
-    <div class="row justify-content-center text-white">
+    <div class="mt-4 row justify-content-center text-white">
         <!-- Home Team Section -->
         <div class="col-5">
             <div class="row">
@@ -54,7 +54,7 @@
     </div>
     </form>
     <!-- Content -->
-    <div class="container mt-2 text-white">
+    <div class="container text-white">
         <div class="row">
             <!-- Left Side -->
             <div class="col-3">
@@ -184,18 +184,16 @@
                             <!-- Home Team -->
                             <div class="col-6 text-start justify-content-center">
                                 <table class="player-table table table-sm table-dark table-hover table-responsive">
-                                    <thead><td>Pos</td><td>Name</td><td>Injury</td></thead>
+                                    <thead><td>Pos</td><td>Name</td></thead>
                                     <tbody>
                                         {% for player in matchup.home_team.players %}
                                         <tr data-id="{{ player.ID }}">
                                             {% if player.designation == 'Questionable' or player.designation == 'Doubtful' %}
                                             <td>{{ player.position }}</td>
-                                            <td>{{  player.fname[0]  }}. {{ player.lname }} <div class="badge rounded-pill p-1 bg-warning"><span class="visually-hidden">N</span></div></td>
-                                            <td>{{ player.injury}} </td>
+                                            <td>{{  player.name }} <div class="badge rounded-pill p-1 bg-warning"><span class="visually-hidden">N</span></div></td>
                                             {% elif player.designation == 'Out' %}
                                             <td>{{ player.position }}</td>
-                                            <td>{{  player.fname[0]  }}. {{ player.lname }} <div class="badge rounded-pill p-1 bg-danger"><span class="visually-hidden">N</span></div></td>
-                                            <td>{{ player.injury}} </td>
+                                            <td>{{  player.name }} <div class="badge rounded-pill p-1 bg-danger"><span class="visually-hidden">N</span></div></td>
                                             {% endif %}
                                         </tr>
                                         {% endfor %}
@@ -205,18 +203,16 @@
                             <!-- Away Team -->
                             <div class="col-6 text-start">
                                 <table class="player-table table table-sm table-dark table-hover table-responsive">
-                                    <thead><td>Pos</td><td>Name</td><td>Injury</td></thead>
+                                    <thead><td>Pos</td><td>Name</td></thead>
                                     <tbody>
                                         {% for player in matchup.away_team.players %}
                                         <tr data-id="{{ player.ID }}">
                                             {% if player.designation == 'Questionable' or player.designation == 'Doubtful' %}
                                             <td>{{ player.position }}</td>
-                                            <td>{{  player.fname[0]  }}. {{ player.lname }} <div class="badge rounded-pill p-1 bg-warning"><span class="visually-hidden">N</span></div></td>
-                                            <td>{{ player.injury}} </td>
+                                            <td>{{  player.name }} <div class="badge rounded-pill p-1 bg-warning"><span class="visually-hidden">N</span></div></td>
                                             {% elif player.designation == 'Out' %}
                                             <td>{{ player.position }}</td>
-                                            <td>{{  player.fname[0]  }}. {{ player.lname }} <div class="badge rounded-pill p-1 bg-danger"><span class="visually-hidden">N</span></div></td>
-                                            <td>{{ player.injury}} </td>
+                                            <td>{{  player.name }} <div class="badge rounded-pill p-1 bg-danger"><span class="visually-hidden">N</span></div></td>
                                             {% endif %}
                                         </tr>
                                         {% endfor %}

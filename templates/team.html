@@ -389,10 +389,10 @@
                     <tr data-id="{{ player.ID }}">
                         {% if player.designation == 'Questionable' or player.designation == 'Doubtful' %}
                         <td>{{ player.position }}</td>
-                        <td>{{ player.shortname  }} <div class="badge rounded-pill p-1 bg-warning"><span class="visually-hidden">N</span></div></td>
+                        <td>{{ player.name  }} <div class="badge rounded-pill p-1 bg-warning"><span class="visually-hidden">N</span></div></td>
                         {% elif player.designation == 'Out' %}
                         <td>{{ player.position }}</td>
-                        <td>{{ player.shortname }} <div class="badge rounded-pill p-1 bg-danger"><span class="visually-hidden">N</span></div></td>
+                        <td>{{ player.name }} <div class="badge rounded-pill p-1 bg-danger"><span class="visually-hidden">N</span></div></td>
                         {% endif %}
                     </tr>
                     {% endif %}
@@ -419,7 +419,7 @@
                     <tr data-id="{{ player.ID }}">
                         {% if player.designation == 'Injured Reserve' %}
                         <td>{{ player.position }}</td>
-                        <td>{{ player.shortname  }} <div class="badge rounded-pill p-1 bg-danger"><span class="visually-hidden">N</span></div></td>
+                        <td>{{ player.name  }} <div class="badge rounded-pill p-1 bg-danger"><span class="visually-hidden">N</span></div></td>
                         {% endif %}
                     </tr>
                   {% endfor %}
@@ -2445,11 +2445,11 @@
                     <tr data-id="{{ player.ID }}">
                         {% if player.designation == 'Questionable' or player.designation == 'Doubtful' %}
                         <td>{{ player.position }}</td>
-                        <td>{{ player.shortname  }} <div class="badge rounded-pill p-1 bg-warning"><span class="visually-hidden">N</span></div></td>
+                        <td>{{ player.name  }} <div class="badge rounded-pill p-1 bg-warning"><span class="visually-hidden">N</span></div></td>
                         <td>{{ player.injury}} </td>
                         {% elif player.designation == 'Out' %}
                         <td>{{ player.position }}</td>
-                        <td>{{ player.shortname }} <div class="badge rounded-pill p-1 bg-danger"><span class="visually-hidden">N</span></div></td>
+                        <td>{{ player.name }} <div class="badge rounded-pill p-1 bg-danger"><span class="visually-hidden">N</span></div></td>
                         <td>{{ player.injury}} </td>
                         {% endif %}
                     </tr>
@@ -2478,7 +2478,7 @@
                     <tr data-id="{{ player.ID }}">
                         {% if player.designation == 'Injured Reserve' %}
                         <td>{{ player.position }}</td>
-                        <td>{{ player.shortname }} <div class="badge rounded-pill p-1 bg-danger"><span class="visually-hidden">N</span></div></td>
+                        <td>{{ player.name }} <div class="badge rounded-pill p-1 bg-danger"><span class="visually-hidden">N</span></div></td>
                         <td>{{ player.injury}}</td>
                         {% endif %}
                     </tr>
