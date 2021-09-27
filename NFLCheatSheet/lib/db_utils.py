@@ -1034,30 +1034,81 @@ def update_fantasy_points(db, thread):
     print("Calculating Fantasy Points...\x1b[32mCOMPLETE!\x1b[0m\033[K")
 
 
+def get_rank(stats, attribute, reverse=True):
+
+    count = 1
+    current_rank = 1
+    next_rank = 1
+    rank_list = []
+    for i in range(len(stats)):
+        if reverse:
+            try:
+                if float(getattr(stats[i], attribute)) > float(getattr(stats[i+1], attribute)):
+                    count = 1
+                    current_rank = next_rank
+                    rank_list.append(current_rank)
+                    next_rank = next_rank + 1
+                else:
+                    count += 1
+                    next_rank += 1
+                    rank_list.append(current_rank)
+
+            except IndexError as err:
+                rank_list.append(next_rank)
+        else:
+            try:
+                if float(getattr(stats[i], attribute)) < float(getattr(stats[i + 1], attribute)):
+                    count = 1
+                    current_rank = next_rank
+                    rank_list.append(current_rank)
+                    next_rank = next_rank + 1
+                else:
+                    count += 1
+                    next_rank += 1
+                    rank_list.append(current_rank)
+
+            except IndexError as err:
+                rank_list.append(next_rank)
+
+    print(rank_list)
+    return rank_list
+
+
 def update_rankings(db, thread, preseason):
 
     thread.progress = 0
 
     teams = Team.query.filter(Team.ID != 100).all()
     s = stats.TeamStats.query.filter(stats.TeamStats.team_id != 100).filter_by(preseason=preseason).all()
-    passYDsPerGameRank = sorted(s, key=operator.attrgetter("passYDsPerGame"), reverse=True)
-    rushYDsPerGameRank = sorted(s, key=operator.attrgetter("rushYDsPerGame"), reverse=True)
-    passYDsRank = sorted(s, key=operator.attrgetter("passYDs"), reverse=True)
-    rushYDsRank = sorted(s, key=operator.attrgetter("passYDs"), reverse=True)
-    PPGRank = sorted(s, key=operator.attrgetter("PPG"), reverse=True)
-    PAPGRank = sorted(s, key=operator.attrgetter("PAPG"))
+    passYDsPerGame = sorted(s, key=operator.attrgetter("passYDsPerGame"), reverse=True)
+    passYDsPerGameRank = get_rank(passYDsPerGame, "passYDsPerGame")
+
+    rushYDsPerGame = sorted(s, key=operator.attrgetter("rushYDsPerGame"), reverse=True)
+    rushYDsPerGameRank = get_rank(rushYDsPerGame, "rushYDsPerGame")
+
+    passYDs = sorted(s, key=operator.attrgetter("passYDs"), reverse=True)
+    passYDsRank = get_rank(passYDs, "passYDs")
+
+    rushYDs = sorted(s, key=operator.attrgetter("rushYDs"), reverse=True)
+    rushYDsRank = get_rank(rushYDs, "rushYDs")
+
+    PPG = sorted(s, key=operator.attrgetter("PPG"), reverse=True)
+    PPGRank = get_rank(PPG, "PPG")
+
+    PAPG = sorted(s, key=operator.attrgetter("PAPG"))
+    PAPGRank = get_rank(PAPG, "PAPG", reverse=False)
 
     thread.total = len(teams)
     for i in range(len(teams)):
         thread.progress = i+1
         team = teams[i]
         s = team.get_team_stats(preseason=preseason)
-        s.passYDsPerGameRank = passYDsPerGameRank.index(s)+1
-        s.rushYDsPerGameRank = rushYDsPerGameRank.index(s)+1
-        s.passYDsRank = passYDsRank.index(s)+1
-        s.rushYDsRank = rushYDsRank.index(s)+1
-        s.PPGRank = PPGRank.index(s)+1
-        s.PAPGRank = PAPGRank.index(s)+1
+        s.passYDsPerGameRank = passYDsPerGameRank[passYDsPerGame.index(s)]
+        s.rushYDsPerGameRank = rushYDsPerGameRank[rushYDsPerGame.index(s)]
+        s.passYDsRank = passYDsRank[passYDs.index(s)]
+        s.rushYDsRank = rushYDsRank[rushYDs.index(s)]
+        s.PPGRank = PPGRank[PPG.index(s)]
+        s.PAPGRank = PAPGRank[PAPG.index(s)]
 
 
 def read_dvoa_file(file):
