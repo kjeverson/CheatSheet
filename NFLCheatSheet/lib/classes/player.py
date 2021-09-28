@@ -137,10 +137,15 @@ class Player(db.Model):
 
             self.date = injuries[0]['date']
             if len(injuries[0]['shortComment'].split()) == 1:
-                self.news = "{} was listed as {} on {}."\
-                    .format(self.name, self.designation,
-                            self.get_injury_date().strftime('%B %d'))
-                self.analysis = self.news
+                if self.injury:
+                    self.news = "{}({}) was listed as {} on {}."\
+                        .format(self.name, self.injury, self.designation,
+                                self.get_injury_date().strftime('%B %d'))
+                else:
+                    self.news = "{} was listed as {} on {}."\
+                        .format(self.name, self.designation,
+                                self.get_injury_date().strftime('%B %d'))
+                self.analysis = ""
             else:
                 self.news = injuries[0]['shortComment']
                 self.analysis = injuries[0]['longComment']
