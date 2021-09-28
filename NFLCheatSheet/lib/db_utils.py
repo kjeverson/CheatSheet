@@ -1070,7 +1070,6 @@ def get_rank(stats, attribute, reverse=True):
             except IndexError as err:
                 rank_list.append(next_rank)
 
-    print(rank_list)
     return rank_list
 
 
