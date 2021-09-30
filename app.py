@@ -392,6 +392,10 @@ def update_rosters():
     db_utils.set_depth_charts(db, thread)
     db.session.commit()
 
+    thread.state = "Getting Team Transactions"
+    db_utils.get_team_transactions(db, thread)
+    db.session.commit()
+
     print("Updating Rosters")
     return jsonify("Done")
 

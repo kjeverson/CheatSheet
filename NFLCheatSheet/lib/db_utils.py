@@ -13,6 +13,7 @@ import csv
 
 from NFLCheatSheet.lib.classes.team import Team
 from NFLCheatSheet.lib.classes.player import Player, add_player, get_player, player_url
+from NFLCheatSheet.lib.classes.transactions import Transactions
 from NFLCheatSheet.lib.classes import stats
 from NFLCheatSheet.lib.classes.game import Game
 from NFLCheatSheet.lib.classes.depth_chart import DepthChart
@@ -20,7 +21,7 @@ from NFLCheatSheet.lib.classes.depth_chart import DepthChart
 from NFLCheatSheet.lib.fantasy.scoring import Scoring, get_score
 
 from NFLCheatSheet.lib.scrape.boxscore import get_game_stats, get_scores
-from NFLCheatSheet.lib.scrape import schedule
+from NFLCheatSheet.lib.scrape import schedule, transactions
 
 
 DVOA_PATH = Path("/Users/everson/NFLCheatSheet/data/DVOA")
@@ -1155,6 +1156,23 @@ def update_dvoa_rankings():
 
         team_stats.DEFPASS = int(dvoa_dict[team]['Pass DVOA Rank'])
         team_stats.DEFRUSH = int(dvoa_dict[team]['Rush DVOA Rank'])
+
+
+def get_team_transactions(db, thread):
+
+    thread.progress = 0
+    teams = Team.query.filter(Team.ID != 100).all()
+    thread.total = len(teams)
+    for i in range(len(teams)):
+        thread.progress = i+1
+        team = teams[i]
+        t = transactions.get_team_transactions(team.key)
+        for transaction in t:
+            db.session.add(Transactions(
+                team_id=team.ID,
+                date=transaction[0],
+                transaction=transaction[1]
+            ))
 
 
 def build_db(db, thread, preseason):

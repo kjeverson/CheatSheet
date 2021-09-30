@@ -1,5 +1,6 @@
 from app import db
 from NFLCheatSheet.lib.classes import stats
+from NFLCheatSheet.lib.classes.transactions import Transactions
 import requests
 import re
 
@@ -49,6 +50,10 @@ class Team(db.Model):
     def __repr__(self):
 
         return "Team({})".format(self.fullname)
+
+    def get_transactions(self):
+        transactions = Transactions.query.filter_by(team_id=self.ID).all()
+        return transactions
 
     def get_team_stats(self, preseason):
 
