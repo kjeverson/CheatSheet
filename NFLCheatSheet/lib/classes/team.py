@@ -55,6 +55,10 @@ class Team(db.Model):
         transactions = Transactions.query.filter_by(team_id=self.ID).all()
         return transactions
 
+    def get_transactions_by_month(self, month):
+        transactions = Transactions.query.filter_by(team_id=self.ID).all()
+        return [transaction for transaction in transactions if month in transaction.date]
+
     def get_team_stats(self, preseason):
 
         return stats.TeamStats.query.filter_by(

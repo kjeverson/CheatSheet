@@ -2506,6 +2506,11 @@
             <div class="card bg-dark">
                 <div class="card-title text-center">Transactions</div>
                 <div class="card-body">
+                    {% set transactions = team.get_transactions_by_month("December") %}
+                    {% if transactions %}
+                    <div class="row mt-2">
+                      <h3>December</h3>
+                    </div>
                     <div class="row mt-2">
                       <table class="table table-dark table-sm table-hover">
                         <thead>
@@ -2515,7 +2520,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {% for transaction in team.get_transactions() %}
+                        {% for transaction in transactions %}
                           <tr>
                             <td class="col-2">{{ transaction.date }}</td>
                             <td class="col-10">{{ transaction.transaction }}</td>
@@ -2524,6 +2529,271 @@
                         </tbody>
                       </table>
                     </div>
+                    {% endif %}
+                    {% set transactions = team.get_transactions_by_month("November") %}
+                    {% if transactions %}
+                    <div class="row mt-2">
+                      <h3>November</h3>
+                    </div>
+                    <div class="row mt-2">
+                      <table class="table table-dark table-sm table-hover">
+                        <thead>
+                        <tr>
+                          <th>Date</th>
+                          <th>Transaction</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for transaction in transactions %}
+                          <tr>
+                            <td class="col-2">{{ transaction.date }}</td>
+                            <td class="col-10">{{ transaction.transaction }}</td>
+                          </tr>
+                        {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                    {% endif %}
+                    {% set transactions = team.get_transactions_by_month("October") %}
+                    {% if transactions %}
+                    <div class="row mt-2">
+                      <h3>October</h3>
+                    </div>
+                    <div class="row mt-2">
+                      <table class="table table-dark table-sm table-hover">
+                        <thead>
+                        <tr>
+                          <th>Date</th>
+                          <th>Transaction</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for transaction in transactions %}
+                          <tr>
+                            <td class="col-2">{{ transaction.date }}</td>
+                            <td class="col-10">{{ transaction.transaction }}</td>
+                          </tr>
+                        {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                    {% endif %}
+                    {% set transactions = team.get_transactions_by_month("September") %}
+                    {% if transactions %}
+                    <div class="row mt-2">
+                      <h3>September</h3>
+                    </div>
+                    <div class="row mt-2">
+                      <table class="table table-dark table-sm table-hover">
+                        <thead>
+                        <tr>
+                          <th>Date</th>
+                          <th>Transaction</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for transaction in transactions %}
+                          <tr>
+                            <td class="col-2">{{ transaction.date }}</td>
+                            <td class="col-10">{{ transaction.transaction }}</td>
+                          </tr>
+                        {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                    {% endif %}
+                    {% set transactions = team.get_transactions_by_month("August") %}
+                    {% if transactions %}
+                    <div class="row mt-2">
+                      <h3>August</h3>
+                    </div>
+                    <div class="row mt-2">
+                      <table class="table table-dark table-sm table-hover">
+                        <thead>
+                        <tr>
+                          <th>Date</th>
+                          <th>Transaction</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for transaction in transactions %}
+                          <tr>
+                            <td class="col-2">{{ transaction.date }}</td>
+                            <td class="col-10">{{ transaction.transaction }}</td>
+                          </tr>
+                        {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                    {% endif %}
+                    {% set transactions = team.get_transactions_by_month("July") %}
+                    {% if transactions %}
+                    <div class="row mt-2">
+                      <h3>July</h3>
+                    </div>
+                    <div class="row mt-2">
+                      <table class="table table-dark table-sm table-hover">
+                        <thead>
+                        <tr>
+                          <th>Date</th>
+                          <th>Transaction</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for transaction in transactions %}
+                          <tr>
+                            <td class="col-2">{{ transaction.date }}</td>
+                            <td class="col-10">{{ transaction.transaction }}</td>
+                          </tr>
+                        {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                    {% endif %}
+                    {% set transactions = team.get_transactions_by_month("June") %}
+                    {% if transactions %}
+                    <div class="row mt-2">
+                      <h3>June</h3>
+                    </div>
+                    <div class="row mt-2">
+                      <table class="table table-dark table-sm table-hover">
+                        <thead>
+                        <tr>
+                          <th>Date</th>
+                          <th>Transaction</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for transaction in transactions %}
+                          <tr>
+                            <td class="col-2">{{ transaction.date }}</td>
+                            <td class="col-10">{{ transaction.transaction }}</td>
+                          </tr>
+                        {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                    {% endif %}
+                    {% set transactions = team.get_transactions_by_month("May") %}
+                    {% if transactions %}
+                    <div class="row mt-2">
+                      <h3>May</h3>
+                    </div>
+                    <div class="row mt-2">
+                      <table class="table table-dark table-sm table-hover">
+                        <thead>
+                        <tr>
+                          <th>Date</th>
+                          <th>Transaction</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for transaction in transactions %}
+                          <tr>
+                            <td class="col-2">{{ transaction.date }}</td>
+                            <td class="col-10">{{ transaction.transaction }}</td>
+                          </tr>
+                        {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                    {% endif %}
+                    {% set transactions = team.get_transactions_by_month("April") %}
+                    {% if transactions %}
+                    <div class="row mt-2">
+                      <h3>April</h3>
+                    </div>
+                    <div class="row mt-2">
+                      <table class="table table-dark table-sm table-hover">
+                        <thead>
+                        <tr>
+                          <th>Date</th>
+                          <th>Transaction</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for transaction in transactions %}
+                          <tr>
+                            <td class="col-2">{{ transaction.date }}</td>
+                            <td class="col-10">{{ transaction.transaction }}</td>
+                          </tr>
+                        {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                    {% endif %}
+                    {% set transactions = team.get_transactions_by_month("March") %}
+                    {% if transactions %}
+                    <div class="row mt-2">
+                      <h3>March</h3>
+                    </div>
+                    <div class="row mt-2">
+                      <table class="table table-dark table-sm table-hover">
+                        <thead>
+                        <tr>
+                          <th>Date</th>
+                          <th>Transaction</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for transaction in transactions %}
+                          <tr>
+                            <td class="col-2">{{ transaction.date }}</td>
+                            <td class="col-10">{{ transaction.transaction }}</td>
+                          </tr>
+                        {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                    {% endif %}
+                    {% set transactions = team.get_transactions_by_month("February") %}
+                    {% if transactions %}
+                    <div class="row mt-2">
+                      <h3>February</h3>
+                    </div>
+                    <div class="row mt-2">
+                      <table class="table table-dark table-sm table-hover">
+                        <thead>
+                        <tr>
+                          <th>Date</th>
+                          <th>Transaction</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for transaction in transactions %}
+                          <tr>
+                            <td class="col-2">{{ transaction.date }}</td>
+                            <td class="col-10">{{ transaction.transaction }}</td>
+                          </tr>
+                        {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                    {% endif %}
+                    {% set transactions = team.get_transactions_by_month("January") %}
+                    {% if transactions %}
+                    <div class="row mt-2">
+                      <h3>January</h3>
+                    </div>
+                    <div class="row mt-2">
+                      <table class="table table-dark table-sm table-hover">
+                        <thead>
+                        <tr>
+                          <th>Date</th>
+                          <th>Transaction</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for transaction in transactions %}
+                          <tr>
+                            <td class="col-2">{{ transaction.date }}</td>
+                            <td class="col-10">{{ transaction.transaction }}</td>
+                          </tr>
+                        {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

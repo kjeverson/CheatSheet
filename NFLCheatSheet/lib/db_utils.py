@@ -1161,6 +1161,10 @@ def update_dvoa_rankings():
 def get_team_transactions(db, thread):
 
     thread.progress = 0
+
+    Transactions.__table__.drop(db.engine)
+    Transactions.__table__.create(db.engine)
+
     teams = Team.query.filter(Team.ID != 100).all()
     thread.total = len(teams)
     for i in range(len(teams)):
