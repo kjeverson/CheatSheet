@@ -112,6 +112,7 @@ def matchups():
 
         return render_template("matchups.html", teams=teams, week=week, week_string=week_string,
                                matchups=m, bye_teams=bye_teams, games_completed=games_completed,
+                               Player=Player,
                                passLeader=passLeader,
                                recLeader=recLeader, rushLeader=rushLeader,
                                default_headshot_path=default_headshot_path)

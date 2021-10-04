@@ -23,7 +23,7 @@
               </div>
               <div class="card-body">
                   <!-- Week Selection Button -->
-                  <div class="row justify-content-center m-2">
+                  <div class="row justify-content-center m-2 text-center">
                       <form action="{{ url_for('matchups') }}" method="GET">
                         <div class="col btn-group text-center" role="group">
                           {% for n in range(1, 5) %}
@@ -43,84 +43,123 @@
                         </div>
                       </form>
                   </div>
+                  <!-- Matchups -->
                   <div class="row">
                   {% for matchup in matchups %}
-                  <!-- Matchup -->
-                  <div class="col-4">
-                    <div class="card text-white bg-dark m-1 border-secondary shadow">
-                        <div class="card-body">
-                            <!-- Game Info -->
-                            <div class="row">
-                                <form class="text-end" action="{{ url_for('matchup') }}" method="GET">
-                                    <button type="submit" class="btn-block btn bg-dark text-white card-title" name="matchup" value="{{ matchup.ID }}">
+                  <div class="col-12">
+                      <div class="card text-white bg-dark m-1 border-secondary shadow">
+                          <div class="card-body">
+                              <div class="row">
+                                  <div class="col-2 align-self-center">
+                                      <div class="row"><span class="text-end"><small><small>{{matchup.away_team.location}}</small></small></span></div>
+                                      <div class="row"><span class="text-end"><h5>{{ matchup.away_team.name}}</h5></span></div>
+                                      <div class="row"><span class="text-end"><small><small class="text-muted">{{matchup.away_team.wins}}-{{matchup.away_team.loses}}</small></small></span></div>
+                                  </div>
+                                  <div class="col-2">
+                                      <form action="{{ url_for('team') }}" method="GET">
+                                          <button id="{{ matchup.away_team.key }}" class="btn btn-dark btn-small" name="team" value="{{ matchup.away_team.key }}">
+                                            <img src="{{ url_for('static', filename='logos/'+matchup.away_team.key+'.png') }}" class="img-fluid">
+                                          </button>
+                                      </form>
+                                  </div>
+                                  <div class="col-1 align-self-center">
                                       {% if matchup.completed %}
-                                        <small class="card-title text-end"><strong class="text-uppercase">{% if matchup.overtime %}Final/OT{% else %}Final{%endif%}</strong></small>
-                                      {% else %}
-                                        <small>{{ matchup.get_time().strftime('%a, %b %-d %-I:%M %p') }}</small>
+                                        {% if matchup.winner == matchup.away_team.key %}
+                                            <h4><strong>• {{ matchup.away_team_score }}</strong></h4>
+                                        {% else %}
+                                            <h4>{{ matchup.away_team_score }}</h4>
+                                        {% endif %}
                                       {% endif %}
-                                    </button>
-                                </form>
-                            </div>
-                            <form action="{{ url_for('team') }}" method="GET">
-                                <!-- Away Team -->
-                                <div class="row">
-                                    <button id="{{ matchup.away_team.key }}" class="btn btn-dark btn-small" name="team" value="{{ matchup.away_team.key }}">
+                                  </div>
+                                  <div class="col-2 text-center align-self-center">
+                                    <form class="text-center" action="{{ url_for('matchup') }}" method="GET">
+                                        <button type="submit" class="btn-block btn bg-dark text-white card-title" name="matchup" value="{{ matchup.ID }}">
+                                          {% if matchup.completed %}
+                                            <strong>{% if matchup.overtime %}Final/OT{% else %}Final{%endif%}</strong>
+                                          {% else %}
+                                            <div class="row text-center"><span class="text-center">{{ matchup.get_time().strftime('%a, %b %-d') }}</span></div>
+                                            <div class="row text-center"><span class="text-center">{{ matchup.get_time().strftime('%-I:%M %p') }}</span></div>
+                                          {% endif %}
+                                        </button>
+                                    </form>
+                                  </div>
+                                  <div class="col-1 align-self-center">
+                                      {% if matchup.completed %}
+                                        {% if matchup.winner == matchup.home_team.key %}
+                                            <h4><strong>• {{ matchup.home_team_score }}</strong></h4>
+                                        {% else %}
+                                            <h4>{{ matchup.home_team_score }}</h4>
+                                        {% endif %}
+                                      {% endif %}
+                                  </div>
+                                  <div class="col-2">
+                                      <form action="{{ url_for('team') }}" method="GET">
+                                      <button id="{{ matchup.home_team.key }}" class="btn btn-dark btn-small" name="team" value="{{ matchup.home_team.key }}">
+                                        <img src="{{ url_for('static', filename='logos/'+matchup.home_team.key+'.png') }}" class="img-fluid">
+                                      </button>
+                                  </form>
+                                  </div>
+                                  <div class="col-2 align-self-center">
+                                      <div class="row"><span class="text-start"><small><small>{{matchup.home_team.location}}</small></small></span></div>
+                                      <div class="row"><span class="text-start"><h5>{{ matchup.home_team.name}}</h5></span></div>
+                                      <div class="row"><span class="text-start"><small><small class="text-muted">{{matchup.home_team.wins}}-{{matchup.home_team.loses}}</small></small></span></div>
+                                  </div>
+                              </div>
+                              <!-- Matchup Leaders -->
+                              {% if matchup.completed %}
+                              <div class="row mt-4">
+                                  <div class="col-4">
+                                      <button data-id="{{ matchup.passingLeader_id }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
                                         <div class="row">
-                                            <div class="col-2">
-                                                <img src="{{ url_for('static', filename='logos/'+matchup.away_team.key+'.png') }}" class="img-fluid">
+                                            <div class="col-6">
+                                                {% set passLeader = Player.query.get(matchup.passingLeader_id) %}
+                                                {% set passLeaderStats = passLeader.get_weekly_stats(matchup) %}
+                                                <div class="row mt-2 text-start"><small>{{ passLeader.fname[0] }}. {{ passLeader.lname }}</small></div>
+                                                <div class="row mt-1 text-start"><small class="text-muted">{{ passLeaderStats.passComps }}-{{ passLeaderStats.passAtts }}, {{ passLeaderStats.passYDs }} YDs, {{ passLeaderStats.passTDs }} TDs</small></div>
                                             </div>
-                                            <div class="col-7 text-start align-self-center">
-                                             {% if matchup.preseason %}
-                                             {{ matchup.away_team.name }} <small class="text-muted">{{ matchup.away_team.preseason_wins }}-{{ matchup.away_team.preseason_loses }}</small>
-                                             {% else %}
-                                             {{ matchup.away_team.name }} <small class="text-muted">{{ matchup.away_team.wins }}-{{ matchup.away_team.loses }}</small>
-                                             {% endif %}
+                                            <div class="col-6 position-relative">
+                                                <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + matchup.passingLeader_id|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
                                             </div>
-                                            {% if matchup.completed %}
-                                            {% if matchup.winner == matchup.away_team.key %}
-                                            <div class="col-3 text-end align-self-center">
-                                                <strong>• {{ matchup.away_team_score }}</strong>
-                                            </div>
-                                            {% else %}
-                                            <div class="col-3 text-end align-self-center">
-                                                {{ matchup.away_team_score }}
-                                            </div>
-                                            {% endif %}
-                                            {% endif %}
                                         </div>
+                                        <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Passing Yards</span>
                                     </button>
-                                </div>
-                                <!-- Home Team -->
-                                <div class="row mt-2">
-                                    <button id="{{ matchup.home_team.key }}" class="btn btn-dark btn-small" name="team" value="{{ matchup.home_team.key }}">
+                                  </div>
+                                  <div class="col-4">
+                                      <button data-id="{{ matchup.rushingLeader_id }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
                                         <div class="row">
-                                            <div class="col-2">
-                                                <img src="{{ url_for('static', filename='logos/'+matchup.home_team.key+'.png') }}" class="img-fluid">
+                                            <div class="col-6">
+                                                {% set rushLeader = Player.query.get(matchup.rushingLeader_id) %}
+                                                {% set rushLeaderStats = rushLeader.get_weekly_stats(matchup) %}
+                                                <div class="row mt-2 text-start"><small>{{ rushLeader.fname[0] }}. {{ rushLeader.lname }}</small></div>
+                                                <div class="row mt-1 text-start"><small class="text-muted">{{ rushLeaderStats.rushAtts }} CAR, {{ rushLeaderStats.rushYDs }} YDs, {{ rushLeaderStats.rushTDs }} TDs</small></div>
                                             </div>
-                                            <div class="col-7 text-start align-self-center">
-                                              {% if matchup.preseason %}
-                                              {{ matchup.home_team.name }} <small class="text-muted">{{ matchup.home_team.preseason_wins }}-{{ matchup.home_team.preseason_loses }}</small>
-                                              {% else %}
-                                              {{ matchup.home_team.name }} <small class="text-muted">{{ matchup.home_team.wins }}-{{ matchup.home_team.loses }}</small>
-                                              {% endif %}
+                                            <div class="col-6 position-relative">
+                                                <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + matchup.rushingLeader_id|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
                                             </div>
-                                            {% if matchup.completed %}
-                                            {% if matchup.winner == matchup.home_team.key %}
-                                            <div class="col-3 text-end align-self-center">
-                                                <strong>• {{ matchup.home_team_score }}</strong>
-                                            </div>
-                                            {% else %}
-                                            <div class="col-3 text-end align-self-center">
-                                                {{ matchup.home_team_score }}
-                                            </div>
-                                            {% endif %}
-                                            {% endif %}
                                         </div>
+                                        <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Rushing Yards</span>
                                     </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+                                  </div>
+                                  <div class="col-4">
+                                      <button data-id="{{ matchup.receivingLeader_id }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                {% set recLeader = Player.query.get(matchup.receivingLeader_id) %}
+                                                {% set recLeaderStats = recLeader.get_weekly_stats(matchup) %}
+                                                <div class="row mt-2 text-start"><small>{{ recLeader.fname[0] }}. {{ recLeader.lname }}</small></div>
+                                                <div class="row mt-1 text-start"><small class="text-muted">{{ recLeaderStats.recs }} REC, {{ recLeaderStats.recYDs }} YDs, {{ recLeaderStats.recTDs }} TDs</small></div>
+                                            </div>
+                                            <div class="col-6 position-relative">
+                                                <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + matchup.receivingLeader_id|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
+                                            </div>
+                                        </div>
+                                        <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light">Receiving Yards</span>
+                                    </button>
+                                  </div>
+                              </div>
+                              {% endif %}
+                          </div>
+                      </div>
                   </div>
                   {% endfor %}
                 </div>
