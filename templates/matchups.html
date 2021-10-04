@@ -49,6 +49,7 @@
                   <div class="col-12">
                       <div class="card text-white bg-dark m-1 border-secondary shadow">
                           <div class="card-body">
+                              <!-- Matchup -->
                               <div class="row">
                                   <div class="col-2 align-self-center">
                                       <div class="row"><span class="text-end"><small><small>{{matchup.away_team.location}}</small></small></span></div>
@@ -77,7 +78,8 @@
                                           {% if matchup.completed %}
                                             <strong>{% if matchup.overtime %}Final/OT{% else %}Final{%endif%}</strong>
                                           {% else %}
-                                            <div class="row text-center"><span class="text-center">{{ matchup.get_time().strftime('%a, %b %-d') }}</span></div>
+                                            <div class="row text-center"><span class="text-center">{{ matchup.get_time().strftime('%A') }}</span></div>
+                                            <div class="row text-center"><span class="text-center">{{ matchup.get_time().strftime('%B %-d') }}</span></div>
                                             <div class="row text-center"><span class="text-center">{{ matchup.get_time().strftime('%-I:%M %p') }}</span></div>
                                           {% endif %}
                                         </button>
