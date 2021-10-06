@@ -460,6 +460,11 @@ def update_schedule(db, thread):
                     game.home_team.preseason_loses += 1
                     game.home_team.preseason_games_played += 1
                     game.away_team.preseason_games_played += 1
+
+                if game.away_team.conference == game.home_team.conference and game.away_team.division == game.home_team.division:
+                    game.away_team.divisionWins += 1
+                    game.home_team.divisionLosses += 1
+
             elif game.home_team_score > game.away_team_score:
                 game.winner = game.home_team.key
                 if not game.preseason:
@@ -472,6 +477,10 @@ def update_schedule(db, thread):
                     game.away_team.preseason_loses += 1
                     game.home_team.preseason_games_played += 1
                     game.away_team.preseason_games_played += 1
+
+                if game.away_team.conference == game.home_team.conference and game.away_team.division == game.home_team.division:
+                    game.home_team.divisionWins += 1
+                    game.away_team.divisionLosses += 1
             else:
                 game.winner = "Tie"
                 if not game.preseason:
@@ -484,6 +493,10 @@ def update_schedule(db, thread):
                     game.home_team.preseason_ties += 1
                     game.home_team.preseason_games_played += 1
                     game.away_team.preseason_games_played += 1
+
+                if game.away_team.conference == game.home_team.conference and game.away_team.division == game.home_team.division:
+                    game.away_team.divisionTies += 1
+                    game.home_team.divisionTies += 1
 
     print("Updating Games...\x1b[32mCOMPLETE!\x1b[0m\033[K")
 

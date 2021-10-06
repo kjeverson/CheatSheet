@@ -260,6 +260,7 @@ def team():
             Team.conference == team.conference).all()
         division.sort(key=lambda team: team.get_team_stats(preseason=preseason).pointsFor,
                       reverse=True)
+        division.sort(key=lambda team: team.divisionWins, reverse=True)
         division.sort(key=lambda team: team.wins, reverse=True)
 
         return render_template("team.html", preseason=preseason,
