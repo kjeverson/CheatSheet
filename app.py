@@ -309,15 +309,32 @@ def player():
     else:
         status_string = '<span class="badge rounded-pill bg-success">Active</span>'
 
-    stats = ["-", "-", "-", "-", "-"]
     if player.position == 'QB':
         labels = ["YDS", "TD", "INT", "RTG"]
 
     elif player.position == 'RB':
         labels = ["ATT", "YDS", "TD", "AVG"]
 
-    else:
+    elif player.position == 'WR' or player.position == 'TE':
         labels = ["REC", "YDS", "TD", "AVG"]
+
+    elif player.position == 'CB' or player.position == 'S':
+        labels = ["SOLO", "FF", "INT", "PD"]
+
+    elif player.position == 'LB':
+        labels = ["SOLO", "SACK", "FF", "INT"]
+
+    elif player.position == 'DE' or player.position == 'DT':
+        labels = ["SOLO", "TFL", "SACK", "QBHITS"]
+
+    elif player.position == 'PK':
+        labels = ["FG%", "XP%", "LNG", "Points"]
+
+    elif player.position == 'P':
+        labels = ["PUNTS", "AVG", "LNG", "IN20"]
+
+    else:
+        labels = ["", "", "", ""]
 
     player_dict.update({'labels': labels})
     player_dict.update({'preseason': preseason})

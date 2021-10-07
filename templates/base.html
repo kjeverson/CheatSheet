@@ -277,30 +277,26 @@
             $('#playerCardName').html(player.name);
             $('#playerCardStatus').html(player.status_string);
             $('#playerCardLogo').html(player.logo);
+            $('#playerLbl1').html(player['labels'][0]);
+            $('#playerLbl2').html(player['labels'][1]);
+            $('#playerLbl3').html(player['labels'][2]);
+            $('#playerLbl4').html(player['labels'][3]);
+            $('#stat1').html("-");
+            $('#stat2').html("-");
+            $('#stat3').html("-");
+            $('#stat4').html("-");
+            $('#stat5').html("-");
+
             if(player['position'] == "QB"){
-              $('#playerLbl1').html("YDS");
-              $('#playerLbl2').html("TD");
-              $('#playerLbl3').html("INT");
-              $('#playerLbl4').html("RTG");
               if (player.passAtts) {
                 $('#stat1').html(player.passYDs);
                 $('#stat2').html(player.passTDs);
                 $('#stat3').html(player.passINTs);
                 $('#stat4').html(player.passRTG.toFixed(1));
                 $('#stat5').html(player.FPs.toFixed(1));
-                } else {
-                $('#stat1').html("-");
-                $('#stat2').html("-");
-                $('#stat3').html("-");
-                $('#stat4').html("-");
-                $('#stat5').html("-");
                 }
             }
             else if(player['position'] == "RB"){
-              $('#playerLbl1').html("ATT");
-              $('#playerLbl2').html("YDS");
-              $('#playerLbl3').html("TD");
-              $('#playerLbl4').html("AVG");
               if (player.rushAtts) {
                 $('#stat1').html(player.rushAtts);
                 $('#stat2').html(player.rushYDs);
@@ -308,25 +304,9 @@
                 var AVG = player.rushYDs/player.rushAtts
                 $('#stat4').html(AVG.toFixed(1));
                 $('#stat5').html(player.FPs.toFixed(1));
-                } else {
-                $('#stat1').html("-");
-                $('#stat2').html("-");
-                $('#stat3').html("-");
-                $('#stat4').html("-");
-                $('#stat5').html("-");
                 }
             }
-            else if(player['position'] == "K"){
-              $('#playerLbl1').html("FG%");
-              $('#playerLbl2').html("XP%");
-              $('#playerLbl3').html("LNG");
-              $('#playerLbl4').html("PTS");
-            }
-            else{
-              $('#playerLbl1').html("REC");
-              $('#playerLbl2').html("YDS");
-              $('#playerLbl3').html("TD");
-              $('#playerLbl4').html("AVG");
+            else if(player['position'] == "WR" || player['position'] == "TE"){
               if (player.recs) {
                 $('#stat1').html(player.recs);
                 $('#stat2').html(player.recYDs);
@@ -334,13 +314,124 @@
                 var AVG = player.recYDs/player.recs
                 $('#stat4').html(AVG.toFixed(1));
                 $('#stat5').html(player.FPs.toFixed(1));
-                } else {
-                $('#stat1').html("-");
-                $('#stat2').html("-");
-                $('#stat3').html("-");
-                $('#stat4').html("-");
-                $('#stat5').html("-");
                 }
+            }
+            else if(player['position'] == "CB" || player['position'] == "S"){
+                if (player.soloTackles == 0 ) {
+                  $('#stat1').html("-");
+                } else {
+                  $('#stat1').html(player.soloTackles);
+                }
+                $('#stat2').html(player.recYDs);
+                if (player.defINTs == 0 ) {
+                  $('#stat3').html("-");
+                } else {
+                  $('#stat3').html(player.defINTs);
+                }
+                if (player.passDefensed == 0 ) {
+                  $('#stat4').html("-");
+                } else {
+                  $('#stat4').html(player.passDefensed);
+                }
+                $('#stat5').html(player.FPs.toFixed(1));
+            }
+            else if(player['position'] == "LB"){
+                if (player.soloTackles == 0 ) {
+                  $('#stat1').html("-");
+                } else {
+                  $('#stat1').html(player.soloTackles);
+                }
+                if (player.sacks == 0 ) {
+                  $('#stat2').html("-");
+                } else {
+                  $('#stat2').html(player.sacks);
+                }
+                if (player.tacklesForLoss == 0 ) {
+                  $('#stat3').html("-");
+                } else {
+                  $('#stat3').html(player.tacklesForLoss);
+                }
+                if (player.passDefensed == 0 ) {
+                  $('#stat4').html("-");
+                } else {
+                  $('#stat4').html(player.passDefensed);
+                }
+                $('#stat5').html(player.FPs.toFixed(1));
+            }
+            else if(player['position'] == "DE" || player['position'] == "DT"){
+                if (player.soloTackles == 0 ) {
+                  $('#stat1').html("-");
+                } else {
+                  $('#stat1').html(player.soloTackles);
+                }
+                if (player.tacklesForLoss == 0 ) {
+                  $('#stat2').html("-");
+                } else {
+                  $('#stat2').html(player.tacklesForLoss);
+                }
+                if (player.sacks == 0 ) {
+                  $('#stat3').html("-");
+                } else {
+                  $('#stat3').html(player.sacks);
+                }
+                if (player.qbHits == 0 ) {
+                  $('#stat4').html("-");
+                } else {
+                  $('#stat4').html(player.qbHits);
+                }
+                $('#stat5').html(player.FPs.toFixed(1));
+            }
+            else if(player['position'] == "PK" ){
+                if (player.fgAtts == 0 ) {
+                  $('#stat1').html("-");
+                } else {
+                  var AVG = player.fgMade / player.fgAtts * 100;
+                  $('#stat1').html(AVG.toFixed(1));
+                }
+                if (player.xpAtts == 0 ) {
+                  $('#stat2').html("-");
+                } else {
+                  var AVG = player.xpMade / player.xpAtts * 100;
+                  $('#stat2').html(AVG.toFixed(1));
+                }
+                if (player.fgAtts == 0 ) {
+                  $('#stat3').html("-");
+                } else {
+                  $('#stat3').html(player.fgLng);
+                }
+                if (player.points == 0 ) {
+                  $('#stat4').html("-");
+                } else {
+                  $('#stat4').html(player.points);
+                }
+                $('#stat5').html(player.FPs.toFixed(1));
+            }
+            else if(player['position'] == "P" ){
+                if (player.punts == 0 ) {
+                  $('#stat1').html("-");
+                } else {
+                  $('#stat1').html(player.punts);
+                }
+                if (player.punts == 0 ) {
+                  $('#stat2').html("-");
+                } else {
+                  var AVG = player.puntYDs / player.punts;
+                  $('#stat2').html(AVG.toFixed(1));
+                }
+                if (player.punts == 0 ) {
+                  $('#stat3').html("-");
+                } else {
+                  $('#stat3').html(player.puntLng);
+                }
+                if (player.punts == 0 ) {
+                  $('#stat4').html("-");
+                } else {
+                  $('#stat4').html(player.puntIn20);
+                }
+                $('#stat5').html(player.FPs.toFixed(1));
+            }
+            else{
+
             }
            }
           });
