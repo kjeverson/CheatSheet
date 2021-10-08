@@ -286,11 +286,11 @@
             $('#playerLbl3').html(player['labels'][2]);
             $('#playerLbl4').html(player['labels'][3]);
             $('#playerLbl5').html("FPS");
-            $('#stat1').html("");
-            $('#stat2').html("");
-            $('#stat3').html("");
-            $('#stat4').html("");
-            $('#stat5').html("");
+            $('#stat1').html("-");
+            $('#stat2').html("-");
+            $('#stat3').html("-");
+            $('#stat4').html("-");
+            $('#stat5').html("-");
 
             if(player['position'] == "QB"){
               if (player.passAtts) {
@@ -299,7 +299,10 @@
                 $('#stat3').html(player.passINTs);
                 $('#stat4').html(player.passRTG.toFixed(1));
                 $('#stat5').html(player.FPs.toFixed(1));
+                } else {
+                $('#stat5').html(player.FPs.toFixed(1));
                 }
+
             }
             else if(player['position'] == "RB" || player['position'] == "FB"){
               if (player.rushAtts) {
@@ -308,6 +311,8 @@
                 $('#stat3').html(player.rushTDs);
                 var AVG = player.rushYDs/player.rushAtts
                 $('#stat4').html(AVG.toFixed(1));
+                $('#stat5').html(player.FPs.toFixed(1));
+                } else {
                 $('#stat5').html(player.FPs.toFixed(1));
                 }
             }
@@ -318,6 +323,8 @@
                 $('#stat3').html(player.recTDs);
                 var AVG = player.recYDs/player.recs
                 $('#stat4').html(AVG.toFixed(1));
+                $('#stat5').html(player.FPs.toFixed(1));
+                } else {
                 $('#stat5').html(player.FPs.toFixed(1));
                 }
             }
