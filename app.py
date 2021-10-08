@@ -312,7 +312,7 @@ def player():
     if player.position == 'QB':
         labels = ["YDS", "TD", "INT", "RTG"]
 
-    elif player.position == 'RB':
+    elif player.position == 'RB' or player.position == 'FB':
         labels = ["ATT", "YDS", "TD", "AVG"]
 
     elif player.position == 'WR' or player.position == 'TE':

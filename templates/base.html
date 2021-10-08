@@ -216,13 +216,13 @@
               </div>
             </div>
             <div class="row mt-4">
-              <button class="btn active btn-secondary position-relative" style="pointer-events: none">
+              <button id="playerCardStats" class="btn active btn-secondary position-relative" style="pointer-events: none">
                 <div class="row mt-2">
                   <div class="col"><div class="row"><h4><strong id="stat1"></strong></h4></div><div class="row"><small id="playerLbl1"></small></div></div>
                   <div class="col"><div class="row"><h4><strong id="stat2"></strong></h4></div><div class="row"><small id="playerLbl2"></small></div></div>
                   <div class="col"><div class="row"><h4><strong id="stat3"></strong></h4></div><div class="row"><small id="playerLbl3"></small></div></div>
                   <div class="col"><div class="row"><h4><strong id="stat4"></strong></h4></div><div class="row"><small id="playerLbl4"></small></div></div>
-                  <div class="col"><div class="row"><h4><strong id="stat5"></strong></h4></div><div class="row"><small>FPS</small></div></div>
+                  <div class="col"><div class="row"><h4><strong id="stat5"></strong></h4></div><div class="row"><small id="playerLbl5"></small></div></div>
                 </div>
                 <span class="position-absolute top-0 start-50 translate-middle badge text-dark bg-light"><small id="statHeader"></small></span>
               </button>
@@ -277,15 +277,20 @@
             $('#playerCardName').html(player.name);
             $('#playerCardStatus').html(player.status_string);
             $('#playerCardLogo').html(player.logo);
+
+            var stats = document.getElementById("playerCardStats");
+            stats.classList.remove("invisible");
+
             $('#playerLbl1').html(player['labels'][0]);
             $('#playerLbl2').html(player['labels'][1]);
             $('#playerLbl3').html(player['labels'][2]);
             $('#playerLbl4').html(player['labels'][3]);
-            $('#stat1').html("-");
-            $('#stat2').html("-");
-            $('#stat3').html("-");
-            $('#stat4').html("-");
-            $('#stat5').html("-");
+            $('#playerLbl5').html("FPS");
+            $('#stat1').html("");
+            $('#stat2').html("");
+            $('#stat3').html("");
+            $('#stat4').html("");
+            $('#stat5').html("");
 
             if(player['position'] == "QB"){
               if (player.passAtts) {
@@ -296,7 +301,7 @@
                 $('#stat5').html(player.FPs.toFixed(1));
                 }
             }
-            else if(player['position'] == "RB"){
+            else if(player['position'] == "RB" || player['position'] == "FB"){
               if (player.rushAtts) {
                 $('#stat1').html(player.rushAtts);
                 $('#stat2').html(player.rushYDs);
@@ -431,7 +436,8 @@
                 $('#stat5').html(player.FPs.toFixed(1));
             }
             else{
-
+                var stats = document.getElementById("playerCardStats");
+                stats.classList.add("invisible");
             }
            }
           });
