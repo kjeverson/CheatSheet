@@ -363,6 +363,52 @@ def scoring():
     return render_template("scoring.html", teams=teams, scoring=scoring)
 
 
+@app.route('/compare', methods=["GET", "POST"])
+def compare():
+
+    games = Game.query.all()
+    current_week, preseason = get_week(games)
+
+    teams = Team.query.all()
+    players = Player.query.filter(Player.team_id != 100).all()
+    scoring = Scoring.query.filter_by(ID=0).first()
+
+    comparing = []
+    if request.method == "POST":
+        if "addPlayer" in request.form:
+            player_id, list = request.form.get("addPlayer").split("-")
+
+            list = list.replace("[", "")
+            list = list.replace("]", "")
+            list = list.split(",") if list else []
+
+            comparing = list if list else []
+            comparing = [int(p) for p in comparing]
+            comparing.append(int(player_id))
+
+        else:
+            player_id, list = request.form.get("dropPlayer").split("-")
+
+            list = list.replace("[", "")
+            list = list.replace("]", "")
+            list = list.split(", ") if list else []
+            list = [int(p) for p in list]
+            list.remove(int(player_id))
+            comparing = list
+
+    default_headshot_path = url_for('static', filename='headshots/default.png')
+
+    return render_template("compare.html",
+                           current_week=current_week,
+                           preseason=preseason,
+                           teams=teams,
+                           Player=Player,
+                           players=players,
+                           scoring=scoring,
+                           comparing=comparing,
+                           default_headshot_path=default_headshot_path)
+
+
 @app.route('/db', methods=["GET", "POST"])
 def database():
 

@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% block title %}
+  Compare Tool
+{% endblock %}
+{% block content %}
+<div class="container mt-4 pt-4">
+    <div class="row text-white">
+        <div class="row mt-2">
+            <div class="card bg-dark">
+            <div class="card-title text-center">Compare Players</div>
+            <div class="card-body">
+                <div class="col">
+                    <div class="row mt-2">
+                        {% for player in comparing %}
+                        {% set player = Player.query.get(player) %}
+                        <div class="col-3 align-self-center">
+                            <div class="row">
+                                <button data-id="{{ player.ID }}" class="border-secondary player-btn btn btn-block btn-dark position-relative">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="row mt-2 text-start">
+                                            <small>{{player.name}}</small>
+                                        </div>
+                                        <div class="row text-start">
+                                            <div class="col"><span class="text-muted"><small><small>{{player.position}} • {{player.current_team.name}}</small></small></span></div>
+                                        </div>
+                                        <div class="row mt-1 text-start"><small class="text-muted"><small>Bye: {{ player.current_team.bye }}</small></small></div>
+                                    </div>
+                                    <div class="col-6 position-relative">
+                                        <img class="img-fluid" src="{{ url_for('static', filename='headshots/' + player.ID|string + '.png') }}" onerror="this.src='{{ default_headshot_path }}'">
+                                    </div>
+                                </div>
+                                </button>
+                            </div>
+                            <form action="{{ url_for('compare') }}" role="form" method="POST">
+                            <div class="row">
+                                <button name="dropPlayer" type="submit" class="btn btn-secondary" value="{{player.ID}}-{{comparing}}"><i class="bi bi-dash-circle-fill"></i> Drop Player</button>
+                            </div>
+                            </form>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="row mt-1 align-self-center">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addPlayerModal"><i class="bi bi-plus-circle-fill"></i> Add Player</button>
+                    </div>
+                    <div class="row mt-2">
+                    <canvas id="line-chart"></canvas>
+                </div>
+                </div>
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
+<!-- Add Player Modal -->
+<div class="modal fade" id="addPlayerModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+        <div class="modal-dialog modal-lg bg-dark text-white">
+            <div class="modal-content">
+                <div class="modal-header bg-dark">
+                    <h5 class="modal-title">Add Player</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body bg-dark text-white">
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                      <button type="button" class="btn btn-secondary">ALL</button>
+                      <button type="button" class="btn btn-secondary">QB</button>
+                      <button type="button" class="btn btn-secondary">RB</button>
+                      <button type="button" class="btn btn-secondary">WR</button>
+                      <button type="button" class="btn btn-secondary">TE</button>
+                      <button type="button" class="btn btn-secondary">K</button>
+                    </div>
+                    <form action="{{ url_for('compare') }}" role="form" method="POST">
+                        <table class="table table-dark table-hover" id="addPlayerTable">
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th>Name</th>
+                                <th>Position</th>
+                                <th>Team</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                        {% for player in players %}
+                        {% if player.ID not in comparing %}
+                            <tr>
+                                <td><button name="addPlayer" type="submit" class="btn text-success" value="{{player.ID}}-{{comparing}}"><i class="bi bi-plus-circle-fill"></i></button></td>
+                                <td data-id="{{player.ID}}" class="player-btn">{{player.name}}</td>
+                                <td data-id="{{player.ID}}" class="player-btn">{{player.position}}</td>
+                                <td data-id="{{player.ID}}" class="player-btn">{{player.current_team.key}}</td>
+                            </tr>
+                        {% endif %}
+                        {% endfor %}
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+<script type=text/javascript>
+
+    $(document).ready( function () {
+        $('#addPlayerTable').DataTable();
+    });
+
+    new Chart(document.getElementById("line-chart"), {
+    type: 'line',
+    data: {
+        labels: Array.from(new Array({{current_week}}), (x, i) => i + 1) ,
+        datasets: [
+            {% for player in comparing %}
+            {% set player = Player.query.get(player) %}
+            {
+            tension: 0,
+            data: {{player.get_weekly_stats_by_stat(preseason=preseason) }},
+            label: "{{player.shortname}}",
+            borderColor: "#{{player.current_team.primary}}",
+            fill: false
+            },
+            {% endfor %}
+    ]
+  },
+  options: {
+    title: {
+      display: true,
+    },
+    scales: {
+    xAxes: [{
+      scaleLabel: {
+        display: true,
+        labelString: 'Week'
+      }
+    }]
+  }
+  }
+});
+
+</script>
+{% endblock %}

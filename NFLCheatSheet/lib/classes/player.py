@@ -71,6 +71,25 @@ class Player(db.Model):
         return stats.WeeklyStats.query.filter_by(
             player_id=self.ID).filter_by(game_id=game.ID).first()
 
+    def get_weekly_stats_by_stat(self, preseason, stat="FPS"):
+
+        week_stats = self.get_weekly_stats_list(preseason=preseason)
+        week_stats.sort(key=lambda stats: stats.week)
+
+        stats = []
+
+        i = 1
+        for week in week_stats:
+            if week.week != i:
+                stats.extend([0]*(week.week - i))
+                stats.append(week.FPs)
+                i += (week.week - i) + 1
+            else:
+                stats.append(week.FPs)
+                i += 1
+
+        return stats
+
     def get_weekly_stats_by_week(self, preseason=False, week=None):
         return stats.WeeklyStats.query.filter_by(player_id=self.ID).filter_by(preseason=preseason).filter_by(week=str(week)).first()
 

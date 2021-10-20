@@ -33,7 +33,7 @@
           </a>
           <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="statsDropdown">
             <li><a class="dropdown-item" href="{{ url_for('stats') }}">Leaders</a></li>
-            <li><a class="dropdown-item" href="">Compare Tool</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('compare') }}">Compare</a></li>
           </ul>
         </li>
         <!-- Teams Dropdown -->
@@ -242,6 +242,9 @@
 
 {% block content %}
 {% endblock %}
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.1/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.js"></script>
 
     <!-- Optional JavaScript; choose one of the two! -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
