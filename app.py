@@ -371,6 +371,7 @@ def compare():
 
     teams = Team.query.all()
     players = Player.query.filter(Player.team_id != 100).all()
+    players = [player for player in players if player.position in ['QB', 'RB', 'WR', 'TE']]
     scoring = Scoring.query.filter_by(ID=0).first()
 
     comparing = []
