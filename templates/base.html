@@ -217,6 +217,18 @@
                   <div class="row text-center mt-2">
                     <div id="playerCardLogo"></div>
                   </div>
+                  <div class="row text-center mt-2 justify-content-center">
+                    <div class="col-10">
+                      <div class="row mt-2">
+                        <button class="btn btn-dark text-white p-2 position-relative" style="pointer-events: none">
+                          <div class="row px-1 mx-1">
+                            <span class="text-center"><small id="gameLocation"></small><span id="oppImg"></span><small id="oppTeam"></small></span>
+                          </div>
+                          <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light"><small>Upcoming</small></span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
               </div>
               <div class="col-6 mt-2 text-center align-self-center">
                 <div id="playerCardPic"></div>
@@ -287,6 +299,9 @@
             $('#playerCardName').html(player.name);
             $('#playerCardStatus').html(player.status_string);
             $('#playerCardLogo').html(player.logo);
+            $('#gameLocation').html(player.gameLocation);
+            $('#oppImg').html(player.oppImg);
+            $('#oppTeam').html(player.oppTeam);
 
             var stats = document.getElementById("playerCardStats");
             stats.classList.remove("invisible");

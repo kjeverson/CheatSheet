@@ -289,6 +289,32 @@ def player():
     default_path = url_for('static', filename='headshots/default.png')
 
     team_logo = url_for('static', filename='logos/{}.png'.format(player.current_team.key))
+    matchup = player.current_team.get_game_by_week(preseason, current_week)
+
+    if matchup:
+
+        if matchup.away_team.key == player.current_team.key:
+
+            gameLocation = "@ "
+            oppImgPath = url_for('static', filename='logos/{}.png'.format(matchup.home_team.key))
+            oppTeam = matchup.home_team.location + ' ' + matchup.home_team.name
+
+        else:
+            gameLocation = "vs. "
+            oppImgPath = url_for('static', filename='logos/{}.png'.format(matchup.away_team.key))
+            oppTeam = matchup.away_team.location + ' ' + matchup.away_team.name
+
+    else:
+
+        gameLocation = " "
+        oppImgPath = None
+        oppTeam = 'Bye Week'
+
+    player_dict.update({
+        'gameLocation': gameLocation,
+        'oppImg': "<img src='{}'  height='40'>".format(oppImgPath) if oppImgPath else " ",
+        'oppTeam': " " + oppTeam
+    })
 
     status = player.designation
     if status in ['Questionable', 'Doubtful']:

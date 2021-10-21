@@ -90,7 +90,7 @@ class Team(db.Model):
         if completed:
             games = [game for game in games if game.completed]
 
-        return games
+        return sorted(games)
 
     def get_bye(self):
 
@@ -98,6 +98,16 @@ class Team(db.Model):
         weeks = [game.week for game in games]
         bye = [week for week in range(1, 19) if week not in weeks]
         return bye[-1]
+
+    def get_game_by_week(self, preseason, week):
+
+        games = self.get_games(preseason, completed=False, home=True, away=True)
+        game = games[week-1]
+
+        if game.week == week:
+            return game
+        else:
+            return None
 
     def set_depth_chart(self):
 
