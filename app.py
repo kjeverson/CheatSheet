@@ -241,11 +241,11 @@ def team():
         team_key = request.args.get('team')
         team = Team.query.filter_by(key=team_key).first()
 
-        players = team.players
+        players = team.get_players(preseason=preseason)
 
         default_headshot_path = url_for('static', filename='headshots/default.png')
 
-        player_stats = [player.get_season_stats(preseason=preseason) for player in players]
+        player_stats = [player.get_season_stats_by_team(preseason=preseason, team_id=team.ID) for player in players]
 
         injured = [player for player in players if player.date]
         injured = [player for player in injured if len(player.news) > 2]

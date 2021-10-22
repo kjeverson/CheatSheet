@@ -109,6 +109,16 @@ class Team(db.Model):
         else:
             return None
 
+    def get_players(self, preseason=False):
+
+        players = set()
+        week_stats = stats.WeeklyStats.query.filter(stats.WeeklyStats.team_id == self.ID)\
+            .filter(stats.WeeklyStats.preseason == preseason).all()
+        for week_stat in week_stats:
+            players.add(week_stat.player)
+
+        return players
+
     def set_depth_chart(self):
 
         o = {"qb": [], "rb": [], "fb": [], "wr1": [], "wr2": [], "wr3": [], "te": [], "lt": [],

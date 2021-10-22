@@ -6,6 +6,7 @@ import json
 import requests
 from pathlib import Path
 from PIL import Image, UnidentifiedImageError
+from types import SimpleNamespace
 import re
 
 
@@ -65,6 +66,130 @@ class Player(db.Model):
 
         return stats.SeasonStats.query.filter_by(
             player_id=self.ID).filter_by(preseason=preseason).first()
+
+    def get_season_stats_by_team(self, preseason, team_id):
+        
+        weekly_stats = stats.WeeklyStats.query.filter(stats.WeeklyStats.player_id == self.ID)\
+            .filter(stats.WeeklyStats.team_id == team_id)\
+            .filter(stats.WeeklyStats.preseason == preseason).all()
+
+        if weekly_stats:
+
+            stat_dict = {
+                "player": self,
+                "player_id": self.ID,
+                "preseason": preseason,
+                "gamesPlayed": len(weekly_stats),
+                "passComps": 0,
+                "passAtts": 0,
+                "passYDs": 0,
+                "passYDsPerGame": 0,
+                "passAVG": 0,
+                "passTDs": 0,
+                "passINTs": 0,
+                "passSacks": 0,
+                "passSackYDs": 0,
+                "passRTG": 0,
+                "rushAtts": 0,
+                "rushYDs": 0,
+                "rushYDsPerGame": 0,
+                "rushAVG": 0,
+                "rushTDs": 0,
+                "rushLng": 0,
+                "recs": 0,
+                "recYDs": 0,
+                "recYDsPerGame": 0,
+                "recAVG": 0,
+                "recTDs": 0,
+                "recLng": 0,
+                "recTGTS": 0,
+                "fumLost": 0,
+                "fum": 0,
+                "fumRec": 0,
+                "totalTackles": 0,
+                "soloTackles": 0,
+                "sacks": 0,
+                "tacklesForLoss": 0,
+                "passDefensed": 0,
+                "qbHits": 0,
+                "defTDs": 0,
+                "defINTs": 0,
+                "defINTYDs": 0,
+                "defINTTDs": 0,
+                "krAtts": 0,
+                "krYDs": 0,
+                "krAVG": 0,
+                "krLng": 0,
+                "krTDs": 0,
+                "prAtts": 0,
+                "prYDs": 0,
+                "prAVG": 0,
+                "prLng": 0,
+                "prTDs": 0,
+                "fgMade": 0,
+                "fgAtts": 0,
+                "fgPCT": 0,
+                "fgLng": 0,
+                "xpMade": 0,
+                "xpAtts": 0,
+                "points": 0,
+                "punts": 0,
+                "puntYDs": 0,
+                "puntAVG": 0,
+                "puntTB": 0,
+                "puntIn20": 0,
+                "puntLng": 0,
+                "FPs": 0
+            }
+
+            season = SimpleNamespace(**stat_dict)
+
+            for weekly_stat in weekly_stats:
+                for attr in dir(weekly_stat):
+                    if "__" in attr or "_" in attr:
+                        continue
+
+                    if attr in ["ID", "counted", "defender", "game", "metadata", "passer", "player",
+                                "query", "receiver", "registry", "rusher", "team", "week"]:
+                        continue
+
+                    if "Lng" in attr:
+                        value = getattr(season, attr)
+                        check = getattr(weekly_stat, attr)
+                        if check > value:
+                            setattr(season, attr, check)
+
+                    value = getattr(season, attr)
+                    setattr(season, attr, value + getattr(weekly_stat, attr))
+
+            if season.passAtts:
+                season.passYDsPerGame = season.passYDs / season.gamesPlayed
+                season.passAVG = season.passYDs / season.passComps
+
+            if season.rushAtts:
+                season.rushYDsPerGame = season.rushYDs / season.gamesPlayed
+                season.rushAVG = season.rushYDs / season.rushAtts
+
+            if season.recs:
+                season.recYDsPerGame = season.recYDs / season.gamesPlayed
+                season.recAVG = season.recYDs / season.recs
+
+            if season.krAtts:
+                season.krAVG = season.krYDs / season.krAtts
+
+            if season.prAtts:
+                season.prAVG = season.prYDs / season.prAtts
+
+            if season.fgAtts:
+                season.fgPCT = season.fgMade / season.fgAtts
+
+            if season.punts:
+                season.puntAVG = season.puntYDs / season.punts
+
+            return season
+
+        else:
+            return None
 
     def get_weekly_stats(self, game):
 
