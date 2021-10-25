@@ -365,8 +365,7 @@ def player():
     recent_performance = []
     week_label = []
     week_fps = []
-
-    weeks = range(current_week-4, current_week+1)
+    
     stats = player.get_weekly_stats_list(preseason=preseason)[-5:]
     for stat in stats:
         if stat:
