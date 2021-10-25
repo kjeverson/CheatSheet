@@ -102,12 +102,23 @@ class Team(db.Model):
     def get_game_by_week(self, preseason, week):
 
         games = self.get_games(preseason, completed=False, home=True, away=True)
-        game = games[week-1]
 
-        if game.week == week:
-            return game
-        else:
+        if self.bye == week:
             return None
+
+        elif self.bye > week:
+            game = games[week-1]
+            if game.week == week:
+                return game
+            else:
+                return None
+
+        else:
+            game = games[week-2]
+            if game.week == week:
+                return game
+            else:
+                return None
 
     def get_players(self, preseason=False):
 
