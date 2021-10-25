@@ -164,7 +164,8 @@ class Player(db.Model):
 
             if season.passAtts:
                 season.passYDsPerGame = season.passYDs / season.gamesPlayed
-                season.passAVG = season.passYDs / season.passComps
+                if season.passComps:
+                    season.passAVG = season.passYDs / season.passComps
 
             if season.rushAtts:
                 season.rushYDsPerGame = season.rushYDs / season.gamesPlayed
