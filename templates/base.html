@@ -203,10 +203,10 @@
             <div class="row">
               <div class="col-6 align-self-center">
                   <div class="row text-center">
-                    <h3 id="playerCardName"></h3>
+                    <h3 class="text-center"><span id="playerCardName"></span></h3>
                   </div>
                   <div class="row text-center">
-                    <p id="playerCardInfo"></p>
+                    <span class="text-center"><small id="playerPosition"></small><span id="playerCardLogo"></span> <small id="playerTeam"></small><small id="playerExp"></small></span>
                   </div>
                   <div class="row text-center">
                     <p id="playerCardExperience"></p>
@@ -214,28 +214,20 @@
                   <div class="row text-center">
                     <div id="playerCardStatus"></div>
                   </div>
-                  <div class="row text-center mt-2">
-                    <div id="playerCardLogo"></div>
-                  </div>
                   <div class="row text-center mt-2 justify-content-center">
                     <div class="col-10">
-                      <div class="row mt-2">
+                      <div class="row mt-4">
                         <button class="btn btn-dark text-white p-2 position-relative" style="pointer-events: none">
                           <div class="row px-1 mx-1">
                             <span class="text-center"><small id="gameLocation"></small><span id="oppImg"></span><small id="oppTeam"></small></span>
                           </div>
-                          <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill text-dark bg-light"><small>Upcoming</small></span>
+                          <span class="position-absolute top-0 start-50 translate-middle badge text-dark bg-light"><small>Upcoming</small></span>
                         </button>
                       </div>
                     </div>
                   </div>
-              </div>
-              <div class="col-6 mt-2 text-center align-self-center">
-                <div id="playerCardPic"></div>
-              </div>
-            </div>
-            <div class="row mt-4">
-              <button id="playerCardStats" class="btn active btn-secondary position-relative" style="pointer-events: none">
+                <div class="row mt-2">
+                  <button id="playerCardStats" class="btn active btn-secondary position-relative" style="pointer-events: none">
                 <div class="row mt-2">
                   <div class="col"><div class="row"><h4><strong id="stat1"></strong></h4></div><div class="row"><small id="playerLbl1"></small></div></div>
                   <div class="col"><div class="row"><h4><strong id="stat2"></strong></h4></div><div class="row"><small id="playerLbl2"></small></div></div>
@@ -244,6 +236,33 @@
                   <div class="col"><div class="row"><h4><strong id="stat5"></strong></h4></div><div class="row"><small id="playerLbl5"></small></div></div>
                 </div>
                 <span class="position-absolute top-0 start-50 translate-middle badge text-dark bg-light"><small id="statHeader"></small></span>
+              </button>
+                </div>
+              </div>
+              <div class="col-6 mt-2 text-center align-self-center">
+                <div id="playerCardPic"></div>
+              </div>
+            </div>
+            <div class="row mt-4">
+              <button id="playerCardStats" class="btn active btn-dark position-relative" style="pointer-events: none">
+                <div class="row mt-2">
+                  <div class="col-7">
+                    <div class="row">
+                      <table id="recentTable" class="table table-dark">
+                    <thead>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                  </table>
+                    </div>
+                  </div>
+                  <div class="col-5">
+                    <div class="row">
+<canvas id="line-chart" height="250" width="400"></canvas>
+                    </div>
+                  </div>
+                </div>
+                <span class="position-absolute top-0 start-50 translate-middle badge text-dark bg-light"><small id="statHeader">Recent Performance</small></span>
               </button>
             </div>
           </div>
@@ -270,8 +289,43 @@
     <!--<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
     -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
   </body>
 <script>
+
+  var chart = new Chart(document.getElementById("line-chart"), {
+  type: 'line',
+  data: {
+    labels: [],
+    datasets: [{
+        data: [],
+        tension: 0,
+        borderColor: "#FFFFFF",
+        fill: true
+      }
+    ]
+  },
+  options: {
+    legend: {
+        display: false
+    },
+    responsive: false,
+    scales: {
+        yAxes: [{
+            display: true,
+            ticks: {
+                suggestedMin: 0,
+                suggestedMax: 50
+
+            }
+        }]
+    }
+  }
+});
+
+
 
     // Show Player Modal on table row click
     $(function(){
@@ -295,6 +349,9 @@
               $('#statHeader').html('2021 Season Stats');
               };
             $('#playerCardPic').html(player.cutout);
+            $('#playerPosition').html(player.position+' • ');
+            $('#playerTeam').html(player.team_name+' • ');
+            $('#playerExp').html(player.experience_string);
             $('#playerCardInfo').html(player.position+' • '+player.team_name+' • '+player.experience_string);
             $('#playerCardName').html(player.name);
             $('#playerCardStatus').html(player.status_string);
@@ -305,6 +362,16 @@
 
             var stats = document.getElementById("playerCardStats");
             stats.classList.remove("invisible");
+
+            chart.data.labels = player.week_label
+            chart.data.datasets[0].data = player.week_fps;
+            chart.update();
+
+            $("#recentTable tr").remove();
+            tableHead = $('#recentTable').find('thead');
+            tableHead.append("<tr><th>Wk</th><th>Opp</th><th>Status</th><th>YDs</th><th>TD</th><th>INT</th><th>FPs</th></tr>")
+            tableBody = $('#recentTable').find('tbody');
+            player.recent_performance.forEach(item => tableBody.append(item));
 
             $('#playerLbl1').html(player['labels'][0]);
             $('#playerLbl2').html(player['labels'][1]);

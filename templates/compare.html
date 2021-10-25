@@ -44,7 +44,7 @@
                         <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addPlayerModal"><i class="bi bi-plus-circle-fill"></i> Add Player</button>
                     </div>
                     <div class="row mt-2">
-                    <canvas id="line-chart"></canvas>
+                    <canvas id="compareChart"></canvas>
                 </div>
                 </div>
             </div>
@@ -106,7 +106,7 @@
         $('#addPlayerTable').DataTable();
     });
 
-    new Chart(document.getElementById("line-chart"), {
+    new Chart(document.getElementById("compareChart"), {
     type: 'line',
     data: {
         labels: Array.from(new Array({{current_week}}), (x, i) => i + 1) ,

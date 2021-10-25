@@ -362,14 +362,48 @@ def player():
     else:
         labels = ["", "", "", ""]
 
+    recent_performance = []
+    week_label = []
+    week_fps = []
+
+    weeks = range(current_week-4, current_week+1)
+    stats = player.get_weekly_stats_list(preseason=preseason)[-5:]
+    for stat in stats:
+        if stat:
+            table_string = "<tr><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>"
+
+            game = stat.game
+            if game.away_team == player.current_team:
+                opponent = "@ {}".format(game.home_team.key)
+            else:
+                opponent = "vs. {}".format(game.away_team.key)
+
+            if game.winner == game.home_team.key and game.winner == player.current_team.key:
+                final = "W {}-{}".format(game.home_team_score, game.away_team_score)
+
+            elif game.winner == game.home_team.key and game.winner != player.current_team.key:
+                final = "L {}-{}".format(game.away_team_score, game.home_team_score)
+
+            elif game.winner != game.home_team.key and game.winner == player.current_team.key:
+                final = "W {}-{}".format(game.away_team_score, game.home_team_score)
+
+            elif game.winner != game.home_team.key and game.winner != player.current_team.key:
+                final = "L {}-{}".format(game.home_team_score, game.away_team_score)
+
+            recent_performance.append(table_string.format(stat.week, opponent, final, stat.passYDs, stat.passTDs, stat.passINTs, '{0:.2f}'.format(stat.FPs)))
+            week_label.append(game.week)
+            week_fps.append(stat.FPs)
+
     player_dict.update({'labels': labels})
     player_dict.update({'preseason': preseason})
     player_dict.update({'cutout': "<img src='{}' onerror='this.src=\"{}\"' class='img-fluid'>"
                         .format(cutout_path, default_path)})
-    player_dict.update({'logo': "<img src='{}' height='100'>"
+    player_dict.update({'logo': "<img src='{}' height='30'>"
                        .format(team_logo)})
     player_dict.update({'status_string': status_string})
     player_dict.update({'team_name': player.current_team.fullname})
+    player_dict.update({"recent_performance": recent_performance})
+    player_dict.update({"week_label": week_label, "week_fps": week_fps})
 
     return jsonify(player_dict)
 
