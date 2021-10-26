@@ -365,33 +365,66 @@ def player():
     recent_performance = []
     week_label = []
     week_fps = []
-    
-    stats = player.get_weekly_stats_list(preseason=preseason)[-5:]
-    for stat in stats:
-        if stat:
-            table_string = "<tr><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>"
 
-            game = stat.game
+    recent_games = player.current_team.get_games(
+        preseason=False, completed=True, home=True, away=True)[-5:]
+
+    table_label = "<tr><th><small><small>Wk</small></small></th><th style='border-right: 1px solid white'><small><small>Opp</small></small></th><th><small><small>{}</small></small></th><th><small><small>{}</small></small></th><th><small><small>{}</small></small></th><th style='border-right: 1px solid white'><small><small>{}</small></small></th><th><small><small>{}</small></small></th><th><small><small>{}</small></small></th><th style='border-right: 1px solid white'><small><small>{}</small></small></th><th><small><small>{}</small></small></th></tr>"
+    if player.position == 'QB':
+        table_label = "<tr><th><small><small>Wk</small></small></th><th style='border-right: 1px solid white'><small><small>Opp</small></small></th><th><small><small>{}</small></small></th><th><small><small>{}</small></small></th><th><small><small>{}</small></small></th><th style='border-right: 1px solid white'><small><small>{}</small></small></th><th><small><small>{}</small></small></th><th><small><small>{}</small></small></th><th style='border-right: 1px solid white'><small><small>{}</small></small></th><th><small><small>{}</small></small></th></tr>".format("CMP/ATT", "YD", "TD", "INT", "CAR", "YD", "TD", "FPs")
+    elif player.position == "RB":
+        table_label = "<tr><th><small><small>Wk</small></small></th><th style='border-right: 1px solid white'><small><small>Opp</small></small></th><th><small><small>{}</small></small></th><th><small><small>{}</small></small></th><th style='border-right: 1px solid white'><small><small>{}</small></small></th><th><small><small>{}</small></small></th><th><small><small>{}</small></small></th><th><small><small>{}</small></small></th><th style='border-right: 1px solid white'><small><small>{}</small></small></th><th><small><small>{}</small></small></th></tr>".format("CAR", "YD", "TD", "TGT", "REC", "YD", "TD", "FPs")
+    elif player.position == "WR" or player.position == "TE":
+        table_label = "<tr><th><small><small>Wk</small></small></th><th style='border-right: 1px solid white'><small><small>Opp</small></small></th><th><small><small>{}</small></small></th><th><small><small>{}</small></small></th><th><small><small>{}</small></small></th><th style='border-right: 1px solid white'><small><small>{}</small></small></th><th><small><small>{}</small></small></th><th><small><small>{}</small></small></th><th style='border-right: 1px solid white'><small><small>{}</small></small></th><th><small><small>{}</small></small></th></tr>".format("TGT", "REC", "YD", "TD", "CAR", "YD", "TD", "FPs")
+    else:
+        table_label = "<tr><th><small><small>Wk</small></small></th><th style='border-right: 1px solid white'><small><small>Opp</small></small></th><th><small><small>{}</small></small></th><th><small><small>{}</small></small></th><th><small><small>{}</small></small></th><th style='border-right: 1px solid white'><small><small>{}</small></small></th><th><small><small>{}</small></small></th><th><small><small>{}</small></small></th><th style='border-right: 1px solid white'><small><small>{}</small></small></th><th><small><small>{}</small></small></th></tr>".format("", "", "", "", "", "", "", "")
+
+    for game in sorted(recent_games, reverse=True):
+        week_label.append(game.week)
+        stat = player.get_weekly_stats_by_week(preseason=preseason, week=game.week)
+        table_string = "<tr><td><small><small>{}</small></small></td><td style='border-right: 1px solid white'><small><small>{}</small></small></td><td><small><small>{}</small></small></td><td><small><small>{}</small></small></td><td><small><small>{}</small></small></td><td style='border-right: 1px solid white'><small><small>{}</small></small></td><td><small><small>{}</small></small></td><td><small><small>{}</small></small></td><td style='border-right: 1px solid white'><small><small>{}</small></small></td><td><small><small>{}</small></small></td></tr>"
+        if stat:
             if game.away_team == player.current_team:
                 opponent = "@ {}".format(game.home_team.key)
             else:
                 opponent = "vs. {}".format(game.away_team.key)
 
-            if game.winner == game.home_team.key and game.winner == player.current_team.key:
-                final = "W {}-{}".format(game.home_team_score, game.away_team_score)
-
-            elif game.winner == game.home_team.key and game.winner != player.current_team.key:
-                final = "L {}-{}".format(game.away_team_score, game.home_team_score)
-
-            elif game.winner != game.home_team.key and game.winner == player.current_team.key:
-                final = "W {}-{}".format(game.away_team_score, game.home_team_score)
-
-            elif game.winner != game.home_team.key and game.winner != player.current_team.key:
-                final = "L {}-{}".format(game.home_team_score, game.away_team_score)
-
-            recent_performance.append(table_string.format(stat.week, opponent, final, stat.passYDs, stat.passTDs, stat.passINTs, '{0:.2f}'.format(stat.FPs)))
-            week_label.append(game.week)
+            if player.position == 'QB':
+                recent_performance.append(table_string.format(stat.week, opponent,
+                                                              str(stat.passAtts) + "/" + str(
+                                                                  stat.passComps), stat.passYDs,
+                                                              stat.passTDs, stat.passINTs,
+                                                              stat.rushAtts, stat.rushYDs,
+                                                              stat.rushTDs,
+                                                              '{0:.2f}'.format(stat.FPs)))
+            elif player.position == "RB":
+                table_string = "<tr><td><small><small>{}</small></small></td><td style='border-right: 1px solid white'><small><small>{}</small></small></td><td><small><small>{}</small></small></td><td><small><small>{}</small></small></td><td style='border-right: 1px solid white'><small><small>{}</small></small></td><td><small><small>{}</small></small></td><td><small><small>{}</small></small></td><td><small><small>{}</small></small></td><td style='border-right: 1px solid white'><small><small>{}</small></small></td><td><small><small>{}</small></small></td></tr>"
+                recent_performance.append(
+                    table_string.format(stat.week, opponent, stat.rushAtts, stat.rushYDs,
+                                        stat.rushTDs, stat.recTGTS, stat.recs, stat.recYDs,
+                                        stat.recTDs, '{0:.2f}'.format(stat.FPs)))
+            elif player.position == "WR" or player.position == "TE":
+                recent_performance.append(
+                    table_string.format(stat.week, opponent, stat.recTGTS, stat.recs, stat.recYDs,
+                                        stat.recTDs, stat.rushAtts, stat.rushYDs, stat.rushTDs,
+                                        '{0:.2f}'.format(stat.FPs)))
+            else:
+                recent_performance.append(
+                    table_string.format(stat.week, opponent, stat.passYDs, stat.passTDs,
+                                        stat.passINTs, '{0:.2f}'.format(stat.FPs)))
             week_fps.append(stat.FPs)
+        else:
+            if game.away_team == player.current_team:
+                opponent = "@ {}".format(game.home_team.key)
+            else:
+                opponent = "vs. {}".format(game.away_team.key)
+
+            recent_performance.append(
+                table_string.format(game.week, opponent, "-", "-", "-", "-", "-", "-", "-", '{0:.2f}'.format(0)))
+            week_fps.append(0)
+
+    week_fps.reverse()
+    week_label.reverse()
 
     player_dict.update({'labels': labels})
     player_dict.update({'preseason': preseason})
@@ -403,6 +436,7 @@ def player():
     player_dict.update({'team_name': player.current_team.fullname})
     player_dict.update({"recent_performance": recent_performance})
     player_dict.update({"week_label": week_label, "week_fps": week_fps})
+    player_dict.update({"table_label": table_label})
 
     return jsonify(player_dict)
 

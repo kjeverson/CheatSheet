@@ -246,7 +246,7 @@
             <div class="row mt-4">
               <button id="playerCardStats" class="btn active btn-dark position-relative" style="pointer-events: none">
                 <div class="row mt-2">
-                  <div class="col-7">
+                  <div class="col-8">
                     <div class="row">
                       <table id="recentTable" class="table table-dark">
                     <thead>
@@ -256,7 +256,7 @@
                   </table>
                     </div>
                   </div>
-                  <div class="col-5">
+                  <div class="col-4">
                     <div class="row">
 <canvas id="line-chart" height="250" width="400"></canvas>
                     </div>
@@ -369,7 +369,7 @@
 
             $("#recentTable tr").remove();
             tableHead = $('#recentTable').find('thead');
-            tableHead.append("<tr><th>Wk</th><th>Opp</th><th>Status</th><th>YDs</th><th>TD</th><th>INT</th><th>FPs</th></tr>")
+            tableHead.append(player.table_label);
             tableBody = $('#recentTable').find('tbody');
             player.recent_performance.forEach(item => tableBody.append(item));
 
