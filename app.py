@@ -377,7 +377,7 @@ def player():
     elif player.position == "WR" or player.position == "TE":
         table_label = "<tr><th><small><small>Wk</small></small></th><th style='border-right: 1px solid white'><small><small>Opp</small></small></th><th><small><small>{}</small></small></th><th><small><small>{}</small></small></th><th><small><small>{}</small></small></th><th style='border-right: 1px solid white'><small><small>{}</small></small></th><th><small><small>{}</small></small></th><th><small><small>{}</small></small></th><th style='border-right: 1px solid white'><small><small>{}</small></small></th><th><small><small>{}</small></small></th></tr>".format("TGT", "REC", "YD", "TD", "CAR", "YD", "TD", "FPs")
     else:
-        table_label = "<tr><th><small><small>Wk</small></small></th><th style='border-right: 1px solid white'><small><small>Opp</small></small></th><th><small><small>{}</small></small></th><th><small><small>{}</small></small></th><th><small><small>{}</small></small></th><th style='border-right: 1px solid white'><small><small>{}</small></small></th><th><small><small>{}</small></small></th><th><small><small>{}</small></small></th><th style='border-right: 1px solid white'><small><small>{}</small></small></th><th><small><small>{}</small></small></th></tr>".format("", "", "", "", "", "", "", "")
+        table_label = "<tr><th><small><small>Wk</small></small></th><th style='border-right: 1px solid white'><small><small>Opp</small></small></th><th><small><small>{}</small></small></th><th><small><small>{}</small></small></th><th><small><small>{}</small></small></th><th style='border-right: 1px solid white'><small><small>{}</small></small></th><th><small><small>{}</small></small></th><th><small><small>{}</small></small></th><th style='border-right: 1px solid white'><small><small>{}</small></small></th><th><small><small>{}</small></small></th></tr>".format("TOT", "SACK", "TFL", "PD", "INT", "FR", "TD", "FPs")
 
     for game in sorted(recent_games, reverse=True):
         week_label.append(game.week)
@@ -410,8 +410,8 @@ def player():
                                         '{0:.2f}'.format(stat.FPs)))
             else:
                 recent_performance.append(
-                    table_string.format(stat.week, opponent, stat.passYDs, stat.passTDs,
-                                        stat.passINTs, '{0:.2f}'.format(stat.FPs)))
+                    table_string.format(stat.week, opponent, stat.soloTackles, stat.totalTackles, stat.sacks, stat.tacklesForLoss, stat.passDefensed, stat.defINTs, stat.fumRec,
+                                        stat.defTDs, '{0:.2f}'.format(stat.FPs)))
             week_fps.append(stat.FPs)
         else:
             if game.away_team == player.current_team:
@@ -419,8 +419,13 @@ def player():
             else:
                 opponent = "vs. {}".format(game.away_team.key)
 
-            recent_performance.append(
-                table_string.format(game.week, opponent, "-", "-", "-", "-", "-", "-", "-", '{0:.2f}'.format(0)))
+            if player.position == 'RB':
+                recent_performance.append(
+                    "<tr><td><small><small>{}</small></small></td><td style='border-right: 1px solid white'><small><small>{}</small></small></td><td><small><small>{}</small></small></td><td><small><small>{}</small></small></td><td style='border-right: 1px solid white'><small><small>{}</small></small></td><td><small><small>{}</small></small></td><td><small><small>{}</small></small></td><td><small><small>{}</small></small></td><td style='border-right: 1px solid white'><small><small>{}</small></small></td><td><small><small>{}</small></small></td></tr>".format(game.week, opponent, "-", "-", "-", "-", "-", "-", "-", '{0:.2f}'.format(0))
+                )
+            else:
+                recent_performance.append(
+                    table_string.format(game.week, opponent, "-", "-", "-", "-", "-", "-", "-", '{0:.2f}'.format(0)))
             week_fps.append(0)
 
     week_fps.reverse()
