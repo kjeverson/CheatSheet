@@ -158,9 +158,9 @@ class Player(db.Model):
                         check = getattr(weekly_stat, attr)
                         if check > value:
                             setattr(season, attr, check)
-
-                    value = getattr(season, attr)
-                    setattr(season, attr, value + getattr(weekly_stat, attr))
+                    else:
+                        value = getattr(season, attr)
+                        setattr(season, attr, value + getattr(weekly_stat, attr))
 
             if season.passAtts:
                 season.passYDsPerGame = season.passYDs / season.gamesPlayed
