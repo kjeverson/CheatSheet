@@ -461,6 +461,27 @@ def scoring():
     return render_template("scoring.html", teams=teams, scoring=scoring)
 
 
+def generate_list(list_string, string=False):
+    
+    list_string = list_string.replace("[", "")
+    list_string = list_string.replace("]", "")
+
+    if string:
+        list_string = list_string.replace("'", "")
+
+    list_string = list_string.split(",") if list_string else []
+
+    list = list_string if list_string else []
+
+    if string:
+        list = [c.strip(" ") for c in list]
+        list = [str(c) for c in list]
+    else:
+        list = [int(p) for p in list]
+
+    return list
+
+
 @app.route('/compare', methods=["GET", "POST"])
 def compare():
 
@@ -472,28 +493,52 @@ def compare():
     players = [player for player in players if player.position in ['QB', 'RB', 'WR', 'TE']]
     scoring = Scoring.query.filter_by(ID=0).first()
 
+    stats = {'FPs',
+             'passAVG', 'passAtts', 'passComps', 'passINTs', 'passRTG', 'passTDs', 'passYDs',
+             'recAVG', 'recLng', 'recTDs', 'recTGTS', 'recYDs', 'recs',
+             'rushAVG', 'rushAtts', 'rushLng', 'rushTDs', 'rushYDs'}
+
     comparing = []
+    compareStats = []
+    chartTypes = []
     if request.method == "POST":
+
         if "addPlayer" in request.form:
-            player_id, list = request.form.get("addPlayer").split("-")
-
-            list = list.replace("[", "")
-            list = list.replace("]", "")
-            list = list.split(",") if list else []
-
-            comparing = list if list else []
-            comparing = [int(p) for p in comparing]
+            player_id, player_list, stat_list, chart_list = request.form.get("addPlayer").split("-")
+            comparing = generate_list(player_list, string=False)
+            compareStats = generate_list(stat_list, string=True)
+            chartTypes = generate_list(chart_list, string=True)
             comparing.append(int(player_id))
 
-        else:
-            player_id, list = request.form.get("dropPlayer").split("-")
+        if "dropPlayer" in request.form:
+            player_id, player_list, stat_list, chart_list = request.form.get("dropPlayer").split("-")
+            comparing = generate_list(player_list, string=False)
+            compareStats = generate_list(stat_list, string=True)
+            chartTypes = generate_list(chart_list, string=True)
+            comparing.remove(int(player_id))
 
-            list = list.replace("[", "")
-            list = list.replace("]", "")
-            list = list.split(", ") if list else []
-            list = [int(p) for p in list]
-            list.remove(int(player_id))
-            comparing = list
+        if "addStat" in request.form:
+            chartType, player_list, stat_list, chart_list = request.form.get("chartSelect").split("-")
+            comparing = generate_list(player_list, string=False)
+            compareStats = generate_list(stat_list, string=True)
+            chartTypes = generate_list(chart_list, string=True)
+            chartTypes.append(chartType)
+
+            stat, player_list, stat_list, chart_list = request.form.get("statSelect").split("-")
+            comparing = generate_list(player_list, string=False)
+            compareStats = generate_list(stat_list, string=True)
+            compareStats.append(stat)
+            stats.remove(stat)
+
+            print(chartTypes)
+
+        if "dropStat" in request.form:
+            stat, player_list, stat_list, chart_list = request.form.get("dropStat").split("-")
+            comparing = generate_list(player_list, string=False)
+            compareStats = generate_list(stat_list, string=True)
+            chartTypes = generate_list(chart_list, string=True)
+            compareStats.remove(stat)
+            stats.add(stat)
 
     default_headshot_path = url_for('static', filename='headshots/default.png')
 
@@ -505,7 +550,10 @@ def compare():
                            players=players,
                            scoring=scoring,
                            comparing=comparing,
-                           default_headshot_path=default_headshot_path)
+                           compareStats=compareStats,
+                           chartTypes=chartTypes,
+                           default_headshot_path=default_headshot_path,
+                           stats=stats)
 
 
 @app.route('/db', methods=["GET", "POST"])

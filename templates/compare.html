@@ -5,9 +5,9 @@
 {% block content %}
 <div class="container mt-4 pt-4">
     <div class="row text-white">
+        <!-- Player Selection -->
         <div class="row mt-2">
             <div class="card bg-dark">
-            <div class="card-title text-center">Compare Players</div>
             <div class="card-body">
                 <div class="col">
                     <div class="row mt-2">
@@ -34,7 +34,7 @@
                             </div>
                             <form action="{{ url_for('compare') }}" role="form" method="POST">
                             <div class="row">
-                                <button name="dropPlayer" type="submit" class="btn btn-secondary" value="{{player.ID}}-{{comparing}}"><i class="bi bi-dash-circle-fill"></i> Drop Player</button>
+                                <button name="dropPlayer" type="submit" class="btn btn-secondary" value="{{player.ID}}-{{comparing}}-{{compareStats}}-{{chartTypes}}"><i class="bi bi-dash-circle-fill"></i> Drop Player</button>
                             </div>
                             </form>
                         </div>
@@ -43,12 +43,52 @@
                     <div class="row mt-1 align-self-center">
                         <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addPlayerModal"><i class="bi bi-plus-circle-fill"></i> Add Player</button>
                     </div>
-                    <div class="row mt-2">
-                    <canvas id="compareChart"></canvas>
-                </div>
                 </div>
             </div>
           </div>
+        </div>
+        <!-- Stat Selection -->
+        <div class="row mt-2">
+            <div class="card bg-dark">
+                <div class="card-body">
+                    <div class="col">
+                        <div class="row mt-2">
+                            {% for stat in compareStats %}
+                            <div class="col-1 align-self-center">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="row mt-2 text-start">
+                                            <small>{{stat}}</small>
+                                        </div>
+                                        <div class="row text-start">
+                                            <div class="col"><span class="text-muted"><small><small>chart: {{chartTypes[loop.index0]}}</small></small></span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <form action="{{ url_for('compare') }}" role="form" method="POST">
+                                    <div class="row">
+                                        <button name="dropStat" type="submit" class="btn btn-secondary" value="{{stat}}-{{comparing}}-{{compareStats}}-{{chartTypes}}"><i class="bi bi-dash-circle-fill"></i> Drop</button>
+                                    </div>
+                                </form>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="row mt-1 align-self-center">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addStatModal"><i class="bi bi-plus-circle-fill"></i> Add Stat</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Graph -->
+        <div class="row mt-2">
+            <div class="card bg-dark">
+                <div class="card-body">
+                    <div class="row mt-2">
+                        <canvas id="compareChart"></canvas>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -83,7 +123,7 @@
                         {% for player in players %}
                         {% if player.ID not in comparing %}
                             <tr>
-                                <td><button name="addPlayer" type="submit" class="btn text-success" value="{{player.ID}}-{{comparing}}"><i class="bi bi-plus-circle-fill"></i></button></td>
+                                <td><button name="addPlayer" type="submit" class="btn text-success" value="{{player.ID}}-{{comparing}}-{{compareStats}}-{{chartTypes}}"><i class="bi bi-plus-circle-fill"></i></button></td>
                                 <td data-id="{{player.ID}}" class="player-btn">{{player.name}}</td>
                                 <td data-id="{{player.ID}}" class="player-btn">{{player.position}}</td>
                                 <td data-id="{{player.ID}}" class="player-btn">{{player.current_team.key}}</td>
@@ -92,6 +132,49 @@
                         {% endfor %}
                             </tbody>
                         </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+</div>
+
+<!-- Add Stat Modal -->
+<div class="modal fade" id="addStatModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+        <div class="modal-dialog modal-lg bg-dark text-white">
+            <div class="modal-content">
+                <div class="modal-header bg-dark">
+                    <h5 class="modal-title">Add Stats</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body bg-dark text-white">
+                    <form action="{{ url_for('compare') }}" role="form" method="POST">
+                        <div class="row">
+                            <div class="col">
+                                Select Stat:
+                            </div>
+                            <div class="col">
+                                <select name="statSelect" class="form-select">
+                                  <option selected></option>
+                                    {% for value in stats %}
+                                        <option value="{{ value }}-{{comparing}}-{{compareStats}}-{{chartTypes}}">{{ value }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col">
+                                Select Chart Type:
+                            </div>
+                            <div class="col">
+                                <select name="chartSelect" class="form-select">
+                                    <option selected></option>
+                                    <option value="line-{{comparing}}-{{compareStats}}-{{chartTypes}}">Line Graph</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <button name="addStat" class="button" type="submit">Add Stat</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -113,13 +196,17 @@
         datasets: [
             {% for player in comparing %}
             {% set player = Player.query.get(player) %}
+                {% for stat in compareStats %}
             {
-            tension: 0,
-            data: {{player.get_weekly_stats_by_stat(preseason=preseason) }},
-            label: "{{player.shortname}}",
-            borderColor: "#{{player.current_team.primary}}",
-            fill: false
+                data: {{player.get_weekly_stats_by_stat(stat, preseason=preseason) }},
+                label: "{{player.shortname}}",
+                borderColor: "#{{player.current_team.primary}}",
+                type: "{{ chartTypes[loop.index0] }}",
+                tension: 0,
+                fill: false,
+                label: "{{player.shortname}} {{stat}}"
             },
+                {% endfor %}
             {% endfor %}
     ]
   },
@@ -132,7 +219,10 @@
       scaleLabel: {
         display: true,
         labelString: 'Week'
-      }
+      },
+      ticks: {
+        min: 0
+      },
     }]
   }
   }
