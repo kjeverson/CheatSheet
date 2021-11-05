@@ -530,8 +530,6 @@ def compare():
             compareStats.append(stat)
             stats.remove(stat)
 
-            print(chartTypes)
-
         if "dropStat" in request.form:
             stat, player_list, stat_list, chart_list = request.form.get("dropStat").split("-")
             comparing = generate_list(player_list, string=False)
