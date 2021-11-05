@@ -1,6 +1,7 @@
 from app import db
 from NFLCheatSheet.lib.classes import stats
 from NFLCheatSheet.lib.classes.transactions import Transactions
+from NFLCheatSheet.lib.classes.player import Player
 import requests
 import re
 
@@ -122,11 +123,7 @@ class Team(db.Model):
 
     def get_players(self, preseason=False):
 
-        players = set()
-        week_stats = stats.WeeklyStats.query.filter(stats.WeeklyStats.team_id == self.ID)\
-            .filter(stats.WeeklyStats.preseason == preseason).all()
-        for week_stat in week_stats:
-            players.add(week_stat.player)
+        players = Player.query.filter(Player.team_id==self.ID).all()
 
         return players
 

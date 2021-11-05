@@ -245,7 +245,9 @@ def team():
 
         default_headshot_path = url_for('static', filename='headshots/default.png')
 
-        player_stats = [player.get_season_stats_by_team(preseason=preseason, team_id=team.ID) for player in players]
+        player_stats = [player.get_season_stats_by_team(preseason=preseason, team_id=team.ID) for
+                        player in players if player.get_season_stats_by_team(
+                preseason=preseason, team_id=team.ID)]
 
         injured = [player for player in players if player.date]
         injured = [player for player in injured if len(player.news) > 2]
