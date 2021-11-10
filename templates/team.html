@@ -811,7 +811,7 @@
                   {% for season_stats in player_stats|sort(attribute='krYDs', reverse=True) %}
                   {% if season_stats.krAtts > 0 or season_stats.prAtts > 0 %}
                   <tr data-id="{{ season_stats.player.ID }}">
-                    <td <th style='border-right: 1px solid white'></th>>{{ season_stats.player.name }} <small class="text-muted">{{ season_stats.player.position }}</small></td>
+                    <td style='border-right: 1px solid white'>{{ season_stats.player.name }} <small class="text-muted">{{ season_stats.player.position }}</small></td>
                     <td class="text-end" style='border-right: 1px solid white'>{{ season_stats.gamesPlayed }}</td>
                     <td class="text-end">{{ season_stats.krAtts }}</td>
                     <td class="text-end">{{ season_stats.krYDs }}</td>
@@ -855,7 +855,7 @@
                   {% for season_stats in player_stats|sort(attribute='fgMade', reverse=True) %}
                   {% if season_stats.fgAtts > 0 or season_stats.xpAtts > 0 %}
                   <tr data-id="{{ season_stats.player.ID }}">
-                    <td <th style='border-right: 1px solid white'></th>>{{ season_stats.player.name }} <small class="text-muted">{{ season_stats.player.position }}</small></td>
+                    <td style='border-right: 1px solid white'>{{ season_stats.player.name }} <small class="text-muted">{{ season_stats.player.position }}</small></td>
                     <td class="text-end" style='border-right: 1px solid white'>{{ season_stats.gamesPlayed }}</td>
                     <td class="text-end">{{ season_stats.fgMade }}</td>
                     <td class="text-end">{{ season_stats.fgAtts }}</td>
