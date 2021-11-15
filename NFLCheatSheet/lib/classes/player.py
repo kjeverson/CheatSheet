@@ -197,24 +197,31 @@ class Player(db.Model):
         return stats.WeeklyStats.query.filter_by(
             player_id=self.ID).filter_by(game_id=game.ID).first()
 
-    def get_weekly_stats_by_stat(self, stat, preseason):
+    def get_weekly_stats_by_stat(self, stat, preseason, current_week, as_json=False):
 
         week_stats = self.get_weekly_stats_list(preseason=preseason)
         week_stats.sort(key=lambda stats: stats.week)
 
         stats = []
 
-        i = 1
-        for week in week_stats:
-            if week.week != i:
-                stats.extend([0]*(week.week - i))
-                stats.append(getattr(week, stat))
-                i += (week.week - i) + 1
+        for i in range(1, current_week+1):
+            if i == self.current_team.bye:
+                stats.append(None)
             else:
-                stats.append(getattr(week, stat))
-                i += 1
+                week = self.get_weekly_stats_by_week(preseason=preseason, week=i)
+                if week:
+                    stats.append(getattr(week, stat))
+                else:
+                    game = self.current_team.get_game_by_week(preseason=preseason, week=i)
+                    if game.completed:
+                        stats.append(0)
+                    else:
+                        stats.append(None)
 
-        return stats
+        if as_json:
+            return json.dumps(stats)
+        else:
+            return stats
 
     def get_weekly_stats_by_week(self, preseason=False, week=None):
         return stats.WeeklyStats.query.filter_by(player_id=self.ID).filter_by(preseason=preseason).filter_by(week=str(week)).first()

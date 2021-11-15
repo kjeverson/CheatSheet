@@ -198,7 +198,7 @@
             {% set player = Player.query.get(player) %}
                 {% for stat in compareStats %}
             {
-                data: {{player.get_weekly_stats_by_stat(stat, preseason=preseason) }},
+                data: {{player.get_weekly_stats_by_stat(stat, preseason=preseason, current_week=current_week, as_json=True) }},
                 label: "{{player.shortname}}",
                 borderColor: "#{{player.current_team.primary}}",
                 type: "{{ chartTypes[loop.index0] }}",
