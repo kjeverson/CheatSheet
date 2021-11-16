@@ -137,6 +137,8 @@
                   {% if game.completed %}
                     {% if game.winner == team.key %}
                     <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill text-dark bg-success">W</span>
+                    {% elif game.winner == "Tie" %}
+                    <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill text-dark bg-warning">T</span>
                     {% else %}
                     <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill text-dark bg-danger">L</span>
                     {% endif %}
@@ -153,6 +155,8 @@
                   {% if game.completed %}
                     {% if game.winner == team.key %}
                     <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill text-dark bg-success">W</span>
+                    {% elif game.winner == "Tie" %}
+                    <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill text-dark bg-warning">T</span>
                     {% else %}
                     <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill text-dark bg-danger">L</span>
                     {% endif %}
@@ -173,6 +177,8 @@
                   {% if game.completed %}
                     {% if game.winner == team.key %}
                     <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill text-dark bg-success">W</span>
+                    {% elif game.winner == "Tie" %}
+                    <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill text-dark bg-warning">T</span>
                     {% else %}
                     <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill text-dark bg-danger">L</span>
                     {% endif %}
@@ -189,6 +195,8 @@
                   {% if game.completed %}
                     {% if game.winner == team.key %}
                     <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill text-dark bg-success">W</span>
+                    {% elif game.winner == "Tie" %}
+                    <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill text-dark bg-warning">T</span>
                     {% else %}
                     <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill text-dark bg-danger">L</span>
                     {% endif %}
@@ -969,7 +977,7 @@
                             <td><span class="fw-bold text-danger">L </span> {{ game.home_team_score }}-{{ game.away_team_score }}</td>
                             {% else %}
                             {% set record.ties = record.ties + 1 %}
-                            <td><span class="fw-bold">T </span> {{ game.home_team_score }}-{{ game.away_team_score }}</td>
+                            <td><span class="fw-bold text-warning">T </span> {{ game.home_team_score }}-{{ game.away_team_score }}</td>
                             {% endif %}
                           {% else %}
                           <td class="align-self-center">@ {{ game.home_team.name }}</td>
@@ -981,7 +989,7 @@
                             <td><span class="fw-bold text-danger">L </span> {{ game.away_team_score }}-{{ game.home_team_score }}</td>
                             {% else %}
                             {% set record.ties = record.ties + 1 %}
-                            <td><span class="fw-bold">T </span> {{ game.away_team_score }}-{{ game.home_team_score }}</td>
+                            <td><span class="fw-bold text-warning">T </span> {{ game.away_team_score }}-{{ game.home_team_score }}</td>
                             {% endif %}
                           {% endif %}
                           {% if record.ties > 0 %}
@@ -1073,7 +1081,7 @@
                               <td><span class="fw-bold text-danger">L </span> {{ game.home_team_score }}-{{ game.away_team_score }}</td>
                               {% else %}
                               {% set record.ties = record.ties + 1 %}
-                              <td><span class="fw-bold">T </span> {{ game.home_team_score }}-{{ game.away_team_score }}</td>
+                              <td><span class="fw-bold text-warning">T </span> {{ game.home_team_score }}-{{ game.away_team_score }}</td>
                               {% endif %}
                             {% else %}
                             <td class="align-self-center">@ {{ game.home_team.name }}</td>
@@ -1085,7 +1093,7 @@
                               <td><span class="fw-bold text-danger">L </span> {{ game.away_team_score }}-{{ game.home_team_score }}</td>
                               {% else %}
                               {% set record.ties = record.ties + 1 %}
-                              <td><span class="fw-bold">T </span> {{ game.away_team_score }}-{{ game.home_team_score }}</td>
+                              <td><span class="fw-bold text-warning">T </span> {{ game.away_team_score }}-{{ game.home_team_score }}</td>
                               {% endif %}
                             {% endif %}
                             {% if record.ties > 0 %}
@@ -1142,7 +1150,7 @@
                               <td><span class="fw-bold text-danger">L </span> {{ game.home_team_score }}-{{ game.away_team_score }}</td>
                               {% else %}
                               {% set record.ties = record.ties + 1 %}
-                              <td><span class="fw-bold">T </span> {{ game.home_team_score }}-{{ game.away_team_score }}</td>
+                              <td><span class="fw-bold text-warning">T </span> {{ game.home_team_score }}-{{ game.away_team_score }}</td>
                               {% endif %}
                             {% else %}
                             <td class="align-self-center">@ {{ game.home_team.name }}</td>
@@ -1154,7 +1162,7 @@
                               <td><span class="fw-bold text-danger">L </span> {{ game.away_team_score }}-{{ game.home_team_score }}</td>
                               {% else %}
                               {% set record.ties = record.ties + 1 %}
-                              <td><span class="fw-bold">T </span> {{ game.away_team_score }}-{{ game.home_team_score }}</td>
+                              <td><span class="fw-bold text-warning">T </span> {{ game.away_team_score }}-{{ game.home_team_score }}</td>
                               {% endif %}
                             {% endif %}
                             {% if record.ties > 0 %}
