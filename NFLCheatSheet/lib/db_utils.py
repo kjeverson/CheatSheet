@@ -1043,8 +1043,17 @@ def update_fantasy_points(db, thread):
         if not week_stats:
             continue
         else:
+            ss = player.get_season_stats(preseason=False)
+            ps = player.get_season_stats(preseason=True)
+            ps.FPs = 0
+            ss.FPs = 0
             for week in week_stats:
                 week.FPs = get_score(scoring, week)
+                if week.preseason:
+                    ps.FPs += week.FPs
+                else:
+                    ss.FPs += week.FPs
+
     print("Calculating Fantasy Points...\x1b[32mCOMPLETE!\x1b[0m\033[K")
 
 

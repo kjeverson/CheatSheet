@@ -461,6 +461,11 @@ def scoring():
             setattr(scoring, key, value)
         db.session.commit()
 
+        thread = UpdateThread(ID=random.randint(0, 1000))
+        thread.state = "INIT"
+        db_utils.update_fantasy_points(db, thread)
+        db.session.commit()
+
     return render_template("scoring.html", teams=teams, scoring=scoring)
 
 
@@ -565,7 +570,7 @@ def database():
     thread_ids = []
     for i in range(0, 8):
         thread_id = random.randint(0, 10000)
-        update_threads[thread_id] = UpdateThread()
+        update_threads[thread_id] = UpdateThread(thread_id)
         update_threads[thread_id].state = "INIT"
         thread_ids.append(thread_id)
 
