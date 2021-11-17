@@ -29,7 +29,7 @@ class Team(db.Model):
 
     games_played = db.Column(db.Integer)
     wins = db.Column(db.Integer)
-    loses = db.Column(db.Integer)
+    losses = db.Column(db.Integer)
     ties = db.Column(db.Integer)
     winPCT = db.Column(db.Integer)
 
@@ -39,7 +39,7 @@ class Team(db.Model):
 
     preseason_games_played = db.Column(db.Integer)
     preseason_wins = db.Column(db.Integer)
-    preseason_loses = db.Column(db.Integer)
+    preseason_losses = db.Column(db.Integer)
     preseason_ties = db.Column(db.Integer)
     preseasonWinPCT = db.Column(db.Integer)
 

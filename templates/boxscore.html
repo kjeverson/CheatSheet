@@ -14,15 +14,15 @@
                     <div class="row"><h2 class="text-end text-uppercase">{{ matchup.home_team.name }}</h2></div>
                     {% if matchup.preseason %}
                         {% if matchup.home_team.preseason_ties %}
-                        <div class="row"><small class="text-end font-weight-light">{{ matchup.home_team.preseason_wins }}-{{matchup.home_team.preseason_loses}}-{{matchup.home_team.preseason_ties}}</small></div>
+                        <div class="row"><small class="text-end font-weight-light">{{ matchup.home_team.preseason_wins }}-{{matchup.home_team.preseason_losses}}-{{matchup.home_team.preseason_ties}}</small></div>
                         {% else %}
-                        <div class="row"><small class="text-end font-weight-light">{{ matchup.home_team.preseason_wins }}-{{matchup.home_team.preseason_loses}}</small></div>
+                        <div class="row"><small class="text-end font-weight-light">{{ matchup.home_team.preseason_wins }}-{{matchup.home_team.preseason_losses}}</small></div>
                         {% endif %}
                     {% else %}
                         {% if matchup.home_team.ties %}
-                        <div class="row"><small class="text-end font-weight-light">{{ matchup.home_team.wins }}-{{matchup.home_team.loses}}-{{matchup.home_team.ties}}</small></div>
+                        <div class="row"><small class="text-end font-weight-light">{{ matchup.home_team.wins }}-{{matchup.home_team.losses}}-{{matchup.home_team.ties}}</small></div>
                         {% else %}
-                        <div class="row"><small class="text-end font-weight-light">{{ matchup.home_team.wins }}-{{matchup.home_team.loses}}</small></div>
+                        <div class="row"><small class="text-end font-weight-light">{{ matchup.home_team.wins }}-{{matchup.home_team.losses}}</small></div>
                         {% endif %}
                     {% endif %}
                 </div>
@@ -64,15 +64,15 @@
                     <div class="row"><h2 class="text-start text-uppercase">{{ matchup.away_team.name }}</h2></div>
                     {% if matchup.preseason %}
                         {% if matchup.away_team.preseason_ties %}
-                        <div class="row"><small class="text-start font-weight-light">{{ matchup.away_team.preseason_wins }}-{{matchup.away_team.preseason_loses}}-{{matchup.away_team.preseason_ties}}</small></div>
+                        <div class="row"><small class="text-start font-weight-light">{{ matchup.away_team.preseason_wins }}-{{matchup.away_team.preseason_losses}}-{{matchup.away_team.preseason_ties}}</small></div>
                         {% else %}
-                        <div class="row"><small class="text-start font-weight-light">{{ matchup.away_team.preseason_wins }}-{{matchup.away_team.preseason_loses}}</small></div>
+                        <div class="row"><small class="text-start font-weight-light">{{ matchup.away_team.preseason_wins }}-{{matchup.away_team.preseason_losses}}</small></div>
                         {% endif %}
                     {% else %}
                         {% if matchup.away_team.ties %}
-                        <div class="row"><small class="text-start font-weight-light">{{ matchup.away_team.wins }}-{{matchup.away_team.loses}}-{{matchup.away_team.ties}}</small></div>
+                        <div class="row"><small class="text-start font-weight-light">{{ matchup.away_team.wins }}-{{matchup.away_team.losses}}-{{matchup.away_team.ties}}</small></div>
                         {% else %}
-                        <div class="row"><small class="text-start font-weight-light">{{ matchup.away_team.wins }}-{{matchup.away_team.loses}}</small></div>
+                        <div class="row"><small class="text-start font-weight-light">{{ matchup.away_team.wins }}-{{matchup.away_team.losses}}</small></div>
                         {% endif %}
                     {% endif %}
                 </div>

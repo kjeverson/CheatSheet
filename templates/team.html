@@ -16,9 +16,9 @@
           <div class="row"><small class="text-start">{{ team.location}}</small></div>
           <div class="row"><h2 class="text-start text-uppercase">{{ team.name }}</h2></div>
           {% if preseason %}
-          <div class="row"><small class="text-start font-weight-light">{{ team.preseason_wins }}-{{ team.preseason_loses }}</small></div>
+          <div class="row"><small class="text-start font-weight-light">{{ team.preseason_wins }}-{{ team.preseason_losses }}</small></div>
           {% else %}
-          <div class="row"><small class="text-start font-weight-light">{{ team.wins }}-{{ team.loses }}</small></div>
+          <div class="row"><small class="text-start font-weight-light">{{ team.wins }}-{{ team.losses }}</small></div>
           {% endif %}
         </div>
       </div>
@@ -463,7 +463,7 @@
                     <tr>
                       <td><strong>{{ t.name }}</strong></td>
                       <td><strong>{{ t.wins }}</strong></td>
-                      <td><strong>{{ t.loses }}</strong></td>
+                      <td><strong>{{ t.losses }}</strong></td>
                       <td><strong>{{ t.ties }}</strong></td>
                       <td><strong></strong></td>
                       <td><strong>{{ t.get_team_stats(preseason=false).pointsFor }}</strong></td>
@@ -473,7 +473,7 @@
                     <tr>
                       <td>{{ t.name }}</td>
                       <td>{{ t.wins }}</td>
-                      <td>{{ t.loses }}</td>
+                      <td>{{ t.losses }}</td>
                       <td>{{ t.ties }}</td>
                       <td></td>
                       <td>{{ t.get_team_stats(preseason=false).pointsFor }}</td>
