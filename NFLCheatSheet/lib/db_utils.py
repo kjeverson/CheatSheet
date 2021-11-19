@@ -100,10 +100,10 @@ def add_teams(database, teams: List[Dict]) -> None:
             conference=team_conference.get(name),
             division=team_division.get(name),
             wins=0,
-            loses=0,
+            losses=0,
             ties=0,
             preseason_wins=0,
-            preseason_loses=0,
+            preseason_losses=0,
             preseason_ties=0,
             preseason_games_played=0,
             games_played=0
@@ -130,10 +130,10 @@ def add_teams(database, teams: List[Dict]) -> None:
         name="Free Agent",
         fullname="Free Agent",
         wins=0,
-        loses=0,
+        losses=0,
         ties=0,
         preseason_wins=0,
-        preseason_loses=0,
+        preseason_losses=0,
         preseason_ties=0,
         preseason_games_played=0
     ))
@@ -452,12 +452,12 @@ def update_schedule(db, thread):
                 game.winner = game.away_team.key
                 if not game.preseason:
                     game.away_team.wins += 1
-                    game.home_team.loses += 1
+                    game.home_team.losses += 1
                     game.home_team.games_played += 1
                     game.away_team.games_played += 1
                 else:
                     game.away_team.preseason_wins += 1
-                    game.home_team.preseason_loses += 1
+                    game.home_team.preseason_losses += 1
                     game.home_team.preseason_games_played += 1
                     game.away_team.preseason_games_played += 1
 
@@ -469,12 +469,12 @@ def update_schedule(db, thread):
                 game.winner = game.home_team.key
                 if not game.preseason:
                     game.home_team.wins += 1
-                    game.away_team.loses += 1
+                    game.away_team.losses += 1
                     game.home_team.games_played += 1
                     game.away_team.games_played += 1
                 else:
                     game.home_team.preseason_wins += 1
-                    game.away_team.preseason_loses += 1
+                    game.away_team.preseason_losses += 1
                     game.home_team.preseason_games_played += 1
                     game.away_team.preseason_games_played += 1
 
