@@ -871,7 +871,11 @@
                     <td class="text-end" style='border-right: 1px solid white'>{{ season_stats.fgLng }}</td>
                     <td class="text-end">{{ season_stats.xpMade }}</td>
                     <td class="text-end">{{ season_stats.xpAtts }}</td>
+                    {% if season_stats.xpAtts > 0 %}
                     <td class="text-end">{{ "%.1f"|format(season_stats.xpMade/season_stats.xpAtts * 100) }}</td>
+                    {% else %}
+                    <td class="text-end">-</td>
+                    {% endif %}
                   </tr>
                   {% endif %}
                   {% endfor %}
