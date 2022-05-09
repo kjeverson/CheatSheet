@@ -413,32 +413,35 @@ def add_player(db, player_data):
     else:
         practice_squad = False
 
-    db.session.add(Player(
-        ID=player_data['id'],
-        name=player_data['fullName'],
-        fname=player_data['firstName'],
-        lname=player_data['lastName'],
-        shortname=player_data['shortName'],
-        height=player_data['displayHeight'],
-        weight=player_data['weight'],
-        age=player_data['age'] if player_data.get('age') else 0,
-        experience=player_data['experience']['years'],
-        experience_string=get_experience_string(player_data['experience']['years']),
-        number=player_data['jersey'] if player_data.get('jersey') else 0,
-        position=player_data['position']['abbreviation'],
-        team_id=team_id,
-        college=college,
-        status="",
-        designation="",
-        injury="",
-        ret="",
-        undrafted=undrafted,
-        draft_year=draftYear if draftYear else 0,
-        draft_round=draftRound if draftRound else 0,
-        draft_pick=draftPick if draftPick else 0,
-        draft_team_id=draft_team_id if draft_team_id else 0,
-        practice_squad=practice_squad
-    ))
+    try:
+        db.session.add(Player(
+            ID=player_data['id'],
+            name=player_data['fullName'],
+            fname=player_data['firstName'],
+            lname=player_data['lastName'],
+            shortname=player_data['shortName'],
+            height=player_data['displayHeight'],
+            weight=player_data['weight'],
+            age=player_data['age'] if player_data.get('age') else 0,
+            experience=player_data['experience']['years'],
+            experience_string=get_experience_string(player_data['experience']['years']),
+            number=player_data['jersey'] if player_data.get('jersey') else 0,
+            position=player_data['position']['abbreviation'],
+            team_id=team_id,
+            college=college,
+            status="",
+            designation="",
+            injury="",
+            ret="",
+            undrafted=undrafted,
+            draft_year=draftYear if draftYear else 0,
+            draft_round=draftRound if draftRound else 0,
+            draft_pick=draftPick if draftPick else 0,
+            draft_team_id=draft_team_id if draft_team_id else 0,
+            practice_squad=practice_squad
+        ))
+    except KeyError:
+        pass
 
     db.session.add(stats.SeasonStats(
         player_id=player_data['id'],
